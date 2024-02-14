@@ -1,4 +1,7 @@
 { pkgs, config, ...}:
+let
+  package_ver = config.boot.kernelPackages.nvidiaPackages.latest;
+in
 {
 
   hardware = {
@@ -19,7 +22,7 @@
       powerManagement.enable = false;
       open = false;
       nvidiaSettings = true;
-      package = config.boot.kernelPackages.nvidiaPackages.latest;
+      package = package_ver;
     };
   };
   
