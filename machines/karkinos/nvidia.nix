@@ -1,9 +1,5 @@
 { config, ...}:
 {
-  # Nvidia and Cuda support
-  services.xserver.videoDrivers = ["nvidia"];
-  config.allowUnfree = true;
-  config.cudaSupport = true;
 
   hardware = {
 
@@ -23,4 +19,9 @@
       package = config.boot.kernelPackages.nvidiaPackages.latest;
     };
   };
+  
+  # Nvidia and Cuda support
+  services.xserver.videoDrivers = ["nvidia"];
+  config.allowUnfree = true;
+  config.cudaSupport = true;
 }
