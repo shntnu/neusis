@@ -18,6 +18,11 @@
 
     # Import your generated (nixos-generate-config) hardware configuration
     ./hardware-configuration.nix
+    ./nvidia.nix
+    ./substituters.nix
+    ./pipewire.nix
+    ./virtualization.nix
+    ./secrets.nix
   ];
 
   nixpkgs = {
@@ -105,32 +110,16 @@
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
-  # Enable sound with pipewire.
-  sound.enable = true;
-  hardware.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    audio.enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
-
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
-  };
-
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.ank = {
     isNormalUser = true;
+    passwordFile = config.age.secrets.karkinos_pass.path;
     description = "Ankur Kumar";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "libvirt" ];
+    openssh.authorizedKeys.keyFiles = [ ../../homes/ank/id_rsa.pub ];
     packages = with pkgs; [
       firefox
       kitty
@@ -152,54 +141,6 @@
   programs.hyprland.enable = true;
   programs.hyprland.xwayland.enable = true;
   programs.hyprland.enableNvidiaPatches = true;
-
-  # This setups a SSH server. Very important if you're setting up a headless system.
-  # Feel free to remove if you don't need it.
-  services.openssh = {
-    enable = true;
-    settings = {
-      # Forbid root login through SSH.
-      PermitRootLogin = "yes";
-      # Use keys only. Remove if you want to SSH using password (not recommended)
-      PasswordAuthentication = true;
-    };
-  };
-
-  # Nvidia and Cuda support
-  services.xserver.videoDrivers = ["nvidia"];
-  config.allowUnfree = true;
-  config.cudaSupport = true;
-  nix.settings = {
-    substituters = [
-      "https://devenv.cachix.org"
-      "https://cuda-maintainers.cachix.org"
-      "https://nix-gaming.cachix.org"
-    ];
-    tursted-public-keys = [
-      "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
-      "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
-      "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
-    ];
-  };
-
-  hardware = {
-
-    # Enable OpenGL
-    opengl = {
-      enable = true;
-      driSupport = true;
-      driSupport32Bit = true;
-    };
-
-    # Configure Nvidia driver
-    nvidia = {
-      modesetting.enable = true;
-      powerManagement.enable = false;
-      open = false;
-      nvidiaSettings = true;
-      package = config.boot.kernelPackages.nvidiaPackages.latest;
-    };
-  };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "23.11";
