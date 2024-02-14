@@ -1,4 +1,4 @@
-{ config, ...}:
+{ pkgs, config, ...}:
 {
 
   hardware = {
@@ -8,6 +8,9 @@
       enable = true;
       driSupport = true;
       driSupport32Bit = true;
+      extraPackages = with pkgs; [
+        vaapiVdpau
+      ];
     };
 
     # Configure Nvidia driver
@@ -22,6 +25,8 @@
   
   # Nvidia and Cuda support
   services.xserver.videoDrivers = ["nvidia"];
-  config.allowUnfree = true;
-  config.cudaSupport = true;
+  config = {
+    allowUnfree = true;
+    cudaSupport = true;
+  };
 }
