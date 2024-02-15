@@ -2,8 +2,8 @@
 {
   environment.systemPackages = with pkgs; [
     looking-glass-client
-    scream-receivers
-    virtmanager
+    scream
+    virt-manager
   ];
 
   virtualisation.libvirtd = {
@@ -28,7 +28,7 @@
   # '';
 
   systemd.tmpfiles.rules = [
-    "f /dev/shm/scream 0660 ank qemu-libvirtd -"
+    "f /dev/shm/scream-ivshmem 0660 ank qemu-libvirtd -"
     "f /dev/shm/looking-glass 0660 ank qemu-libvirtd -"
   ];
 
@@ -36,7 +36,7 @@
     enable = true;
     description = "Scream IVSHMEM";
     serviceConfig = {
-      ExecStart = "${pkgs.scream-receivers}/bin/scream-ivshmem-pulse /dev/shm/scream";
+      ExecStart = "${pkgs.scream}/bin/scream -m /dev/shm/scream-ivshmem";
       Restart = "always";
     };
     wantedBy = [ "multi-user.target" ];

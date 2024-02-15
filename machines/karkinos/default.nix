@@ -22,7 +22,7 @@
     ./substituters.nix
     ./pipewire.nix
     ./virtualization.nix
-    ./secrets.nix
+    # ./secrets.nix
   ];
 
   # nixpkgs = {
