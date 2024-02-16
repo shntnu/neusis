@@ -1,4 +1,4 @@
-{ ... }:
+{ config, ... }:
 {
-  age.secrets.tsauthkey.file = ../../secrets/tsauthkey.age;
+  config.age.secrets.tsauthkey.file = ../../secrets/tsauthkey.age;
 }
