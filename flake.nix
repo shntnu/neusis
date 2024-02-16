@@ -11,12 +11,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # sops-nix = {
-    #   url = "github:Mic92/sops-nix";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    #   inputs.nixpkgs-stable.follows = "nixpkgs";
-    # };
-
     agenix.url = "github:ryantm/agenix";
 
     hardware.url = "github:nixos/nixos-hardware";
@@ -73,7 +67,7 @@
     # overlays = import ./overlays;
     # pkgs = import ./pkgs;
     
-    devShells = forEachSystem (pkgs: import ./shell.nix {inherit pkgs;});
+    devShells = forEachSystem (pkgs: import ./shell.nix {inherit pkgs inputs;});
     formatter = forEachSystem (pkgs: pkgs.nixpkgs-fmt);
 
     # NixOS configuration entrypoint
@@ -88,7 +82,6 @@
     # Standalone home-manager configuration entrypoint
     # Available through 'home-manager --flake .#your-username@your-hostname'
     homeConfigurations = {
-      # FIXME replace with your username@hostname
       "ank@karkinos" = lib.homeManagerConfiguration {
         pkgs = pkgsFor.x86_64-linux;
         extraSpecialArgs = {inherit inputs outputs;};

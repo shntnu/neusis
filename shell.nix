@@ -8,6 +8,7 @@
     };
   in
   import nixpkgs { overlays = [ ]; }
+, inputs
 , ...
 }: {
   default = pkgs.mkShell {
@@ -17,7 +18,8 @@
       home-manager
       git
 
-      sops
+
+      inputs.agenix.packages.${system}.default
       ssh-to-age
       gnupg
       age

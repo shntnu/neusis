@@ -1,4 +1,4 @@
-{config, pkgs, ...}:
+{ config, pkgs, ...}:
 {
 # make the tailscale command usable to users
   environment.systemPackages = [ pkgs.tailscale ];
@@ -30,7 +30,7 @@
       fi
 
       # otherwise authenticate with tailscale
-      ${tailscale}/bin/tailscale up -authkey tskey-examplekeyhere
+      ${tailscale}/bin/tailscale up -authkey "$(cat ${config.age.secrets.tsauthkey.path})" 
     '';
   };
 }
