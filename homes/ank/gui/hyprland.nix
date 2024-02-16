@@ -3,12 +3,12 @@
   home.sessionVariables.WLR_NO_HARDWARE_CURSORS = "1";
   home.sessionVariables.NIXOS_OZONE_WL = "1";
 
-  wayland.windowManger.hyprland.enable = true;
-  wayland.windowManger.hyprland.xwayland.enable = true;
-  wayland.windowManger.hyprland.xwayland.hidpi = true;
-  wayland.windowManger.hyprland.enableNvidiaPatches = true;
-  wayland.windowManger.hyprland.systemdIntegration = true;
-  wayland.windowManger.hyprland.extraConfig = ''
+  wayland.windowManager.hyprland.enable = true;
+  wayland.windowManager.hyprland.xwayland.enable = true;
+  wayland.windowManager.hyprland.xwayland.hidpi = true;
+  wayland.windowManager.hyprland.enableNvidiaPatches = true;
+  wayland.windowManager.hyprland.systemdIntegration = true;
+  wayland.windowManager.hyprland.extraConfig = ''
     monitor =,preferred,auto,auto
     exec-once = dunst & hyprpaper & ${pkgs.polkit-kde-agent}/libexec/polkit-kde-authentication-agent-1
   '';
