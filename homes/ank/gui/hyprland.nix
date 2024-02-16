@@ -3,12 +3,10 @@
   home.sessionVariables.WLR_NO_HARDWARE_CURSORS = "1";
   home.sessionVariables.NIXOS_OZONE_WL = "1";
 
-  programs.hyprland.enable = true;
-  programs.hyprland.xwayland.enable = true;
-  programs.hyprland.xwayland.hidpi = true;
-  programs.hyprland.enableNvidiaPatches = true;
-
   wayland.windowManger.hyprland.enable = true;
+  wayland.windowManger.hyprland.xwayland.enable = true;
+  wayland.windowManger.hyprland.xwayland.hidpi = true;
+  wayland.windowManger.hyprland.enableNvidiaPatches = true;
   wayland.windowManger.hyprland.systemdIntegration = true;
   wayland.windowManger.hyprland.extraConfig = ''
     monitor =,preferred,auto,auto
