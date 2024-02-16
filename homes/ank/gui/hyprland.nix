@@ -8,7 +8,7 @@
     enable = true;
     xwayland.enable = true;
     enableNvidiaPatches = true;
-    systemdIntegration = true;
+    systemd.enable = true;
     settings = {
       source = "${./hyprland.conf}";
       exec-once = [
