@@ -1,7 +1,6 @@
 { pkgs, ... }:
 {
   
-  imports = [ pkgs.inputs.hyprland.homeManagerModules.default ];
   home.sessionVariables.WLR_NO_HARDWARE_CURSORS = "1";
   home.sessionVariables.NIXOS_OZONE_WL = "1";
 
