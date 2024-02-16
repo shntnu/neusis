@@ -1,8 +1,7 @@
-{ inputs, pkgs, ... }:
+{ pkgs, ... }:
 {
-  imports = [ inputs.hyprland.homeManagerModules.default ];
-  environment.sessionVariables.WLR_NO_HARDWARE_CURSORS = "1";
-  environment.sessionVariables.NIXOS_OZONE_WL = "1";
+  home.sessionVariables.WLR_NO_HARDWARE_CURSORS = "1";
+  home.sessionVariables.NIXOS_OZONE_WL = "1";
 
   programs.hyprland.enable = true;
   programs.hyprland.xwayland.enable = true;
