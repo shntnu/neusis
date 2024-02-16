@@ -105,7 +105,7 @@
   home-manager.useUserPackages = true;
   home-manager.users.ank = {
     imports = [
-     inputs.hyprland.homeManagerModules.default 
+     # inputs.hyprland.homeManagerModules.default 
      inputs.agenix.homeManagerModules.default
      ../../homes/ank/karkinos.nix
     ];

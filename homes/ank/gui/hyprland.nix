@@ -4,26 +4,31 @@
   home.sessionVariables.WLR_NO_HARDWARE_CURSORS = "1";
   home.sessionVariables.NIXOS_OZONE_WL = "1";
 
-  wayland.windowManager.hyprland.enable = true;
-  wayland.windowManager.hyprland.xwayland.enable = true;
-  wayland.windowManager.hyprland.systemdIntegration = true;
-  wayland.windowManager.hyprland.extraConfig = ''
-    monitor =,preferred,auto,auto
-    exec-once = dunst & hyprpaper & ${pkgs.polkit-kde-agent}/libexec/polkit-kde-authentication-agent-1
-  '';
+  wayland.windowManager.hyprland = {
+    enable = true;
+    xwayland.enable = true;
+    enableNvidiaPatches = true;
+    systemdIntegration = true;
+    settings = {
+      source = "${./hyprland.conf}";
+      exec = [
+        pkgs.dunst
+        pkgs.hyprpaper
+        "${pkgs.polkit-kde-agent}/libexec/polkit-kde-authentication-agent-1"
+      ];
+    };
+
+  };
 
   xdg.configFile."hypr/hyprpaper.conf".text = ''
     preload = ${./wallpapers/gruvbox_astro.jpg}
     wallpaper = ${./wallpapers/gruvbox_astro.jpg}
   '';
 
-  # xdg.portal = {
-  #   enable = true;
-  #   wlr.enable = true;
-  #   extraPortals = [
-  #      pkgs.xdg-desktop-portal-gtk
-  #     ];
-  # };
+  xdg.portal = {
+    extraPortals = [ pkgs.inputs.hyprland.xdg-desktop-portal-hyprland ];
+    configPackages = [ pkgs.inputs.hyprland.hyprland ];
+  };
 
   fonts.fontconfig.enable = true;
 
