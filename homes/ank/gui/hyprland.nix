@@ -25,10 +25,10 @@
     wallpaper = ${./wallpapers/gruvbox_astro.jpg}
   '';
 
-  xdg.portal = {
-    extraPortals = [ pkgs.inputs.hyprland.xdg-desktop-portal-hyprland ];
-    configPackages = [ pkgs.inputs.hyprland.hyprland ];
-  };
+  # xdg.portal = {
+  #   extraPortals = [ pkgs.inputs.hyprland.xdg-desktop-portal-hyprland ];
+  #   configPackages = [ pkgs.inputs.hyprland.hyprland ];
+  # };
 
   fonts.fontconfig.enable = true;
 
