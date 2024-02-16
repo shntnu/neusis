@@ -11,6 +11,7 @@
   imports = [
     # If you want to use modules from other flakes (such as nixos-hardware):
     inputs.hardware.nixosModules.common-pc-ssd
+    inputs.home-manager.nixosModule
 
     # Import your generated (nixos-generate-config) hardware configuration
     ./hardware-configuration.nix
@@ -102,7 +103,13 @@
   # Enable home-manager for users
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
-  home-manager.users.ank = import ../../homes/ank/karkinos.nix;
+  home-manager.users.ank = {
+    imports = [
+     inputs.hyprland.homeManagerModules.default 
+     inputs.agenix.homeManagerModules.default
+     ../../homes/ank/karkinos.nix
+    ];
+  };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "23.11";

@@ -1,7 +1,6 @@
-{ inputs, ... }:
+{ ... }:
 {
   imports = [
-    inputs.home-manager.nixosModule
     ./home.nix
     ./dev
     ./secrets
@@ -9,11 +8,4 @@
     ./browsers
     ./misc
   ];
-
-  home-manager.users.ank = {
-    imports = [
-     inputs.hyprland.homeManagerModules.default 
-     inputs.agenix.homeManagerModules.default
-    ];
-  };
 }
