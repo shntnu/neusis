@@ -11,10 +11,11 @@
     systemdIntegration = true;
     settings = {
       source = "${./hyprland.conf}";
-      exec = [
+      exec-once = [
         pkgs.dunst
         pkgs.hyprpaper
         "${pkgs.polkit-kde-agent}/libexec/polkit-kde-authentication-agent-1"
+        pkgs.firefox
       ];
     };
 
