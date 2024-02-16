@@ -30,10 +30,7 @@
       ];
   };
 
-  fonts.fonts = with pkgs; [
-    nerdfonts
-    meslo-lgs-nf
-  ];
+  fonts.fontconfig.enable = true;
 
   home.packages = with pkgs; [
     hyprpaper
@@ -49,5 +46,8 @@
     libnotify
     # app launchers
     wofi
+    # fonts
+    nerdfonts
+    meslo-lgs-nf
   ];
 }
