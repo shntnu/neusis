@@ -10,7 +10,7 @@
   # You can import other NixOS modules here
   imports = [
     # If you want to use modules from other flakes (such as nixos-hardware):
-    inputs.hardware.nixosModules.common.pc.ssd
+    inputs.hardware.nixosModules.common-pc-ssd
     inputs.home-manager.nixosModules.home-manager
     inputs.agenix.nixosModules.default
 
