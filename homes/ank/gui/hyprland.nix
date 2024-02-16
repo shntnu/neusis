@@ -13,7 +13,7 @@
     exec-once = dunst & hyprpaper & ${pkgs.polkit-kde-agent}/libexec/polkit-kde-authentication-agent-1
   '';
 
-  xdg.configFiles."hypr/hyprpaper.conf".text = ''
+  xdg.configFile."hypr/hyprpaper.conf".text = ''
     preload = ${./wallpapers/gruvbox_astro.jpg}
     wallpaper = ${./wallpapers/gruvbox_astro.jpg}
   '';
