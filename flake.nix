@@ -64,7 +64,7 @@
     homeManagerMoules = import ./modules/home-manager;
 
     # templates = import ./templates;
-    # overlays = import ./overlays;
+    overlays = import ./overlays { inherit inputs outputs; };
     # pkgs = import ./pkgs;
     
     devShells = forEachSystem (pkgs: import ./shell.nix {inherit pkgs inputs;});
