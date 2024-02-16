@@ -18,8 +18,6 @@
     wallpaper = ${./wallpapers/gruvbox_astro.jpg}
   '';
 
-  services.dbus.enable = true;
-
   xdg.portal = {
     enable = true;
     wlr.enable = true;
