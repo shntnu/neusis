@@ -37,7 +37,6 @@
   ];
 
   home.packages = with pkgs; [
-    hyprland
     hyprpaper
     xdg-desktop-portal-gtk
     xdg-desktop-portal-hyprland
