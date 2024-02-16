@@ -29,6 +29,7 @@
     ../tailscale.nix
     ../ssh.nix
     ../secrets.nix
+    ../us_eng.nix
   ];
 
   # nixpkgs = {
