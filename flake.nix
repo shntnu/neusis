@@ -22,13 +22,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    inputs.nix-ld.url = "github:Mic92/nix-ld";
+    inputs.nix-ld.inputs.nixpkgs.follows = "nixpkgs";
+
     nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
     nixpkgs-wayland.inputs.nixpkgs.follows = "nixpkgs";
 
     hyprland = {
       url = "github:hyprwm/hyprland";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.wlroot = "nixpkgs-wayland.wlroot";
     };
 
     hyprwm-contrib = {
@@ -56,6 +58,7 @@
   } @ inputs: let
     inherit (self) outputs;
     lib = nixpkgs.lib // home-manager.lib;
+    inouts.hyprland.inputs.wlroot = inputs.nixpkgs-wayland.wlroot;
     systems = ["x86_64-linux" "aarch64-linux" "aarch64-darwin"];
     forEachSystem = f: lib.genAttrs systems (system: f pkgsFor.${system});
     pkgsFor = lib.genAttrs systems (system: import nixpkgs {

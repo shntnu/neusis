@@ -12,6 +12,7 @@
     # If you want to use modules from other flakes (such as nixos-hardware):
     inputs.hardware.nixosModules.common-pc-ssd
     inputs.home-manager.nixosModule
+    inputs.nix-ld.nixosModules.nix-ld
 
     # Import your generated (nixos-generate-config) hardware configuration
     ./hardware-configuration.nix
@@ -32,13 +33,19 @@
     ../us_eng.nix
   ];
 
-
+  # FHS
+  programs.nix-ld.dev.enable = true;
+  # Sets up all the libraries to load
+  programs.nix-ld.libraries = with pkgs; [
+    stdenv.cc.cc
+    zlib
+  ];
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 
   # Enable the GNOME Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = false;
+  services.xserver.desktopManager.gnome.enable = true;
 
   # nixpkgs = {
   #   # You can add overlays here
@@ -105,7 +112,6 @@
   home-manager.useUserPackages = true;
   home-manager.users.ank = {
     imports = [
-     # inputs.hyprland.homeManagerModules.default 
      inputs.agenix.homeManagerModules.default
      ../../homes/ank/karkinos.nix
     ];
