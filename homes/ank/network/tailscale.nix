@@ -1,7 +1,6 @@
 { pkgs, config, ... }:
 {
   home.packages = [ pkgs.tailscale ];
-  systemd.user.services.tailscale.enable = true;
   systemd.user.services.tailscale-autoconnect = {
     Unit = {
       Description = "Automatic connection to Tailscale";
