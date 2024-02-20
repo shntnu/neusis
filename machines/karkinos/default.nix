@@ -18,19 +18,16 @@
     ./hardware-configuration.nix
 
     # You can also split up your configuration and import pieces of it here:
-    ../bootloader.nix
-    ../networking.nix
-    ../printing.nix
-    ../gpu/nvidia.nix
-    ../substituters.nix
-    ../pipewire.nix
-    ../virtualization.nix
-    ../input_device.nix
-    ../secrets.nix
-    ../tailscale.nix
-    ../ssh.nix
-    ../secrets.nix
-    ../us_eng.nix
+    ../common/bootloader.nix
+    ../common/networking.nix
+    ../common/printing.nix
+    ../common/gpu/nvidia.nix
+    ../common/substituters.nix
+    ../common/pipewire.nix
+    ../common/virtualization.nix
+    ../common/input_device.nix
+    ../common/ssh.nix
+    ../common/us_eng.nix
   ];
 
   # FHS

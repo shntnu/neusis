@@ -58,7 +58,6 @@
   } @ inputs: let
     inherit (self) outputs;
     lib = nixpkgs.lib // home-manager.lib;
-    inouts.hyprland.inputs.wlroot = inputs.nixpkgs-wayland.wlroot;
     systems = ["x86_64-linux" "aarch64-linux" "aarch64-darwin"];
     forEachSystem = f: lib.genAttrs systems (system: f pkgsFor.${system});
     pkgsFor = lib.genAttrs systems (system: import nixpkgs {

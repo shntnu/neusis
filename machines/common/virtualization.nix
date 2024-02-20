@@ -18,7 +18,7 @@
   boot.kernelParams = [ "amd_iommu=on" "pcie_aspm=off" ];
   boot.kernelModules = [ "kvm-amd" ];
 
-  boot.initrd.availableKernelModules = [ "amdgpu" "vfio-pci" ];
+  boot.initrd.availableKernelModules = [ "vfio-pci" ];
   # boot.initrd.preDeviceCommands = ''
   #   DEVS="0000:0b:00.0 0000:0b:00.1"
   #   for DEV in $DEVS; do
@@ -27,9 +27,9 @@
   #   modprobe -i vfio-pci
   # '';
 
-  systemd.tmpfiles.rules = [
-    "f /dev/shm/scream-ivshmem 0660 ank qemu-libvirtd -"
-    "f /dev/shm/looking-glass 0660 ank qemu-libvirtd -"
+  systemd.user.tmpfiles.rules = [
+    "f /dev/shm/scream-ivshmem 0660 ''$USER qemu-libvirtd -"
+    "f /dev/shm/looking-glass 0660 ''$USER qemu-libvirtd -"
   ];
 
   systemd.user.services.scream-ivshmem = {

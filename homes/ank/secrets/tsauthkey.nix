@@ -1,4 +1,4 @@
 { ... }:
 {
-  age.secrets.tsauthkey.file = ../secrets/tsauthkey.age;
+  age.secrets.tsauthkey.file = ../../../secrets/tsauthkey.age;
 }

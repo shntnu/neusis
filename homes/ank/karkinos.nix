@@ -5,6 +5,7 @@
     ./dev
     ./secrets
     ./browsers
+    ./network
     ./misc
   ];
 }
