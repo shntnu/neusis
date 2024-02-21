@@ -1,4 +1,4 @@
-{ unstable, ... }:
+{ pkgs, ... }:
 {
- home.packages = [ unstable.input-leap ];
+ home.packages = [ pkgs.unstable.input-leap ];
 }

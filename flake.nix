@@ -66,10 +66,6 @@
       inherit system;
       config.allowUnfree = true;
     });
-    upkgsFor = lib.genAttrs systems (system: import nixpkgs-unstable {
-      inherit system;
-      config.allowUnfree = true;
-    });
   in {
     inherit lib;
 
@@ -88,7 +84,7 @@
     nixosConfigurations = {
       karkinos = lib.nixosSystem {
         modules = [ ./machines/karkinos ];
-        specialArgs = {inherit inputs outputs; unstable = upkgsFor.x86_64-linux; };
+        specialArgs = {inherit inputs outputs; };
       };
     };
 
@@ -97,8 +93,7 @@
     homeConfigurations = {
       "ank@karkinos" = lib.homeManagerConfiguration {
         pkgs = pkgsFor.x86_64-linux;
-        unstable = upkgsFor.x86_64-linux;
-        extraSpecialArgs = {inherit inputs outputs; unstable = upkgsFor.x86_64-linux; };
+        extraSpecialArgs = {inherit inputs outputs; };
         # > Our main home-manager configuration file <
         modules = [ ./homes/ank/karkinos.nix ];
       };
