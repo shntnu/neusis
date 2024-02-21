@@ -1,7 +1,7 @@
 { pkgs, config, ... }:
 {
   home.packages = [ pkgs.tailscale ];
-  home.file.".config/systemd/user/tailscale.service".text =
+  home.file.".config/systemd/user/tailscaled.service".text =
     "* ${builtins.readFile "${pkgs.tailscale}/lib/systemd/system/tailscaled.service"}";
   systemd.user.services.tailscale-autoconnect = {
     Unit = {
