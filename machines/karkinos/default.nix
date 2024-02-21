@@ -112,7 +112,7 @@
   home-manager.users.ank = {
     imports = [
      inputs.agenix.homeManagerModules.default
-     ../../homes/ank/karkinos.nix { inherit unstable; }
+     ../../homes/ank/karkinos.nix { unstable = unstable;}
     ];
   };
 
