@@ -5,6 +5,7 @@
   lib,
   config,
   pkgs,
+  unstable,
   ...
 }: {
   # You can import other NixOS modules here
@@ -111,7 +112,7 @@
   home-manager.users.ank = {
     imports = [
      inputs.agenix.homeManagerModules.default
-     ../../homes/ank/karkinos.nix
+     ../../homes/ank/karkinos.nix { inherit unstable; }
     ];
   };
 
