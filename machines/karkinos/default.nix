@@ -110,6 +110,7 @@
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
   home-manager.users.ank = {
+    inherit unstable;
     imports = [
      inputs.agenix.homeManagerModules.default
      ../../homes/ank/karkinos.nix { unstable = unstable;}
