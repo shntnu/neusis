@@ -74,7 +74,8 @@
 
     # templates = import ./templates;
     overlays = import ./overlays { inherit inputs outputs; };
-    # pkgs = import ./pkgs;
+    # packages = import ./pkgs;
+    nixpkgs.overlays = [ outputs.overlays.unstable-packages ];
     
     devShells = forEachSystem (pkgs: import ./shell.nix {inherit pkgs inputs;});
     formatter = forEachSystem (pkgs: pkgs.nixpkgs-fmt);
