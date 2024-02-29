@@ -1,0 +1,6 @@
+[submodule "homes/ank/nvim/AstroNvim"]
+	path = homes/ank/nvim/AstroNvim
+	url = https://github.com/AstroNvim/AstroNvim
+[submodule "homes/ank/nvim/astroank"]
+	path = homes/ank/nvim/astroank
+	url = https://github.com/leoank/astroank
