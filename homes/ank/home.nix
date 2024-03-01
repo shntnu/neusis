@@ -13,7 +13,8 @@
 
   dconf.settings = {
     "org/gnome/desktop/background" = {
-      picture-uri = "/home/ank/Downloads/gruvbox_astro.jpg";
+      picture-uri = "${./gui/wallpapers/gruvbox_astro.jpg}";
+      picture-uri-dark = "${./gui/wallpapers/gruvbox_astro.jpg}";
       picture-options = "zoom";
     };
   };
