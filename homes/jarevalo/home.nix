@@ -6,8 +6,8 @@
     ];
   };
 
-  home.username = "ank";
-  home.homeDirectory = "/home/ank";
+  home.username = "jarevalo";
+  home.homeDirectory = "/home/jarevalo";
 
   home.stateVersion = "23.11";
 

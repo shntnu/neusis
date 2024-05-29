@@ -14,7 +14,7 @@
     inputs.hardware.nixosModules.common-pc-ssd
     inputs.home-manager.nixosModule
     inputs.nix-ld.nixosModules.nix-ld
-
+    outputs.nixosModules.sunshine
     # Import your generated (nixos-generate-config) hardware configuration
     ./hardware-configuration.nix
 
@@ -33,11 +33,6 @@
 
   # FHS
   programs.nix-ld.dev.enable = true;
-  # Sets up all the libraries to load
-  programs.nix-ld.libraries = with pkgs; [
-    stdenv.cc.cc
-    zlib
-  ];
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 
@@ -45,25 +40,21 @@
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
 
-  # nixpkgs = {
-  #   # You can add overlays here
-  #   overlays = [
-  #     # If you want to use overlays exported from other flakes:
-  #     # neovim-nightly-overlay.overlays.default
-  #
-  #     # Or define it inline, for example:
-  #     # (final: prev: {
-  #     #   hi = final.hello.overrideAttrs (oldAttrs: {
-  #     #     patches = [ ./change-hello-to-hi.patch ];
-  #     #   });
-  #     # })
-  #   ];
-  #   # Configure your nixpkgs instance
-  #   config = {
-  #     # Disable if you don't want unfree packages
-  #     allowUnfree = true;
-  #   };
-  # };
+  # Enable sunshine
+  modules.services.sunshine.enable = true;
+
+  nixpkgs = {
+    # You can add overlays here
+    overlays = builtins.attrValues outputs.overlays;
+    # Configure your nixpkgs instance
+    config = {
+      sunshine = {
+        cudaSupport = true;
+      };
+      # Disable if you don't want unfree packages
+      allowUnfree = true;
+    };
+  };
 
   # This will add each flake input as a registry
   # To make nix3 commands consistent with your flake
@@ -88,24 +79,60 @@
   };
 
   # Default system wide packages
-  environment.systemPackages = [ pkgs.vim ];
+  environment.systemPackages = with pkgs; [
+    vim
+    dive
+    podman-tui
+    docker-compose
+    gnomeExtensions.forge
+    gnomeExtensions.blur-my-shell
+    gnomeExtensions.burn-my-windows
+    gnomeExtensions.appindicator
+  ];
+  environment.shells = [ pkgs.zsh ];
+  programs.zsh.enable = true;
 
   # Netowrking
-  networking.hostName = "karkinos";
+  networking.hostName = "GPFDA-11A";
+  # networking.bridges.br0.interfaces = [ "enp2s0" "wlp131s0" ];
   services.tailscale.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.ank = {
+    shell = pkgs.zsh;
     isNormalUser = true;
     # passwordFile = config.age.secrets.karkinos_pass.path;
     description = "Ankur Kumar";
-    extraGroups = [ "networkmanager" "wheel" "libvirt" ];
+    extraGroups = [ "networkmanager" "wheel" "libvirtd" "qemu-libvirtd" "input"];
     openssh.authorizedKeys.keyFiles = [
       ../../homes/ank/id_rsa.pub 
       ../../homes/ank/id_ed25519.pub 
     ];
   };
 
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users.jarevalo = {
+    shell = pkgs.zsh;
+    isNormalUser = true;
+    # passwordFile = config.age.secrets.karkinos_pass.path;
+    description = "John Arevalo";
+    extraGroups = [ "networkmanager" "wheel" "libvirtd" "qemu-libvirtd" ];
+    openssh.authorizedKeys.keyFiles = [
+      ../../homes/jarevalo/id_ed25519.pub 
+    ];
+  };
+
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users.ashah = {
+    shell = pkgs.zsh;
+    isNormalUser = true;
+    # passwordFile = config.age.secrets.karkinos_pass.path;
+    description = "Adit Shah";
+    extraGroups = [ "networkmanager" "wheel" "libvirtd" "qemu-libvirtd" ];
+    openssh.authorizedKeys.keyFiles = [
+      ../../homes/ashah/id_rsa.pub 
+    ];
+  };
   # Enable home-manager for users
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
@@ -114,6 +141,18 @@
     imports = [
      inputs.agenix.homeManagerModules.default
      ../../homes/ank/karkinos.nix
+    ];
+  };
+  home-manager.users.jarevalo = {
+    imports = [
+     inputs.agenix.homeManagerModules.default
+     ../../homes/jarevalo/karkinos.nix
+    ];
+  };
+  home-manager.users.ashah = {
+    imports = [
+     inputs.agenix.homeManagerModules.default
+     ../../homes/ashah/karkinos.nix
     ];
   };
 

@@ -1,10 +1,10 @@
-{ pkgs, config, inputs, ...}:
+{ pkgs, config, lib, ...}:
 let
   astroank_src = pkgs.fetchFromGitHub {
     owner = "leoank";
     repo = "astroank";
-    rev = "31a801a58273c93e382fb12c78b9643f8f10fd07";
-    sha256 = "sha256-a/AsZOWLH8m3VedxukhI3Z0sRli8K0eoT9+cQ7ZMKLM=";
+    rev = "cc5e103b88554e3d2d6e158ea9b6ae2ed3ed2b81";
+    sha256 = "sha256-QC54o9HJL5bKdJmCInvZjN9agEzKQoNKm6TbsLbX8Ys=";
   };
 in
 {
@@ -24,14 +24,12 @@ in
     rustc
     cmake
     clang
-    clang-tools
     unzip
     sioyek
     nvitop
     htop
     fd
     imagemagick
-    zellij
   ];
 
   programs.direnv = {

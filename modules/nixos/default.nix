@@ -1,0 +1,3 @@
+{
+  sunshine = import ./sunshine.nix;
+}

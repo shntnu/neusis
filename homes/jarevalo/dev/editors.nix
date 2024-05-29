@@ -1,10 +1,16 @@
-{ pkgs, config, inputs, ...}:
+{ pkgs, config, lib, ...}:
 let
+  astronvim_src = pkgs.fetchFromGitHub {
+    owner = "AstroNvim";
+    repo = "AstroNvim";
+    rev = "d36af2f75369e3621312c87bd0e377e7d562fc72";
+    sha256 = "sha256-1nfMx9XaTOfuz1IlvepJdEfrX539RRVN5RXzUR00tfk=";
+  };
   astroank_src = pkgs.fetchFromGitHub {
     owner = "leoank";
     repo = "astroank";
-    rev = "31a801a58273c93e382fb12c78b9643f8f10fd07";
-    sha256 = "sha256-a/AsZOWLH8m3VedxukhI3Z0sRli8K0eoT9+cQ7ZMKLM=";
+    rev = "fe3873a966730a8f1cb97a6fe7092a1fa5ef442c";
+    sha256 = "sha256-hOLawys+1FJbRpJ5pSL945TYf62nog+Dsp+mnNc7NMI=";
   };
 in
 {
@@ -24,21 +30,15 @@ in
     rustc
     cmake
     clang
-    clang-tools
     unzip
     sioyek
     nvitop
     htop
     fd
     imagemagick
-    zellij
   ];
 
-  programs.direnv = {
-    enable = true;
-    enableZshIntegration = true;
-    nix-direnv.enable = true;
-  };
+  programs.direnv.enable = true;
   programs.neovim = {
     enable = true;
     # whatever other neovim configuration you have
@@ -49,7 +49,6 @@ in
     extraLuaPackages = ps: [
       # ... other lua packages
       ps.magick # for image rendering
-      ps.luarocks
     ];
     extraPython3Packages = ps: with ps; [
       # ... other python packages
@@ -63,6 +62,11 @@ in
   };
   
   xdg.configFile."nvim" = {
+    source = astronvim_src;
+    recursive = true;
+  };
+
+  xdg.configFile."nvim/lua/user/" = {
     source = astroank_src;
     recursive = true;
   };

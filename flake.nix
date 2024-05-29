@@ -70,12 +70,11 @@
     inherit lib;
 
     nixosModules = import ./modules/nixos;
-    homeManagerMoules = import ./modules/home-manager;
+    homeManagerModules = import ./modules/home-manager;
 
     # templates = import ./templates;
     overlays = import ./overlays { inherit inputs outputs; };
     # packages = import ./pkgs;
-    nixpkgs.overlays = [ outputs.overlays.unstable-packages ];
     
     devShells = forEachSystem (pkgs: import ./shell.nix {inherit pkgs inputs;});
     formatter = forEachSystem (pkgs: pkgs.nixpkgs-fmt);
