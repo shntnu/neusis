@@ -15,6 +15,10 @@
     inputs.home-manager.nixosModule
     inputs.nix-ld.nixosModules.nix-ld
     outputs.nixosModules.sunshine
+    inputs.agenix.nixosModules.default
+    {
+      age.identityPaths = [ "/home/ank/.ssh/id_ed25519" ];
+    }
     # Import your generated (nixos-generate-config) hardware configuration
     ./hardware-configuration.nix
 
@@ -29,6 +33,7 @@
     ../common/input_device.nix
     ../common/ssh.nix
     ../common/us_eng.nix
+    ../common/tailscale.nix
   ];
 
   # FHS
@@ -88,6 +93,7 @@
     gnomeExtensions.blur-my-shell
     gnomeExtensions.burn-my-windows
     gnomeExtensions.appindicator
+    inputs.agenix.packages.x86_64-linux.default
   ];
   environment.shells = [ pkgs.zsh ];
   programs.zsh.enable = true;
@@ -95,7 +101,7 @@
   # Netowrking
   networking.hostName = "gpfe4-674";
   # networking.bridges.br0.interfaces = [ "enp2s0" "wlp131s0" ];
-  services.tailscale.enable = true;
+  # services.tailscale.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.ank = {

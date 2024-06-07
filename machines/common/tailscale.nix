@@ -3,6 +3,9 @@
 # make the tailscale command usable to users
   environment.systemPackages = [ pkgs.tailscale ];
 
+  # add agenix auth key
+  age.secrets.tsauthkey.file = ../../secrets/tsauthkey.age;
+
   # enable the tailscale service
   services.tailscale.enable = true;
 
