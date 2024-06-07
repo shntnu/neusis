@@ -4,6 +4,6 @@
     ./tsauthkey.nix
   ];
   
-  age.identityPaths = [ "/home/ank/.ssh/id_ed5519" ];
+  age.identityPaths = [ "/home/ank/.ssh/id_ed25519" ];
   
 }

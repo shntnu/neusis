@@ -91,6 +91,11 @@
         modules = [ ./machines/karkinos ];
         specialArgs = {inherit inputs outputs; };
       };
+
+      chiral = lib.nixosSystem {
+        modules = [ ./machines/chiral ];
+        specialArgs = {inherit inputs outputs; };
+      };
     };
 
     # Standalone home-manager configuration entrypoint
@@ -101,6 +106,13 @@
         extraSpecialArgs = {inherit inputs outputs; };
         # > Our main home-manager configuration file <
         modules = [ ./homes/ank/karkinos.nix ];
+      };
+
+      "ank@chiral" = lib.homeManagerConfiguration {
+        pkgs = pkgsFor.x86_64-linux;
+        extraSpecialArgs = {inherit inputs outputs; };
+        # > Our main home-manager configuration file <
+        modules = [ ./homes/ank/chiral.nix ];
       };
     };
   };
