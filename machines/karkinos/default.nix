@@ -15,6 +15,17 @@
     inputs.home-manager.nixosModule
     inputs.nix-ld.nixosModules.nix-ld
     outputs.nixosModules.sunshine
+    outputs.nixosModules.nvidia-vgpu
+    {
+      hardware.nvidia.vgpu = {
+        enable = true;
+        grid_driver_zip.sha256 = "sha256-tFgDf7ZSIZRkvImO+9YglrLimGJMZ/fz25gjUT0TfDo=";
+        fastapi-dls = {
+          enable = true;
+        };
+
+      };
+    }
     # Import your generated (nixos-generate-config) hardware configuration
     ./hardware-configuration.nix
 
@@ -38,6 +49,7 @@
 
   # Enable the GNOME Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
+  services.xserver.displayManager.gdm.autoSuspend = false;
   services.xserver.desktopManager.gnome.enable = true;
 
   # Enable sunshine

@@ -12,6 +12,9 @@
   home.stateVersion = "23.11";
 
   dconf.settings = {
+    "org/gnome/desktop/input-sources" = {
+        xkb-options = ["caps:swapescape"];
+      };
     "org/gnome/desktop/background" = {
       picture-uri = "${./gui/wallpapers/gruvbox_astro.jpg}";
       picture-uri-dark = "${./gui/wallpapers/gruvbox_astro.jpg}";

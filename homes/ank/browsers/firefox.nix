@@ -4,10 +4,4 @@
     firefox
   ];
 
-  programs.firefox = {
-    preferences = {
-
-    }
-
-  };
 }

@@ -32,6 +32,7 @@ in
     fd
     imagemagick
     zellij
+    inputs.superfile.packages.${pkgs.system}.default
   ];
 
   programs.direnv = {
@@ -67,7 +68,10 @@ in
     recursive = true;
   };
 
-  programs.gh.enable = true;
+  programs.gh =  {
+    enable = true;
+    extensions = [ pkgs.gh-dash ];
+  };
   programs.thefuck.enable = true;
   programs.zsh = {
     enable = true;

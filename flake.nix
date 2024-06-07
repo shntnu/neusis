@@ -49,6 +49,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    superfile = {
+      url = "github:yorukot/superfile";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
   };
 
   outputs = {
@@ -69,7 +74,7 @@
   in {
     inherit lib;
 
-    nixosModules = import ./modules/nixos;
+    nixosModules = import ./modules/nixos {inherit inputs outputs;};
     homeManagerModules = import ./modules/home-manager;
 
     # templates = import ./templates;
