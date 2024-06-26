@@ -1,6 +1,6 @@
 { ... }:
 {
   networking.networkmanager.enable = true;
-  networking.firewall = {};
+  networking.firewall.enable = false;
   systemd.services.NetworkManager-wait-online.enable = false;
 }
