@@ -6,6 +6,14 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable"; 
 
+    # disko
+
+    inputs.disko.url = "github:nix-community/disko";
+    inputs.disko.inputs.nixpkgs.follows = "nixpkgs";
+
+    # VS Code
+    vscode-server.url = "github:nix-community/nixos-vscode-server";
+
     # Home manager
     home-manager = {
       url = "github:nix-community/home-manager/release-23.11";
