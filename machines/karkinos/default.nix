@@ -34,7 +34,6 @@
     ./disko.nix
 
     # You can also split up your configuration and import pieces of it here:
-    ../common/bootloader.nix
     ../common/networking.nix
     ../common/printing.nix
     ../common/gpu/nvidia.nix
