@@ -140,7 +140,7 @@
           compression = "lz4";
           mountpoint = "none";
           xattr = "sa";
-          "com.sun:auto-snapshot" = false;
+          "com.sun:auto-snapshot" = "false";
         };
         options.ashift = "12";
 
@@ -152,17 +152,17 @@
           "local/home" = {
             type = "zfs_fs";
             mountpoint = "/home";
-            options."com.sun:auto-snapshot" = true;
+            options."com.sun:auto-snapshot" = "true";
           };
           "local/nix" = {
             type = "zfs_fs";
             mountpoint = "/nix";
-            options."com.sun:auto-snapshot" = false;
+            options."com.sun:auto-snapshot" = "false";
           };
           "local/root" = {
             type = "zfs_fs";
             mountpoint = "/";
-            options."com.sun:auto-snapshot" = false;
+            options."com.sun:auto-snapshot" = "false";
             postCreateHook = "zfs snapshot zroot/local/root@blank";
           };
         };
@@ -178,7 +178,7 @@
           compression = "lz4";
           mountpoint = "none";
           xattr = "sa";
-          "com.sun:auto-snapshot" = false;
+          "com.sun:auto-snapshot" = "false";
         };
         options.ashift = "12";
 
@@ -186,7 +186,7 @@
           datastore = {
             type = "zfs_fs";
             mountpoint = "/datastore";
-            options."com.sun:auto-snapshot" = false;
+            options."com.sun:auto-snapshot" = "false";
             postCreateHook = "zfs snapshot zstore/datastore@blank";
           };
         };
