@@ -7,9 +7,9 @@
     zfsSupport = true;
     efiSupport = true;
     efiInstallAsRemovable = true;
-    # mirroredBoots = [
-    #   { devices = [ "nodev"]; path = "/boot";}
-    # ];
+    mirroredBoots = [
+      { devices = [ "/dev/nvme1n1"]; path = "/boot";}
+    ];
   };
   services.zfs.autoScrub.enable = true;
   services.zfs.trim.enable = true;
