@@ -7,9 +7,8 @@
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable"; 
 
     # disko
-
-    inputs.disko.url = "github:nix-community/disko";
-    inputs.disko.inputs.nixpkgs.follows = "nixpkgs";
+    disko.url = "github:nix-community/disko";
+    disko.inputs.nixpkgs.follows = "nixpkgs";
 
     # VS Code
     vscode-server.url = "github:nix-community/nixos-vscode-server";
