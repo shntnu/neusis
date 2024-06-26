@@ -15,19 +15,23 @@
     inputs.home-manager.nixosModule
     inputs.nix-ld.nixosModules.nix-ld
     outputs.nixosModules.sunshine
-    outputs.nixosModules.nvidia-vgpu
-    {
-      hardware.nvidia.vgpu = {
-        enable = true;
-        grid_driver_zip.sha256 = "sha256-tFgDf7ZSIZRkvImO+9YglrLimGJMZ/fz25gjUT0TfDo=";
-        fastapi-dls = {
-          enable = true;
-        };
-
-      };
-    }
+    # outputs.nixosModules.nvidia-vgpu
+    # {
+    #   hardware.nvidia.vgpu = {
+    #     enable = true;
+    #     grid_driver_zip.sha256 = "sha256-tFgDf7ZSIZRkvImO+9YglrLimGJMZ/fz25gjUT0TfDo=";
+    #     fastapi-dls = {
+    #       enable = true;
+    #     };
+    #
+    #   };
+    # }
     # Import your generated (nixos-generate-config) hardware configuration
     ./hardware-configuration.nix
+
+    # Disko configuration
+    inputs.disko.nixosModules.disko
+    ./disko.nix
 
     # You can also split up your configuration and import pieces of it here:
     ../common/bootloader.nix
@@ -146,6 +150,31 @@
       ../../homes/ashah/id_rsa.pub 
     ];
   };
+
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users.suganya = {
+    shell = pkgs.zsh;
+    isNormalUser = true;
+    # passwordFile = config.age.secrets.karkinos_pass.path;
+    description = "Suganya";
+    extraGroups = [ "networkmanager" "wheel" "libvirtd" "qemu-libvirtd" ];
+    openssh.authorizedKeys.keyFiles = [
+      ../../homes/suganya/id_ed25519.pub 
+    ];
+  };
+
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users.skhosrav = {
+    shell = pkgs.zsh;
+    isNormalUser = true;
+    # passwordFile = config.age.secrets.karkinos_pass.path;
+    description = "Sara Khosravi";
+    extraGroups = [ "networkmanager" "wheel" "libvirtd" "qemu-libvirtd" ];
+    openssh.authorizedKeys.keyFiles = [
+      ../../homes/skhosrav/id_ed25519.pub 
+    ];
+  };
+
   # Enable home-manager for users
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
@@ -160,6 +189,18 @@
     imports = [
      inputs.agenix.homeManagerModules.default
      ../../homes/jarevalo/karkinos.nix
+    ];
+  };
+  home-manager.users.suganya = {
+    imports = [
+     inputs.agenix.homeManagerModules.default
+     ../../homes/suganya/karkinos.nix
+    ];
+  };
+  home-manager.users.skhosrav = {
+    imports = [
+     inputs.agenix.homeManagerModules.default
+     ../../homes/skhosrav/karkinos.nix
     ];
   };
   home-manager.users.ashah = {
