@@ -40,6 +40,7 @@
     ../common/input_device.nix
     ../common/ssh.nix
     ../common/us_eng.nix
+    ../common/router.nix
   ];
 
   # FHS
