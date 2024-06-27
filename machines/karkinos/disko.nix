@@ -135,7 +135,10 @@
         mode = "";
         rootFsOptions = {
           # Make sure these options are correct
+          canmount = "off";
           acltype = "posixacl";
+          dnodesize = "auto";
+          normalization = "formD";
           atime = "off";
           compression = "lz4";
           mountpoint = "none";
@@ -143,6 +146,7 @@
           "com.sun:auto-snapshot" = "false";
         };
         options.ashift = "12";
+        options.autotrim = "on";
 
         datasets = {
           "local" = {
@@ -173,7 +177,10 @@
         mode = "";
         rootFsOptions = {
           # Make sure these options are correct
+          canmount = "off";
           acltype = "posixacl";
+          dnodesize = "auto";
+          normalization = "formD";
           atime = "off";
           compression = "lz4";
           mountpoint = "none";
@@ -181,6 +188,7 @@
           "com.sun:auto-snapshot" = "false";
         };
         options.ashift = "12";
+        options.autotrim = "on";
 
         datasets = {
           datastore = {
