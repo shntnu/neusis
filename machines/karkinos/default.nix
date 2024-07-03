@@ -32,6 +32,9 @@
     # Disko configuration
     inputs.disko.nixosModules.disko
     ./disko.nix
+    # Path to make boot work with zstore pool
+    ./filesystem.nix
+    ../common/zfs.nix
 
     # You can also split up your configuration and import pieces of it here:
     ../common/networking.nix

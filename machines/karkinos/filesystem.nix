@@ -1,0 +1,3 @@
+{
+  fileSystems."/datastore".options = ["noauto"];
+}

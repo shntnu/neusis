@@ -33,6 +33,7 @@ in
     imagemagick
     zellij
     inputs.superfile.packages.${pkgs.system}.default
+    lua
   ];
 
   programs.direnv = {
@@ -42,6 +43,7 @@ in
   };
   programs.neovim = {
     enable = true;
+    # package = pkgs.unstable.neovim;
     # whatever other neovim configuration you have
     extraPackages = with pkgs; [
       # ... other packages
