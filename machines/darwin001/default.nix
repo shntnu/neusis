@@ -54,7 +54,7 @@
   # Configure homebrew
   homebrew = {
     enable = true;
-    brews = ["input-leap"]; # Example of brew
+    # brews = ["input-leap"]; # Example of brew
     taps = map (key: builtins.replaceStrings ["homebrew-"] [""] key) (builtins.attrNames config.nix-homebrew.taps);
     casks = pkgs.callPackage ../common/casks.nix {};
     onActivation = {
