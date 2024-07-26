@@ -56,7 +56,7 @@
     enable = true;
     brews = ["input-leap"]; # Example of brew
     taps = map (key: builtins.replaceStrings ["homebrew-"] [""] key) (builtins.attrNames config.nix-homebrew.taps);
-    casks = ../common/casks.nix;
+    casks = pkgs.callPackage ../common/casks.nix {};
     onActivation = {
       cleanup = "uninstall";
       autoUpdate = true;
