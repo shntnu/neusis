@@ -1,5 +1,6 @@
-{inputs, ...}: {
+{inputs, user, ...}: {
   nix-homebrew = {
+    inherit user;
     enable = true;
     taps = with inputs; {
       "homebrew/homebrew-core" = homebrew-core;

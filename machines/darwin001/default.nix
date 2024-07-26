@@ -22,7 +22,7 @@
     }
     inputs.nix-homebrew.darwinModules.nix-homebrew
     ../common/darwin_home_manager.nix
-    ../common/nix-homebrew.nix
+    (import ../common/nix-homebrew.nix { inherit inputs; user = "kumarank";})
     ../common/nix.nix
     ../common/substituters.nix
   ];
