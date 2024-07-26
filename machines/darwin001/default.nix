@@ -5,7 +5,7 @@
   outputs,
   ...
 }: {
-  import = [
+  imports = [
     inputs.home-manager.darwinModules.home-manager
     # Configure home manager
     {
