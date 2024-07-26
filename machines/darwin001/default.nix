@@ -7,6 +7,19 @@
 }: {
   import = [
     inputs.home-manager.darwinModules.home-manager
+    # Configure home manager
+    {
+      home-manager = {
+        userGlobalPkgs = true;
+        useUserPackages = true;
+        extraSpecialArgs = {inherit inputs outputs;};
+        user.kumarank = {
+          imports = [
+            ../../homes/ank/machines/darwin001.nix
+          ];
+        };
+      };
+    }
     inputs.nix-homebrew.darwinModules.nix-homebrew
     ../common/darwin_home_manager.nix
     ../common/nix-homebrew.nix
@@ -37,18 +50,6 @@
       cleanup = "uninstall";
       autoUpdate = true;
       upgrade = true;
-    };
-  };
-
-  # Configure home manager
-  home-manager = {
-    userGlobalPkgs = true;
-    useUserPackages = true;
-    extraSpecialArgs = {inherit inputs outputs;};
-    user.kumarank = {
-      imports = [
-        ../../homes/ank/machines/darwin001.nix
-      ];
     };
   };
 
