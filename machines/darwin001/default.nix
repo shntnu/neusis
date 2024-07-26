@@ -13,7 +13,7 @@
         userGlobalPkgs = true;
         useUserPackages = true;
         extraSpecialArgs = {inherit inputs outputs;};
-        user.kumarank = {
+        users.kumarank = {
           imports = [
             ../../homes/ank/machines/darwin001.nix
           ];
