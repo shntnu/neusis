@@ -10,7 +10,7 @@
     # Configure home manager
     {
       home-manager = {
-        userGlobalPkgs = true;
+        useGlobalPkgs = true;
         useUserPackages = true;
         extraSpecialArgs = {inherit inputs outputs;};
         users.kumarank = {
