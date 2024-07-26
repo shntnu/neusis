@@ -7,19 +7,6 @@
 }: {
   imports = [
     inputs.home-manager.darwinModules.home-manager
-    # Configure home manager
-    {
-      home-manager = {
-        useGlobalPkgs = true;
-        useUserPackages = true;
-        extraSpecialArgs = {inherit inputs outputs;};
-        users.kumarank = {
-          imports = [
-            ../../homes/ank/machines/darwin001.nix
-          ];
-        };
-      };
-    }
     inputs.nix-homebrew.darwinModules.nix-homebrew
     ../common/darwin_home_manager.nix
     (import ../common/nix-homebrew.nix { inherit inputs; user = "kumarank";})
@@ -51,6 +38,10 @@
     ];
   };
 
+  # This is important! Removing this will break your shell and thus your system
+  # This is needed even if you enable zsh in home manager
+  programs.zsh.enable = true;
+
   # Configure homebrew
   homebrew = {
     enable = true;
@@ -63,6 +54,20 @@
       upgrade = true;
     };
   };
+
+
+    # Configure home manager
+    home-manager = {
+      useGlobalPkgs = true;
+      # Look into why enabling this break shell for starship
+      # useUserPackages = true;
+      extraSpecialArgs = {inherit inputs outputs;};
+      users.kumarank = {
+        imports = [
+          ../../homes/ank/machines/darwin001.nix
+        ];
+      };
+    };
 
   # sudo with touch id
   security.pam.enableSudoTouchIdAuth = true;
