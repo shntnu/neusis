@@ -31,7 +31,6 @@ in {
     clang-tools
     unzip
     sioyek
-    nvitop
     htop
     fd
     imagemagick

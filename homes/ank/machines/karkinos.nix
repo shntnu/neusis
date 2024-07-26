@@ -21,5 +21,6 @@
     ../../common/browsers
     ../../common/network
     ../../common/misc
+    ../../common/gpu_tools.nix
   ];
 }
