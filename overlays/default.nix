@@ -1,9 +1,7 @@
-{ inputs, outputs }: let
-  addPatches = pkg: patches:
-    pkg.overrideAttrs (oldAttrs: {
-      patches = (oldAttrs.patches or []) ++ patches;
-    });
-in {
+{
+  inputs,
+  outputs,
+}: {
   # For every flake input, aliases 'pkgs.inputs.${flake}' to
   # 'inputs.${flake}.packages.${pkgs.system}' or
   # 'inputs.${flake}.legacyPackages.${pkgs.system}'
@@ -26,4 +24,7 @@ in {
     unstable = inputs.nixpkgs-unstable.legacyPackages.${final.system};
   };
 
+  master = final: _: {
+    master = inputs.nixpkgs-master.legacyPackages.${final.system};
+  };
 }

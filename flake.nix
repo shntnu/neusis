@@ -3,8 +3,45 @@
 
   inputs = {
     # Nixpkgs
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable"; 
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-master.url = "github:nixos/nixpkgs/master";
+
+    # darwin inputs
+    darwin = {
+      url = "github:LnL7/nix-darwin/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-homebrew = {
+      url = "github:zhaofengli-wip/nix-homebrew";
+    };
+    homebrew-bundle = {
+      url = "github:homebrew/homebrew-bundle";
+      flake = false;
+    };
+    homebrew-core = {
+      url = "github:homebrew/homebrew-core";
+      flake = false;
+    };
+    homebrew-cask = {
+      url = "github:homebrew/homebrew-cask";
+      flake = false;
+    };
+    vancluever-tap = {
+      url = "github:vancluever/homebrew-input-leap";
+      flake = false;
+    };
+    fuse-t-cask = {
+      url = "github:macos-fuse-t/homebrew-cask";
+      flake = false;
+    };
+    nikitabobko-cask = {
+      url = "github:nikitabobko/homebrew-tap";
+      flake = false;
+    };
+
+    # system and flake util
+    systems.url = "github:nix-systems/default-linux";
 
     # disko
     disko.url = "github:nix-community/disko";
@@ -15,7 +52,7 @@
 
     # Home manager
     home-manager = {
-      url = "github:nix-community/home-manager/release-23.11";
+      url = "github:nix-community/home-manager/release-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -60,48 +97,60 @@
       url = "github:yorukot/superfile";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
-
   };
 
   outputs = {
     self,
     nixpkgs,
-    nixpkgs-unstable,
     home-manager,
+    systems,
+    flake-utils,
     ...
   } @ inputs: let
     inherit (self) outputs;
     lib = nixpkgs.lib // home-manager.lib;
-    systems = ["x86_64-linux" "aarch64-linux" "aarch64-darwin"];
-    forEachSystem = f: lib.genAttrs systems (system: f pkgsFor.${system});
-    pkgsFor = lib.genAttrs systems (system: import nixpkgs {
-      inherit system;
-      config.allowUnfree = true;
-    });
+    forEachSystem = f: lib.genAttrs (import systems) (system: f pkgsFor.${system});
+    pkgsFor = lib.genAttrs (import systems) (
+      system:
+        import nixpkgs {
+          inherit system;
+          config.allowUnfree = true;
+        }
+    );
   in {
     inherit lib;
 
+    # custom moudles
     nixosModules = import ./modules/nixos {inherit inputs outputs;};
     homeManagerModules = import ./modules/home-manager;
 
-    # templates = import ./templates;
-    overlays = import ./overlays { inherit inputs outputs; };
-    # packages = import ./pkgs;
-    
+    overlays = import ./overlays {inherit inputs outputs;};
+
+    # packages = forEachSystem (pkgs: import ./pkgs {inherit pkgs;});
     devShells = forEachSystem (pkgs: import ./shell.nix {inherit pkgs inputs;});
-    formatter = forEachSystem (pkgs: pkgs.nixpkgs-fmt);
+    formatter = forEachSystem (pkgs: pkgs.alejandra);
 
     # NixOS configuration entrypoint
     # Available through 'nixos-rebuild --flake .#your-hostname'
     nixosConfigurations = {
       karkinos = lib.nixosSystem {
-        modules = [ ./machines/karkinos ];
-        specialArgs = {inherit inputs outputs; };
+        modules = [./machines/karkinos];
+        specialArgs = {inherit inputs outputs;};
       };
 
       chiral = lib.nixosSystem {
-        modules = [ ./machines/chiral ];
-        specialArgs = {inherit inputs outputs; };
+        modules = [./machines/chiral];
+        specialArgs = {inherit inputs outputs;};
+      };
+    };
+
+    # Darwin configuration entrypoint
+    # Available through 'darwin-rebuild --flake .#your-hostname'
+    darwinConfigurations = {
+      darwin001 = inputs.darwin.lib.darwinSystem {
+        system = "aarch64-darwin";
+        modules = [./machines/darwin001];
+        specialArgs = {inherit inputs outputs;};
       };
     };
 
@@ -110,16 +159,16 @@
     homeConfigurations = {
       "ank@karkinos" = lib.homeManagerConfiguration {
         pkgs = pkgsFor.x86_64-linux;
-        extraSpecialArgs = {inherit inputs outputs; };
+        extraSpecialArgs = {inherit inputs outputs;};
         # > Our main home-manager configuration file <
-        modules = [ ./homes/ank/karkinos.nix ];
+        modules = [./homes/ank/karkinos.nix];
       };
 
       "ank@chiral" = lib.homeManagerConfiguration {
         pkgs = pkgsFor.x86_64-linux;
-        extraSpecialArgs = {inherit inputs outputs; };
+        extraSpecialArgs = {inherit inputs outputs;};
         # > Our main home-manager configuration file <
-        modules = [ ./homes/ank/chiral.nix ];
+        modules = [./homes/ank/chiral.nix];
       };
     };
   };

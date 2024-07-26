@@ -17,7 +17,7 @@
     outputs.nixosModules.sunshine
     inputs.agenix.nixosModules.default
     {
-      age.identityPaths = [ "/home/ank/.ssh/id_ed25519" ];
+      age.identityPaths = ["/home/ank/.ssh/id_ed25519"];
     }
     # Import your generated (nixos-generate-config) hardware configuration
     ./hardware-configuration.nix
@@ -95,7 +95,7 @@
     gnomeExtensions.appindicator
     inputs.agenix.packages.x86_64-linux.default
   ];
-  environment.shells = [ pkgs.zsh ];
+  environment.shells = [pkgs.zsh];
   programs.zsh.enable = true;
 
   # Netowrking
@@ -109,24 +109,24 @@
     isNormalUser = true;
     # passwordFile = config.age.secrets.karkinos_pass.path;
     description = "Ankur Kumar";
-    extraGroups = [ "networkmanager" "wheel" "libvirtd" "qemu-libvirtd" "input"];
+    extraGroups = ["networkmanager" "wheel" "libvirtd" "qemu-libvirtd" "input"];
     openssh.authorizedKeys.keyFiles = [
-      ../../homes/ank/id_rsa.pub 
-      ../../homes/ank/id_ed25519.pub 
+      ../../homes/ank/id_rsa.pub
+      ../../homes/ank/id_ed25519.pub
     ];
   };
 
   # Enable home-manager for users
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
-  home-manager.extraSpecialArgs = { inherit inputs outputs; };
+  home-manager.extraSpecialArgs = {inherit inputs outputs;};
   home-manager.users.ank = {
     imports = [
-     inputs.agenix.homeManagerModules.default
-     ../../homes/ank/karkinos.nix
+      inputs.agenix.homeManagerModules.default
+      ../../homes/ank/machines/karkinos.nix
     ];
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
-  system.stateVersion = "23.11";
+  system.stateVersion = "24.05";
 }

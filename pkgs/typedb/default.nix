@@ -1,4 +1,12 @@
-{ lib, stdenv, fetchFromGitHub, jdk, bazel, glibc, gcc }:
+{
+  lib,
+  stdenv,
+  fetchFromGitHub,
+  jdk,
+  bazel,
+  glibc,
+  gcc,
+}:
 stdenv.mkDerivation {
   pname = "typedb";
   version = "2.27.0";
@@ -41,8 +49,7 @@ stdenv.mkDerivation {
     description = "TypeDB database";
     homepage = "https://typedb.com";
     license = licenses.mit;
-    maintainers = with stdenv.lib.maintainers; [ ank ];
-    platforms = [ "x86_64-linux" ];
+    maintainers = with stdenv.lib.maintainers; [ank];
+    platforms = ["x86_64-linux"];
   };
 }
-

@@ -1,8 +1,6 @@
-{ ... }:
-let
- publicDnsServer = "8.8.8.8";
-in
-{
+{...}: let
+  publicDnsServer = "8.8.8.8";
+in {
   boot.kernel.sysctl = {
     "net.ipv4.conf.all.forwarding" = true;
     # "net.ipv6.conf.all.forwarding" = true;
@@ -23,12 +21,13 @@ in
     # };
     enp2s0 = {
       useDHCP = false;
-      ipv4.addresses = [{
-        address = "10.13.84.1";
-        prefixLength = 24;
-      }];
+      ipv4.addresses = [
+        {
+          address = "10.13.84.1";
+          prefixLength = 24;
+        }
+      ];
     };
-
   };
   networking.nftables.enable = true;
   networking.nftables.ruleset = ''
@@ -48,35 +47,38 @@ in
       }
     }
   '';
-  
+
   services.kea.dhcp4 = {
     enable = true;
     settings = {
       interfaces-config = {
-        interfaces = [ "enp2s0" ];
+        interfaces = ["enp2s0"];
       };
-      subnet4 = [{
-        subnet = "10.13.84.1/24";
-        interface = "enp2s0";
-        option-data = [
-          {
-            name = "domain-name-servers";
-            data = "${publicDnsServer}";
-          }
-          {
-            name = "routers";
-            data = "10.13.84.1";
-          }
-          {
-            name = "subnet-mask"; 
-            data = "255.255.255.0";
-          }
-        ];
-        pools = [{
-          pool = "10.13.84.2 - 10.13.84.254";
-        }];
-      }];
-      
+      subnet4 = [
+        {
+          subnet = "10.13.84.1/24";
+          interface = "enp2s0";
+          option-data = [
+            {
+              name = "domain-name-servers";
+              data = "${publicDnsServer}";
+            }
+            {
+              name = "routers";
+              data = "10.13.84.1";
+            }
+            {
+              name = "subnet-mask";
+              data = "255.255.255.0";
+            }
+          ];
+          pools = [
+            {
+              pool = "10.13.84.2 - 10.13.84.254";
+            }
+          ];
+        }
+      ];
     };
 
     # extraConfig = ''
@@ -88,7 +90,5 @@ in
     #     range 10.13.84.2 10.13.84.254;
     #   }
     # '';
-
   };
-
 }

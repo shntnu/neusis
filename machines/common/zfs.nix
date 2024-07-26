@@ -1,14 +1,16 @@
-{ config, ...}:
-{
+{config, ...}: {
   boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
-  boot.kernelParams = [ "nohibernate" ];
+  boot.kernelParams = ["nohibernate"];
   boot.loader.grub = {
     enable = true;
     zfsSupport = true;
     efiSupport = true;
     efiInstallAsRemovable = true;
     mirroredBoots = [
-      { devices = [ "nodev"]; path = "/boot";}
+      {
+        devices = ["nodev"];
+        path = "/boot";
+      }
     ];
   };
   services.zfs.autoScrub.enable = true;

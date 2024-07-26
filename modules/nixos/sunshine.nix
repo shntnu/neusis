@@ -1,19 +1,26 @@
-{ pkgs, config, lib, ... }:
-with lib;
-let cfg = config.modules.services.sunshine;
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
+with lib; let
+  cfg = config.modules.services.sunshine;
 in {
   options.modules.services.sunshine = {
     enable = mkEnableOption "Enable Sunshine for game streaming";
   };
 
   config = mkIf cfg.enable {
-    warnings = [''
-      You have enabled sunshine which needs to disable the firewall and add a
-      wrapper to run sunshine as root. This is a security risk and you should 
-      only enable this if you know what you are doing.
-    ''];
+    warnings = [
+      ''
+        You have enabled sunshine which needs to disable the firewall and add a
+        wrapper to run sunshine as root. This is a security risk and you should
+        only enable this if you know what you are doing.
+      ''
+    ];
 
-    boot = { kernelModules = [ "uinput" ]; };
+    boot = {kernelModules = ["uinput"];};
     services = {
       udev.extraRules = ''
         KERNEL=="uinput", GROUP="input", MODE="0660" OPTIONS+="static_node=uinput"
@@ -29,8 +36,8 @@ in {
 
     systemd.user.services.sunshine = {
       description = "sunshine";
-      wantedBy = [ "graphical-session.target" ];
-      serviceConfig = { ExecStart = "${config.security.wrapperDir}/sunshine"; };
+      wantedBy = ["graphical-session.target"];
+      serviceConfig = {ExecStart = "${config.security.wrapperDir}/sunshine";};
     };
 
     ######################### Avahi #########################

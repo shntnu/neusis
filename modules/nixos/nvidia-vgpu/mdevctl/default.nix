@@ -1,11 +1,11 @@
-{ lib
-, rustPlatform
-, fetchCrate
-, docutils
-, installShellFiles
-, bash
+{
+  lib,
+  rustPlatform,
+  fetchCrate,
+  docutils,
+  installShellFiles,
+  bash,
 }:
-
 rustPlatform.buildRustPackage rec {
   pname = "mdevctl";
   version = "1.2.0";
@@ -44,12 +44,12 @@ rustPlatform.buildRustPackage rec {
     homepage = "https://github.com/mdevctl/mdevctl";
     description = "A mediated device management utility for linux";
     license = licenses.lgpl21Only;
-    maintainers = with maintainers; [ edwtjo ];
+    maintainers = with maintainers; [edwtjo];
     platforms = platforms.linux;
   };
 }
-
-/* { lib, stdenv, fetchFromGitHub, makeWrapper, bash, getopt, jq }:
+/*
+   { lib, stdenv, fetchFromGitHub, makeWrapper, bash, getopt, jq }:
 
 stdenv.mkDerivation rec {
   name = "mdevctl";
@@ -95,3 +95,4 @@ stdenv.mkDerivation rec {
   };
 }
 */
+

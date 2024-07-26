@@ -1,5 +1,4 @@
-{pkgs, ...}:
-{
+{pkgs, ...}: {
   environment.systemPackages = with pkgs; [
     looking-glass-client
     scream
@@ -7,9 +6,7 @@
     docker-compose
   ];
 
-
   virtualisation = {
-
     libvirtd = {
       enable = true;
       qemu.ovmf.enable = true;
@@ -22,7 +19,6 @@
     oci-containers.backend = "podman";
     podman = {
       enable = true;
-      enableNvidia = true;
       dockerCompat = true;
       defaultNetwork.settings.dns_enabled = true;
     };
@@ -34,10 +30,9 @@
     fi
   '';
 
-
   # boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.kernelParams = [ "amd_iommu=on"];
-  boot.kernelModules = [ "kvm-amd" ];
+  boot.kernelParams = ["amd_iommu=on"];
+  boot.kernelModules = ["kvm-amd"];
 
   # boot.initrd.availableKernelModules = [ "nvidia" "vfio-pci" ];
   # boot.initrd.preDeviceCommands = ''
@@ -52,5 +47,4 @@
     "f /dev/shm/looking-glass 0660 ank qemu-libvirtd -"
     "f /dev/shm/scream 0660 ank qemu-libvirtd -"
   ];
-
 }
