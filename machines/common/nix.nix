@@ -13,7 +13,7 @@
     };
 
     # Deduplicate and optimize nix store
-    auto-optimise-store = true;
+    optimise.automatic = true;
 
     # Turn this on to make command line easier
     extraOptions = ''
