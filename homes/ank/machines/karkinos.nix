@@ -1,6 +1,7 @@
 {
   pkgs,
   config,
+  inputs,
   ...
 }: {
   imports = [
@@ -8,7 +9,7 @@
     ../../common/home_manager.nix
     ../../common/dev
     (import ../../common/dev/editors.nix {
-      inherit pkgs config;
+      inherit pkgs config inputs;
       enableNvim = true;
       enableAstro = true;
     })

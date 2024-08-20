@@ -54,6 +54,21 @@
         "type": "github"
       }
     },
+    "astroank": {
+      "flake": false,
+      "locked": {
+        "dirtyRev": "db1ec3237d66ccd396a189f9f7d63616c1f70753-dirty",
+        "dirtyShortRev": "db1ec32-dirty",
+        "lastModified": 1723716308,
+        "narHash": "sha256-SZk7CimJeWdIv66Ld4RvYSkVG0sMin6r7BEljO4TjAw=",
+        "type": "git",
+        "url": "file:homes/common/astroank"
+      },
+      "original": {
+        "type": "git",
+        "url": "file:homes/common/astroank"
+      }
+    },
     "base16-schemes": {
       "flake": false,
       "locked": {
@@ -907,6 +922,7 @@
     "root": {
       "inputs": {
         "agenix": "agenix",
+        "astroank": "astroank",
         "darwin": "darwin_2",
         "disko": "disko",
         "firefox-addons": "firefox-addons",

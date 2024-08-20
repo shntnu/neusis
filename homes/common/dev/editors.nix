@@ -1,16 +1,12 @@
 {
   pkgs,
   config,
+  inputs,
   enableNvim ? false,
   enableAstro ? false,
   ...
 }: let
-  astroank_src = pkgs.fetchFromGitHub {
-    owner = "leoank";
-    repo = "astroank";
-    rev = "b01cd5e";
-    sha256 = "sha256-EHubGZZPbAN40m1oNcQaIWdjkS8qmK5H5ve3BNX9OvA=";
-  };
+  astroank_src = inputs.astroank;
 in {
   home.packages = with pkgs; [
     xclip
@@ -59,6 +55,8 @@ in {
       extraPackages = with pkgs; [
         # ... other packages
         imagemagick # for image rendering
+        zlib
+        sqlite
       ];
       extraLuaPackages = ps: [
         # ... other lua packages

@@ -7,6 +7,12 @@
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-master.url = "github:nixos/nixpkgs/master";
 
+    # submodule
+    astroank = {
+      url = "git+file:homes/common/astroank";
+      flake = false;
+    };
+
     # darwin inputs
     darwin = {
       url = "github:LnL7/nix-darwin/master";
@@ -97,6 +103,12 @@
       url = "github:yorukot/superfile";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
+
+    # nvidia-vgpu
+    # nixos-nvidia-vgpu = {
+    #   url = "github:leoank/nixos-nvidia-vgpu/535.129";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
   };
 
   outputs = {
