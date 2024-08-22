@@ -20,11 +20,34 @@
   };
 
   # Adds pkgs.stable == inputs.nixpkgs-stable.legacyPackages.${pkgs.system}
-  unstable = final: _: {
-    unstable = inputs.nixpkgs-unstable.legacyPackages.${final.system};
+  unstable = final: _: let
+    upkgs  = import inputs.nixpkgs-unstable {
+      system = final.system;
+      config.allowUnfree = true;
+      config.cudaSupport = true;
+    };
+  in {
+    unstable = upkgs;
   };
 
-  master = final: _: {
-    master = inputs.nixpkgs-master.legacyPackages.${final.system};
+  ank = final: _: let
+    apkgs  = import inputs.nixpkgs-ank {
+      system = final.system;
+      config.allowUnfree = true;
+      config.cudaSupport = true;
+    };
+  in {
+    ank = apkgs;
   };
+
+  master = final: _: let
+    mpkgs  = import inputs.nixpkgs-master {
+      system = final.system;
+      config.allowUnfree = true;
+      config.cudaSupport = true;
+    };
+  in {
+    master = mpkgs;
+  };
+
 }

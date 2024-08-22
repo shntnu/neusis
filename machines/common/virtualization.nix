@@ -16,9 +16,15 @@
     };
 
     containers.enable = true;
-    oci-containers.backend = "podman";
+    oci-containers = {
+      backend = "podman";
+      containers = {
+        open-webui = import ./open-webui-container.nix;
+      };
+    };
     podman = {
       enable = true;
+      enableNvidia = true;
       dockerCompat = true;
       defaultNetwork.settings.dns_enabled = true;
     };

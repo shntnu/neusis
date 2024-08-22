@@ -13,19 +13,23 @@
     # If you want to use modules from other flakes (such as nixos-hardware):
     inputs.hardware.nixosModules.common-pc-ssd
     inputs.home-manager.nixosModule
-    inputs.nix-ld.nixosModules.nix-ld
+    # inputs.nix-ld.nixosModules.nix-ld
     outputs.nixosModules.sunshine
-    # outputs.nixosModules.nvidia-vgpu
+    # inputs.nixos-nvidia-vgpu.nixosModules.nvidia-vgpu
     # {
+    #   # boot.kernelPackages = pkgs.linuxPackages_6_1;
     #   hardware.nvidia.vgpu = {
+    #     pinKernel = true;
+    #     copyVGPUProfiles = {
+    #       "26B1:0000"="26B1:170B";
+    #     };
     #     enable = true;
-    #     grid_driver_zip.sha256 = "sha256-tFgDf7ZSIZRkvImO+9YglrLimGJMZ/fz25gjUT0TfDo=";
     #     fastapi-dls = {
     #       enable = true;
     #     };
-    #
     #   };
     # }
+
     # Import your generated (nixos-generate-config) hardware configuration
     ./hardware-configuration.nix
 
@@ -50,7 +54,7 @@
   ];
 
   # FHS
-  programs.nix-ld.dev.enable = true;
+  programs.nix-ld.enable = true;
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 
@@ -61,6 +65,17 @@
 
   # Enable sunshine
   modules.services.sunshine.enable = true;
+
+  # enable ollama
+  services.ollama = {
+    enable = true;
+    package = (pkgs.unstable.ollama.override {
+      cudaPackages = pkgs.ank.cudaPackages_12_4;
+    });
+    acceleration = "cuda";
+    models = "/datastore/ollama";
+    writablePaths = ["/datastore/ollama"];
+  };
 
   nixpkgs = {
     # You can add overlays here
@@ -102,6 +117,9 @@
     vim
     dive
     podman-tui
+    (pkgs.unstable.ollama.override {
+      cudaPackages = pkgs.ank.cudaPackages_12_4;
+    })
     docker-compose
     gnomeExtensions.forge
     gnomeExtensions.blur-my-shell
@@ -129,6 +147,7 @@
     openssh.authorizedKeys.keyFiles = [
       ../../homes/ank/id_rsa.pub
       ../../homes/ank/id_ed25519.pub
+      ../../homes/ank/id2_ed25519.pub
     ];
   };
 

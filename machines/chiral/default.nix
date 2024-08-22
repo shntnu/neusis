@@ -13,7 +13,7 @@
     # If you want to use modules from other flakes (such as nixos-hardware):
     inputs.hardware.nixosModules.common-pc-ssd
     inputs.home-manager.nixosModule
-    inputs.nix-ld.nixosModules.nix-ld
+    # inputs.nix-ld.nixosModules.nix-ld
     outputs.nixosModules.sunshine
     inputs.agenix.nixosModules.default
     {
@@ -37,7 +37,7 @@
   ];
 
   # FHS
-  programs.nix-ld.dev.enable = true;
+  programs.nix-ld.enable = true;
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 
