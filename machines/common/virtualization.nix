@@ -6,6 +6,10 @@
     docker-compose
   ];
 
+  programs.singularity = {
+    enable = true;
+    package = pkgs.apptainer;
+  };
   virtualisation = {
     libvirtd = {
       enable = true;

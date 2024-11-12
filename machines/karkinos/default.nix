@@ -51,6 +51,7 @@
     ../common/ssh.nix
     ../common/us_eng.nix
     ../common/router.nix
+    ../common/nosleep.nix
   ];
 
   # FHS
@@ -75,6 +76,7 @@
     acceleration = "cuda";
     models = "/datastore/ollama";
     writablePaths = ["/datastore/ollama"];
+    listenAddress = "0.0.0.0:11434";
   };
 
   nixpkgs = {
@@ -151,6 +153,17 @@
     ];
   };
 
+  users.users.niv = {
+    shell = pkgs.zsh;
+    isNormalUser = true;
+    # passwordFile = config.age.secrets.karkinos_pass.path;
+    description = "Niveditha";
+    extraGroups = ["networkmanager" "wheel" "libvirtd" "qemu-libvirtd" "input"];
+    openssh.authorizedKeys.keyFiles = [
+      ../../homes/niv/id_ed25519.pub
+    ];
+  };
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.jarevalo = {
     shell = pkgs.zsh;
@@ -219,6 +232,12 @@
     imports = [
       inputs.agenix.homeManagerModules.default
       ../../homes/ank/machines/karkinos.nix
+    ];
+  };
+  home-manager.users.niv = {
+    imports = [
+      inputs.agenix.homeManagerModules.default
+      ../../homes/niv/machines/karkinos.nix
     ];
   };
   home-manager.users.jarevalo = {
