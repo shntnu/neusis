@@ -27,9 +27,13 @@
     ../common/us_eng.nix
   ];
 
+  # Hardware config
+  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+  hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+
   # WSL Config
   wsl.enable = true;
-  wsl.defaultUser = "nixos";
+  wsl.defaultUser = "ank";
   wsl.useWindowsDriver = true;
 
   # FHS
@@ -41,6 +45,7 @@
   # NVidia and cuda support
 
   hardware = {
+    graphics.enable = true;
     # Enable OpenGL
     opengl = {
       enable = true;
@@ -57,35 +62,17 @@
 
   # Nvidia and Cuda support
   services.xserver.videoDrivers = ["nvidia"];
-  nixpkgs.config.cudaSupport = true;
 
   nixpkgs = {
     # You can add overlays here
     overlays = builtins.attrValues outputs.overlays;
     # Configure your nixpkgs instance
     config = {
-      sunshine = {
-        cudaSupport = true;
-      };
+      cudaSupport = true;
       # Disable if you don't want unfree packages
       allowUnfree = true;
     };
   };
-
-  # This will add each flake input as a registry
-  # To make nix3 commands consistent with your flake
-  nix.registry = (lib.mapAttrs (_: flake: {inherit flake;})) ((lib.filterAttrs (_: lib.isType "flake")) inputs);
-
-  # This will additionally add your inputs to the system's legacy channels
-  # Making legacy nix commands consistent as well, awesome!
-  nix.nixPath = ["/etc/nix/path"];
-  environment.etc =
-    lib.mapAttrs'
-    (name: value: {
-      name = "nix/path/${name}";
-      value.source = value.flake;
-    })
-    config.nix.registry;
 
   nix.settings = {
     # Enable flakes and new 'nix' command

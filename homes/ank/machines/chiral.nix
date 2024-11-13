@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  inputs,
   ...
 }: {
   imports = [
@@ -8,7 +9,7 @@
     ../../common/home_manager.nix
     ../../common/dev
     (import ../../common/dev/editors.nix {
-      inherit pkgs config;
+      inherit pkgs config inputs;
       enableNvim = true;
       enableAstro = true;
     })
@@ -20,4 +21,12 @@
     ../../common/secrets
     ../../common/gpu_tools.nix
   ];
+
+  programs.zsh.initExtra = ''
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/wsl/lib
+  '';
+
+  programs.git.extraConfig = {
+    safe.directory = ''*'';
+  };
 }
