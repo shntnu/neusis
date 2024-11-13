@@ -14,6 +14,9 @@
       flake = false;
     };
 
+    # wsl
+    nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
+
     # darwin inputs
     darwin = {
       url = "github:LnL7/nix-darwin/master";

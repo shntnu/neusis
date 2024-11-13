@@ -10,43 +10,54 @@
 }: {
   # You can import other NixOS modules here
   imports = [
+    # include NixOS-WSL modules
+    inputs.nixos-wsl.nixosModules.default
     # If you want to use modules from other flakes (such as nixos-hardware):
-    inputs.hardware.nixosModules.common-pc-ssd
     inputs.home-manager.nixosModule
     # inputs.nix-ld.nixosModules.nix-ld
-    outputs.nixosModules.sunshine
     inputs.agenix.nixosModules.default
     {
       age.identityPaths = ["/home/ank/.ssh/id_ed25519"];
     }
-    # Import your generated (nixos-generate-config) hardware configuration
-    ./hardware-configuration.nix
 
     # You can also split up your configuration and import pieces of it here:
-    ../common/bootloader.nix
-    ../common/networking.nix
-    ../common/printing.nix
-    ../common/gpu/nvidia.nix
     ../common/substituters.nix
-    ../common/pipewire.nix
-    ../common/virtualization.nix
     ../common/input_device.nix
     ../common/ssh.nix
     ../common/us_eng.nix
-    ../common/tailscale.nix
   ];
 
+  # WSL Config
+  wsl.enable = true;
+  wsl.defaultUser = "nixos";
+  wsl.useWindowsDriver = true;
+
   # FHS
-  programs.nix-ld.enable = true;
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
+  programs.nix-ld = {
+    enable = true;
+    package = pkgs.nix-ld-rs; # only for NixOS 24.05
+};
 
-  # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
+  # NVidia and cuda support
 
-  # Enable sunshine
-  modules.services.sunshine.enable = true;
+  hardware = {
+    # Enable OpenGL
+    opengl = {
+      enable = true;
+      driSupport = true;
+      driSupport32Bit = true;
+      extraPackages = with pkgs; [
+        vaapiVdpau
+      ];
+    };
+
+    # Enable nvidia container
+    nvidia-container-toolkit.enable = true;
+  };
+
+  # Nvidia and Cuda support
+  services.xserver.videoDrivers = ["nvidia"];
+  nixpkgs.config.cudaSupport = true;
 
   nixpkgs = {
     # You can add overlays here
@@ -89,19 +100,14 @@
     dive
     podman-tui
     docker-compose
-    gnomeExtensions.forge
-    gnomeExtensions.blur-my-shell
-    gnomeExtensions.burn-my-windows
-    gnomeExtensions.appindicator
     inputs.agenix.packages.x86_64-linux.default
   ];
   environment.shells = [pkgs.zsh];
   programs.zsh.enable = true;
 
   # Netowrking
-  networking.hostName = "gpfe4-674";
+  networking.hostName = "chiral";
   # networking.bridges.br0.interfaces = [ "enp2s0" "wlp131s0" ];
-  # services.tailscale.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.ank = {
@@ -123,7 +129,7 @@
   home-manager.users.ank = {
     imports = [
       inputs.agenix.homeManagerModules.default
-      ../../homes/ank/machines/karkinos.nix
+      ../../homes/ank/machines/chiral.nix
     ];
   };
 

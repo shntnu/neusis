@@ -18,9 +18,6 @@
       id_ed25519_pub = builtins.readFile ../id_ed25519.pub;
     })
     ../../common/secrets
-    ../../common/browsers
-    ../../common/network
-    ../../common/misc
     ../../common/gpu_tools.nix
   ];
 }
