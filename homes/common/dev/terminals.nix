@@ -5,6 +5,7 @@
 }: {
   home.packages = [
     inputs.superfile.packages.${pkgs.system}.default
+    pkgs.wezterm
   ];
   programs.kitty = {
     enable = true;
