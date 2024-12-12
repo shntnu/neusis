@@ -32,15 +32,19 @@
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
   # WSL Config
-  wsl.enable = true;
-  wsl.defaultUser = "ank";
-  wsl.useWindowsDriver = true;
+  wsl = {
+    enable = true;
+    defaultUser = "ank";
+    useWindowsDriver = true;
+    docker-desktop = {enable = true;};
+    nativeSystemd = true;
+  };
 
   # FHS
   programs.nix-ld = {
     enable = true;
     package = pkgs.nix-ld-rs; # only for NixOS 24.05
-};
+  };
 
   # NVidia and cuda support
 
@@ -86,9 +90,9 @@
     vim
     dive
     podman-tui
-    docker-compose
     inputs.agenix.packages.x86_64-linux.default
   ];
+
   environment.shells = [pkgs.zsh];
   programs.zsh.enable = true;
 

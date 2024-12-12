@@ -101,21 +101,26 @@ in {
 
     shellAliases = {
       ll = "ls -l";
-      update = "sudo nixos-rebuild switch --flake .#karkinos -v";
       n = "nvim";
       ns = "nix search nixpkgs";
     };
     initExtra = ''
+      function update() {
+        sudo nixos-rebuild switch --flake .#$1 -v
+      }
+
       function nz() {
-        $(zoxide query $1) && nvim .
+        cd $(zoxide query $1) && nvim
       }
 
       function nx() {
-        nix-shell -p $1
+        nix-shell -p $@
       }
 
       bindkey '^I' complete-word
       bindkey '^[[Z' autosuggest-accept
+      export EDITOR=nvim
+      export TERM=xterm
     '';
     history.size = 10000;
     history.path = "${config.xdg.dataHome}/zsh/history";
