@@ -57,11 +57,11 @@
     "astroank": {
       "flake": false,
       "locked": {
-        "lastModified": 1734053592,
-        "narHash": "sha256-4soxqs7U9NV2IOE62PyxkCQWCzM1CKbFij3lITI3ZOQ=",
+        "lastModified": 1734053987,
+        "narHash": "sha256-UC4xuj2k8Z/Q5wY8YAM1crtKiS6di9LhB7to/LGqbi4=",
         "ref": "refs/heads/migration/v4",
-        "rev": "61aeb89ba711ce965ba0f7756b724794c0c2d8d0",
-        "revCount": 29,
+        "rev": "56bb74524a0e291def29c480b574547dd038a007",
+        "revCount": 30,
         "type": "git",
         "url": "file:homes/common/astroank"
       },
