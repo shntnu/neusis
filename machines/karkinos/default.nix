@@ -52,6 +52,7 @@
     ../common/us_eng.nix
     ../common/router.nix
     ../common/nosleep.nix
+    ../common/nix.nix
   ];
 
   # FHS
@@ -70,13 +71,11 @@
   # enable ollama
   services.ollama = {
     enable = true;
-    package = (pkgs.unstable.ollama.override {
-      cudaPackages = pkgs.ank.cudaPackages_12_4;
-    });
+    package = pkgs.unstable.ollama;
     acceleration = "cuda";
     models = "/datastore/ollama";
-    writablePaths = ["/datastore/ollama"];
-    listenAddress = "0.0.0.0:11434";
+    host = "0.0.0.0";
+    port = 11434;
   };
 
   nixpkgs = {
@@ -107,21 +106,12 @@
     })
     config.nix.registry;
 
-  nix.settings = {
-    # Enable flakes and new 'nix' command
-    experimental-features = "nix-command flakes";
-    # Deduplicate and optimize nix store
-    auto-optimise-store = true;
-  };
-
   # Default system wide packages
   environment.systemPackages = with pkgs; [
     vim
     dive
     podman-tui
-    (pkgs.unstable.ollama.override {
-      cudaPackages = pkgs.ank.cudaPackages_12_4;
-    })
+    unstable.ollama
     docker-compose
     gnomeExtensions.forge
     gnomeExtensions.blur-my-shell
@@ -272,5 +262,5 @@
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
-  system.stateVersion = "24.05";
+  system.stateVersion = "24.11";
 }

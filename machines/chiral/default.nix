@@ -25,6 +25,7 @@
     ../common/input_device.nix
     ../common/ssh.nix
     ../common/us_eng.nix
+    ../common/nix.nix
   ];
 
   # Hardware config
@@ -43,7 +44,7 @@
   # FHS
   programs.nix-ld = {
     enable = true;
-    package = pkgs.nix-ld-rs; # only for NixOS 24.05
+    package = pkgs.nix-ld-rs;
   };
 
   # NVidia and cuda support
@@ -53,7 +54,6 @@
     # Enable OpenGL
     opengl = {
       enable = true;
-      driSupport = true;
       driSupport32Bit = true;
       extraPackages = with pkgs; [
         vaapiVdpau
@@ -125,5 +125,5 @@
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
-  system.stateVersion = "24.05";
+  system.stateVersion = "24.11";
 }

@@ -30,16 +30,6 @@
     unstable = upkgs;
   };
 
-  ank = final: _: let
-    apkgs  = import inputs.nixpkgs-ank {
-      system = final.system;
-      config.allowUnfree = true;
-      config.cudaSupport = true;
-    };
-  in {
-    ank = apkgs;
-  };
-
   master = final: _: let
     mpkgs  = import inputs.nixpkgs-master {
       system = final.system;
