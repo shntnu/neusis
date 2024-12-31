@@ -4,12 +4,16 @@
   inputs,
   outputs,
   ...
-}: {
+}:
+{
   imports = [
     inputs.home-manager.darwinModules.home-manager
     inputs.nix-homebrew.darwinModules.nix-homebrew
     ../common/darwin_home_manager.nix
-    (import ../common/nix-homebrew.nix { inherit inputs; user = "kumarank";})
+    (import ../common/nix-homebrew.nix {
+      inherit inputs;
+      user = "kumarank";
+    })
     ../common/nix.nix
     ../common/substituters.nix
   ];
@@ -23,6 +27,10 @@
       # Disable if you don't want unfree packages
       allowUnfree = true;
     };
+  };
+
+  nix.settings = {
+    trusted-users = [ "kumarank" ];
   };
 
   # Create users
@@ -46,8 +54,10 @@
   homebrew = {
     enable = true;
     # brews = ["input-leap"]; # Example of brew
-    taps = map (key: builtins.replaceStrings ["homebrew-"] [""] key) (builtins.attrNames config.nix-homebrew.taps);
-    casks = pkgs.callPackage ../common/casks.nix {};
+    taps = map (key: builtins.replaceStrings [ "homebrew-" ] [ "" ] key) (
+      builtins.attrNames config.nix-homebrew.taps
+    );
+    casks = pkgs.callPackage ../common/casks.nix { };
     onActivation = {
       cleanup = "uninstall";
       autoUpdate = true;
@@ -55,19 +65,18 @@
     };
   };
 
-
-    # Configure home manager
-    home-manager = {
-      useGlobalPkgs = true;
-      # Look into why enabling this break shell for starship
-      # useUserPackages = true;
-      extraSpecialArgs = {inherit inputs outputs;};
-      users.kumarank = {
-        imports = [
-          ../../homes/ank/machines/darwin001.nix
-        ];
-      };
+  # Configure home manager
+  home-manager = {
+    useGlobalPkgs = true;
+    # Look into why enabling this break shell for starship
+    # useUserPackages = true;
+    extraSpecialArgs = { inherit inputs outputs; };
+    users.kumarank = {
+      imports = [
+        ../../homes/ank/machines/darwin001.nix
+      ];
     };
+  };
 
   # sudo with touch id
   security.pam.enableSudoTouchIdAuth = true;
