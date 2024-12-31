@@ -7,7 +7,6 @@
     packages = with pkgs; [
       duckdb
       jq
-      sioyek
     ];
   };
 }
