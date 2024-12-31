@@ -1,6 +1,6 @@
 { pkgs, ... }:
 let
-  darwin_gc =
+  gc_freq =
     if pkgs.stdenv.isDarwin then
       {
         interval = {
@@ -10,16 +10,17 @@ let
         };
       }
     else
-      { };
+      {
+        dates = "weekly";
+      };
 in
 {
   nix = {
     package = pkgs.nix;
     gc = {
       automatic = true;
-      dates = "weekly";
       options = "--delete-older-than 15d";
-    } // darwin_gc;
+    } // gc_freq;
 
     # Deduplicate and optimize nix store
     optimise.automatic = true;
