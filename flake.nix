@@ -9,7 +9,7 @@
 
     # submodule
     astroank = {
-      url = "git+file:homes/common/astroank";
+      url = "github:leoank/astroank";
       flake = false;
     };
 
