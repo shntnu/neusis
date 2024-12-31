@@ -193,7 +193,7 @@
 
       packages = forEachSystem (pkgs: import ./pkgs { inherit pkgs inputs; });
       devShells = forEachSystem (pkgs: import ./shell.nix { inherit pkgs inputs; });
-      formatter = forEachSystem (pkgs: pkgs.nix-fmt);
+      formatter = forEachSystem (pkgs: pkgs.nixfmt-rfc-style);
 
       # NixOS configuration entrypoint
       # Available through 'nixos-rebuild --flake .#your-hostname'
