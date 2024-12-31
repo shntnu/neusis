@@ -3,15 +3,16 @@
   pkgs,
   inputs,
   ...
-}: {
+}:
+{
   imports = [
     ../home.nix
     ../../common/home_manager.nix
     ../../common/dev
     (import ../../common/dev/editors.nix {
       inherit pkgs config inputs;
-      enableNvim = true;
-      enableAstro = true;
+      enableNvim = false;
+      enableAstro = false;
     })
     (import ../../common/dev/git.nix {
       username = "Ankur Kumar";
@@ -20,6 +21,8 @@
     })
     ../../common/secrets
     ../../common/gpu_tools.nix
+    ../../common/dev/kalam.nix
+    ../../common/themes
   ];
 
   programs.zsh.initExtra = ''
@@ -27,6 +30,6 @@
   '';
 
   programs.git.extraConfig = {
-    safe.directory = ''*'';
+    safe.directory = "*";
   };
 }

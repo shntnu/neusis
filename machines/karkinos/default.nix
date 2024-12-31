@@ -13,7 +13,6 @@
     # If you want to use modules from other flakes (such as nixos-hardware):
     inputs.hardware.nixosModules.common-pc-ssd
     inputs.home-manager.nixosModule
-    # inputs.nix-ld.nixosModules.nix-ld
     outputs.nixosModules.sunshine
     # inputs.nixos-nvidia-vgpu.nixosModules.nvidia-vgpu
     # {

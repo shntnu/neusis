@@ -13,6 +13,70 @@
       flake = false;
     };
 
+    #------------------------------------------------------------
+    # nixvim
+    nixvim = {
+      url = "github:nix-community/nixvim/nixos-24.11";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    stylix.url = "github:danth/stylix";
+
+    tokyodark = {
+      url = "github:tiagovla/tokyodark.nvim";
+      flake = false;
+    };
+
+    typr = {
+      url = "github:nvzone/typr";
+      flake = false;
+    };
+
+    calendar = {
+      url = "github:itchyny/calendar.vim";
+      flake = false;
+    };
+
+    buffer-manager = {
+      url = "github:j-morano/buffer_manager.nvim";
+      flake = false;
+    };
+
+    minty = {
+      url = "github:NvChad/minty";
+      flake = false;
+    };
+
+    volt = {
+      url = "github:NvChad/volt";
+      flake = false;
+    };
+
+    nvim-window-picker = {
+      url = "github:s1n7ax/nvim-window-picker";
+      flake = false;
+    };
+
+    md-pdf = {
+      url = "github:arminveres/md-pdf.nvim";
+      flake = false;
+    };
+
+    windows = {
+      url = "github:anuvyklack/windows.nvim";
+      flake = false;
+    };
+    windows-mc = {
+      url = "github:anuvyklack/middleclass";
+      flake = false;
+    };
+    windows-a = {
+      url = "github:anuvyklack/animation.nvim";
+      flake = false;
+    };
+
+    #------------------------------------------------------------
+
     # wsl
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
 
@@ -76,12 +140,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nix-ld.url = "github:Mic92/nix-ld";
-    nix-ld.inputs.nixpkgs.follows = "nixpkgs";
-
-    # nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
-    # nixpkgs-wayland.inputs.nixpkgs.follows = "nixpkgs";
-
     hyprland = {
       url = "github:hyprwm/hyprland";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -97,94 +155,90 @@
       inputs.hyprland.follows = "hyprland";
     };
 
-    firefox-addons = {
-      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     superfile = {
       url = "github:yorukot/superfile";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
-    # nvidia-vgpu
-    # nixos-nvidia-vgpu = {
-    #   url = "github:leoank/nixos-nvidia-vgpu/535.129";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    home-manager,
-    systems,
-    flake-utils,
-    ...
-  } @ inputs: let
-    inherit (self) outputs;
-    lib = nixpkgs.lib // home-manager.lib;
-    forEachSystem = f: lib.genAttrs (import systems) (system: f pkgsFor.${system});
-    pkgsFor = lib.genAttrs (import systems) (
-      system:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      home-manager,
+      systems,
+      ...
+    }@inputs:
+    let
+      inherit (self) outputs;
+      lib = nixpkgs.lib // home-manager.lib;
+      forEachSystem = f: lib.genAttrs (import systems) (system: f pkgsFor.${system});
+      pkgsFor = lib.genAttrs (import systems) (
+        system:
         import nixpkgs {
           inherit system;
           config.allowUnfree = true;
         }
-    );
-  in {
-    inherit lib;
+      );
+    in
+    {
+      inherit lib;
 
-    # custom moudles
-    nixosModules = import ./modules/nixos {inherit inputs outputs;};
-    homeManagerModules = import ./modules/home-manager;
+      # custom modules
+      nixosModules = import ./modules/nixos { inherit inputs outputs; };
+      homeManagerModules = import ./modules/home-manager;
 
-    overlays = import ./overlays {inherit inputs outputs;};
+      overlays = import ./overlays { inherit inputs outputs; };
 
-    # packages = forEachSystem (pkgs: import ./pkgs {inherit pkgs;});
-    devShells = forEachSystem (pkgs: import ./shell.nix {inherit pkgs inputs;});
-    formatter = forEachSystem (pkgs: pkgs.alejandra);
+      packages = forEachSystem (pkgs: import ./pkgs { inherit pkgs inputs; });
+      devShells = forEachSystem (pkgs: import ./shell.nix { inherit pkgs inputs; });
+      formatter = forEachSystem (pkgs: pkgs.nix-fmt);
 
-    # NixOS configuration entrypoint
-    # Available through 'nixos-rebuild --flake .#your-hostname'
-    nixosConfigurations = {
-      karkinos = lib.nixosSystem {
-        modules = [./machines/karkinos];
-        specialArgs = {inherit inputs outputs;};
+      # NixOS configuration entrypoint
+      # Available through 'nixos-rebuild --flake .#your-hostname'
+      nixosConfigurations = {
+        karkinos = lib.nixosSystem {
+          modules = [ ./machines/karkinos ];
+          specialArgs = { inherit inputs outputs; };
+        };
+
+        chiral = lib.nixosSystem {
+          modules = [ ./machines/chiral ];
+          specialArgs = { inherit inputs outputs; };
+        };
       };
 
-      chiral = lib.nixosSystem {
-        modules = [./machines/chiral];
-        specialArgs = {inherit inputs outputs;};
+      # Darwin configuration entrypoint
+      # Available through 'darwin-rebuild --flake .#your-hostname'
+      darwinConfigurations = {
+        darwin001 = inputs.darwin.lib.darwinSystem {
+          system = "aarch64-darwin";
+          modules = [ ./machines/darwin001 ];
+          specialArgs = { inherit inputs outputs; };
+        };
+      };
+
+      # Standalone home-manager configuration entrypoint
+      # Available through 'home-manager switch --flake .#your-username@your-hostname'
+      homeConfigurations = {
+        "ank@karkinos" = lib.homeManagerConfiguration {
+          pkgs = pkgsFor.x86_64-linux;
+          extraSpecialArgs = { inherit inputs outputs; };
+          # > Our main home-manager configuration file <
+          modules = [ ./homes/ank/machines/karkinos.nix ];
+        };
+
+        "ank@chiral" = lib.homeManagerConfiguration {
+          pkgs = pkgsFor.x86_64-linux;
+          extraSpecialArgs = { inherit inputs outputs; };
+          # > Our main home-manager configuration file <
+          modules = [
+            inputs.agenix.homeManagerModules.default
+            inputs.stylix.homeManagerModules.stylix
+            ./homes/ank/machines/chiral.nix
+          ];
+        };
       };
     };
-
-    # Darwin configuration entrypoint
-    # Available through 'darwin-rebuild --flake .#your-hostname'
-    darwinConfigurations = {
-      darwin001 = inputs.darwin.lib.darwinSystem {
-        system = "aarch64-darwin";
-        modules = [./machines/darwin001];
-        specialArgs = {inherit inputs outputs;};
-      };
-    };
-
-    # Standalone home-manager configuration entrypoint
-    # Available through 'home-manager --flake .#your-username@your-hostname'
-    homeConfigurations = {
-      "ank@karkinos" = lib.homeManagerConfiguration {
-        pkgs = pkgsFor.x86_64-linux;
-        extraSpecialArgs = {inherit inputs outputs;};
-        # > Our main home-manager configuration file <
-        modules = [./homes/ank/karkinos.nix];
-      };
-
-      "ank@chiral" = lib.homeManagerConfiguration {
-        pkgs = pkgsFor.x86_64-linux;
-        extraSpecialArgs = {inherit inputs outputs;};
-        # > Our main home-manager configuration file <
-        modules = [./homes/ank/chiral.nix];
-      };
-    };
-  };
 }

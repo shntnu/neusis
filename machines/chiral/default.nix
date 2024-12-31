@@ -14,7 +14,6 @@
     inputs.nixos-wsl.nixosModules.default
     # If you want to use modules from other flakes (such as nixos-hardware):
     inputs.home-manager.nixosModule
-    # inputs.nix-ld.nixosModules.nix-ld
     inputs.agenix.nixosModules.default
     {
       age.identityPaths = ["/home/ank/.ssh/id_ed25519"];
@@ -50,6 +49,8 @@
   # NVidia and cuda support
 
   hardware = {
+    # nvidia prop drivers
+    nvidia.open = false;
     graphics.enable = true;
     # Enable OpenGL
     opengl = {
@@ -91,6 +92,7 @@
     dive
     podman-tui
     inputs.agenix.packages.x86_64-linux.default
+    home-manager
   ];
 
   environment.shells = [pkgs.zsh];
@@ -120,6 +122,8 @@
   home-manager.users.ank = {
     imports = [
       inputs.agenix.homeManagerModules.default
+      # include nixvim module
+      inputs.stylix.homeManagerModules.stylix
       ../../homes/ank/machines/chiral.nix
     ];
   };

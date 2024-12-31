@@ -2,16 +2,31 @@
   inputs,
   pkgs,
   ...
-}: {
+}:
+{
   home.packages = [
     inputs.superfile.packages.${pkgs.system}.default
     pkgs.wezterm
   ];
+
   programs.kitty = {
     enable = true;
-    theme = "Gruvbox Dark Hard";
+  };
+
+  programs.zellij = {
+    enable = true;
     settings = {
-      font_family = "MesloLGS Nerd Font Mono";
+      theme = "gruvbox-dark";
+      simpified_ui = true;
+      default_mode = "locked";
     };
+    enableZshIntegration = true;
+  };
+  xdg.configFile = {
+
+    # wezeterm config file
+    "wezterm/wezterm.lua".source = ./wezterm.lua;
+    "zellij/config.kdl".source = ./zellij.kdl;
+    "zellij/layouts/default.kdl".source = ./zellij_layout.kdl;
   };
 }

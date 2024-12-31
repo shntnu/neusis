@@ -2,14 +2,16 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   imports = [
     ../../common/home_manager.nix
     ../../common/dev
+    ../../common/dev/kalam.nix
     (import ../../common/dev/editors.nix {
       inherit pkgs config;
-      enableNvim = true;
-      enableAstro = true;
+      enableNvim = false;
+      enableAstro = false;
     })
     (import ../../common/dev/git.nix {
       username = "Ankur Kumar";
