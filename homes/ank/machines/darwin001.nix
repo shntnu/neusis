@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  inputs,
   ...
 }:
 {
@@ -9,7 +10,7 @@
     ../../common/dev
     ../../common/dev/kalam.nix
     (import ../../common/dev/editors.nix {
-      inherit pkgs config;
+      inherit pkgs config inputs;
       enableNvim = false;
       enableAstro = false;
     })
