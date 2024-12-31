@@ -114,7 +114,7 @@
     };
 
     # system and flake util
-    systems.url = "github:nix-systems/default-linux";
+    systems.url = "github:nix-systems/default";
 
     # disko
     disko.url = "github:nix-community/disko";
