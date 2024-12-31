@@ -1,9 +1,16 @@
-{pkgs, ...}:
+{ pkgs, ... }:
 let
-darwin_gc = if (pkgs.stdenv.isDarwin) then {
-  users = "root";
-  interval = { Weekday = 0; Hour = 0; Minute = 0; };
-} else {};
+  darwin_gc =
+    if pkgs.stdenv.isDarwin then
+      {
+        interval = {
+          Weekday = 0;
+          Hour = 0;
+          Minute = 0;
+        };
+      }
+    else
+      { };
 in
 {
   nix = {
