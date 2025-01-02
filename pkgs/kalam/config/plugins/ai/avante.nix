@@ -1,6 +1,6 @@
 {
   plugins.avante = {
-    enable = false;
+    enable = true;
     settings = {
       diff = {
         autojump = true;
@@ -33,24 +33,7 @@
           api_key_name = "";
           endpoint = "karkinos:11434/v1";
           model = "llama3.3:latest";
-        };
-        deepseek = {
-          __inherited_from = "openai";
-          api_key_name = "";
-          endpoint = "karkinos:11434/v1";
-          model = "deepseek-coder-v2:latest";
-        };
-        deepseeki = {
-          __inherited_from = "openai";
-          api_key_name = "";
-          endpoint = "karkinos:11434/v1";
-          model = "deepseek-coder-v2:16b-lite-instruct-fp16";
-        };
-        deepseekq = {
-          __inherited_from = "openai";
-          api_key_name = "";
-          endpoint = "karkinos:11434/v1";
-          model = "deepseek-coder-v2:236b-instruct-q2_K";
+          local = true;
         };
       };
 
@@ -63,6 +46,7 @@
         wrap = true;
       };
     };
+
   };
   plugins.render-markdown = {
     enable = true;
@@ -72,15 +56,4 @@
       ];
     };
   };
-
-  keymaps = [
-    {
-      mode = "n";
-      key = "<leader>aa";
-      action = "<cmd>AvanteAsk<CR>";
-      options = {
-        desc = "Codeium Chat";
-      };
-    }
-  ];
 }

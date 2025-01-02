@@ -57,7 +57,7 @@
       keymaps = {
         "<leader>fp" = {
           action = "projects";
-          options.desc = "Search Todo";
+          options.desc = "Search Projects";
         };
         "<leader>st" = {
           action = "todo-comments";
@@ -79,7 +79,7 @@
           action = "find_files hidden=true";
           options.desc = "Find project files";
         };
-        "<leader>/" = {
+        "<leader>fw" = {
           action = "live_grep";
           options.desc = "Grep (root dir)";
         };

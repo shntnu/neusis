@@ -69,6 +69,9 @@
         gitbrowse.enabled = true;
         lazygit.enabled = true;
         profiler.enabled = true;
+        zen.enabled = true;
+        animate.enabled = true;
+        quickfile.enabled = true;
       };
     };
   };

@@ -18,6 +18,9 @@
         inc_rename = true;
         lsp_doc_border = true;
       };
+
+      cmdline.view = "cmdline";
+
       notify.enabled = true;
 
       routes = [
