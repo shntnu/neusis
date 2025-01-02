@@ -11,10 +11,11 @@
           end
         end
       '';
-      open_mapping = "[[<c-.>]]";
-      hide_numbers = true;
+      open_mapping = "[[<c-\>]]";
+      auto_scroll = false;
+      hide_numbers = false;
       shade_terminals = true;
-      start_in_insert = true;
+      start_in_insert = false;
       terminal_mappings = true;
       persist_mode = true;
       insert_mappings = true;
@@ -32,10 +33,22 @@
 
   keymaps = [
     {
-      mode = "t";
-      key = "<C-g>";
+      mode = "n";
+      key = "<C-\\>";
       action = "<cmd>ToggleTerm<cr>";
-      options.desc = "Open/Close Terminal 2";
+      options.desc = "Open/Close Terminal";
+    }
+    {
+      mode = "t";
+      key = "<C-\\>";
+      action = "<cmd>ToggleTerm<cr>";
+      options.desc = "Open/Close Terminal";
+    }
+    {
+      mode = "t";
+      key = "<esc>";
+      action = "<C-\\><C-n>";
+      options.desc = "Escape to normal mode";
     }
     {
       mode = "t";
