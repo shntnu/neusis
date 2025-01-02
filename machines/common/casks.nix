@@ -3,4 +3,5 @@
   "hammerspoon"
   "aerospace"
   "wezterm"
+  "macfuse"
 ]
