@@ -46,7 +46,7 @@
     }
     {
       mode = "t";
-      key = "<esc>";
+      key = "<leader><esc>";
       action = "<C-\\><C-n>";
       options.desc = "Escape to normal mode";
     }

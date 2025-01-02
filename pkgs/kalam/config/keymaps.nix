@@ -63,7 +63,7 @@
 
     {
       mode = "n";
-      key = "<C-s>";
+      key = "<leader> ";
       action = "<cmd>w<cr><esc>";
       options = {
         silent = true;
