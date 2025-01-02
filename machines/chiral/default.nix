@@ -7,7 +7,8 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   # You can import other NixOS modules here
   imports = [
     # include NixOS-WSL modules
@@ -16,7 +17,7 @@
     inputs.home-manager.nixosModule
     inputs.agenix.nixosModules.default
     {
-      age.identityPaths = ["/home/ank/.ssh/id_ed25519"];
+      age.identityPaths = [ "/home/ank/.ssh/id_ed25519" ];
     }
 
     # You can also split up your configuration and import pieces of it here:
@@ -36,7 +37,9 @@
     enable = true;
     defaultUser = "ank";
     useWindowsDriver = true;
-    docker-desktop = {enable = true;};
+    docker-desktop = {
+      enable = true;
+    };
     nativeSystemd = true;
   };
 
@@ -66,7 +69,7 @@
   };
 
   # Nvidia and Cuda support
-  services.xserver.videoDrivers = ["nvidia"];
+  services.xserver.videoDrivers = [ "nvidia" ];
 
   nixpkgs = {
     # You can add overlays here
@@ -79,6 +82,8 @@
     };
   };
 
+  # disable nix channel
+  nix.channel.enable = false;
   nix.settings = {
     # Enable flakes and new 'nix' command
     experimental-features = "nix-command flakes";
@@ -95,7 +100,7 @@
     home-manager
   ];
 
-  environment.shells = [pkgs.zsh];
+  environment.shells = [ pkgs.zsh ];
   programs.zsh.enable = true;
 
   # Netowrking
@@ -108,7 +113,13 @@
     isNormalUser = true;
     # passwordFile = config.age.secrets.karkinos_pass.path;
     description = "Ankur Kumar";
-    extraGroups = ["networkmanager" "wheel" "libvirtd" "qemu-libvirtd" "input"];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "libvirtd"
+      "qemu-libvirtd"
+      "input"
+    ];
     openssh.authorizedKeys.keyFiles = [
       ../../homes/ank/id_rsa.pub
       ../../homes/ank/id_ed25519.pub
@@ -118,7 +129,7 @@
   # Enable home-manager for users
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
-  home-manager.extraSpecialArgs = {inherit inputs outputs;};
+  home-manager.extraSpecialArgs = { inherit inputs outputs; };
   home-manager.users.ank = {
     imports = [
       inputs.agenix.homeManagerModules.default
