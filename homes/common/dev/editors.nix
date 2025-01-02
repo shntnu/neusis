@@ -19,7 +19,6 @@ in
       lazygit
       gdu
       bottom
-      yazi
       python3
       nodejs_22
       nerdfonts
@@ -44,8 +43,38 @@ in
       wget
       rclone
       chafa
+      ouch
     ]
     ++ pdf_viewer;
+
+  programs.yazi = {
+    enable = true;
+    package = pkgs.unstable.yazi;
+    keymap = {
+      manager.prepend_keymap = [
+        {
+          on = [ "T" ];
+          run = "plugin max-preview";
+          desc = "Maximize or restore preview";
+        }
+      ];
+
+    };
+    settings = {
+      manager.show_hidden = true;
+      plugin.preloaders = [ ];
+      preview = {
+        max_width = 2000;
+        max_height = 2000;
+      };
+
+    };
+    enableZshIntegration = true;
+    plugins = {
+      max-preview = ./yazi_img_max;
+    };
+
+  };
 
   programs.direnv = {
     enable = true;
