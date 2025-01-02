@@ -103,7 +103,7 @@
   environment.shells = [ pkgs.zsh ];
   programs.zsh.enable = true;
 
-  # Netowrking
+  # Networking
   networking.hostName = "chiral";
   # networking.bridges.br0.interfaces = [ "enp2s0" "wlp131s0" ];
 
@@ -125,17 +125,20 @@
       ../../homes/ank/id_ed25519.pub
     ];
   };
+  home-manager = {
 
-  # Enable home-manager for users
-  home-manager.useGlobalPkgs = true;
-  home-manager.useUserPackages = true;
-  home-manager.extraSpecialArgs = { inherit inputs outputs; };
-  home-manager.users.ank = {
-    imports = [
-      inputs.agenix.homeManagerModules.default
-      # include nixvim module
-      ../../homes/ank/machines/chiral.nix
-    ];
+    useGlobalPkgs = true;
+    useUserPackages = true;
+    extraSpecialArgs = { inherit inputs outputs; };
+
+    # Enable home-manager for users
+    users.ank = {
+      imports = [
+        inputs.agenix.homeManagerModules.default
+        # include nixvim module
+        ../../homes/ank/machines/chiral.nix
+      ];
+    };
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
