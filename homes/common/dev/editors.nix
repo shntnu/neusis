@@ -42,6 +42,8 @@ in
       gnumake
       texliveFull
       wget
+      rclone
+      chafa
     ]
     ++ pdf_viewer;
 
@@ -122,6 +124,14 @@ in
 
       function nx() {
         nix-shell -p $@
+      }
+
+      function rcssh() {
+        rclone mount --sftp-host $1 :sftp:$2 $3 --volname $4 --sftp-user $5 --sftp-key-file ~/.ssh/id_ed25519
+      }
+
+      function rcssha() {
+        rclone mount --sftp-host $1 :sftp:$2 $3 --volname $(uuidgen | head -c 8)-vol --sftp-user ank --sftp-key-file ~/.ssh/id_ed25519
       }
 
       bindkey '^I' complete-word
