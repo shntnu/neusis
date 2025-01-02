@@ -123,7 +123,6 @@
     imports = [
       inputs.agenix.homeManagerModules.default
       # include nixvim module
-      inputs.stylix.homeManagerModules.stylix
       ../../homes/ank/machines/chiral.nix
     ];
   };

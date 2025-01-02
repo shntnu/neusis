@@ -7,7 +7,8 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   # You can import other NixOS modules here
   imports = [
     # If you want to use modules from other flakes (such as nixos-hardware):
@@ -92,18 +93,17 @@
 
   # This will add each flake input as a registry
   # To make nix3 commands consistent with your flake
-  nix.registry = (lib.mapAttrs (_: flake: {inherit flake;})) ((lib.filterAttrs (_: lib.isType "flake")) inputs);
+  nix.registry = (lib.mapAttrs (_: flake: { inherit flake; })) (
+    (lib.filterAttrs (_: lib.isType "flake")) inputs
+  );
 
   # This will additionally add your inputs to the system's legacy channels
   # Making legacy nix commands consistent as well, awesome!
-  nix.nixPath = ["/etc/nix/path"];
-  environment.etc =
-    lib.mapAttrs'
-    (name: value: {
-      name = "nix/path/${name}";
-      value.source = value.flake;
-    })
-    config.nix.registry;
+  nix.nixPath = [ "/etc/nix/path" ];
+  environment.etc = lib.mapAttrs' (name: value: {
+    name = "nix/path/${name}";
+    value.source = value.flake;
+  }) config.nix.registry;
 
   # Default system wide packages
   environment.systemPackages = with pkgs; [
@@ -117,7 +117,7 @@
     gnomeExtensions.burn-my-windows
     gnomeExtensions.appindicator
   ];
-  environment.shells = [pkgs.zsh];
+  environment.shells = [ pkgs.zsh ];
   programs.zsh.enable = true;
 
   # Netowrking
@@ -134,7 +134,13 @@
     initialPassword = "changeme";
     # passwordFile = config.age.secrets.karkinos_pass.path;
     description = "Ankur Kumar";
-    extraGroups = ["networkmanager" "wheel" "libvirtd" "qemu-libvirtd" "input"];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "libvirtd"
+      "qemu-libvirtd"
+      "input"
+    ];
     openssh.authorizedKeys.keyFiles = [
       ../../homes/ank/id_rsa.pub
       ../../homes/ank/id_ed25519.pub
@@ -147,7 +153,13 @@
     isNormalUser = true;
     # passwordFile = config.age.secrets.karkinos_pass.path;
     description = "Niveditha";
-    extraGroups = ["networkmanager" "wheel" "libvirtd" "qemu-libvirtd" "input"];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "libvirtd"
+      "qemu-libvirtd"
+      "input"
+    ];
     openssh.authorizedKeys.keyFiles = [
       ../../homes/niv/id_ed25519.pub
     ];
@@ -159,7 +171,12 @@
     isNormalUser = true;
     # passwordFile = config.age.secrets.karkinos_pass.path;
     description = "John Arevalo";
-    extraGroups = ["networkmanager" "wheel" "libvirtd" "qemu-libvirtd"];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "libvirtd"
+      "qemu-libvirtd"
+    ];
     openssh.authorizedKeys.keyFiles = [
       ../../homes/jarevalo/id_ed25519.pub
     ];
@@ -171,7 +188,12 @@
     isNormalUser = true;
     # passwordFile = config.age.secrets.karkinos_pass.path;
     description = "Adit Shah";
-    extraGroups = ["networkmanager" "wheel" "libvirtd" "qemu-libvirtd"];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "libvirtd"
+      "qemu-libvirtd"
+    ];
     openssh.authorizedKeys.keyFiles = [
       ../../homes/ashah/id_rsa.pub
     ];
@@ -183,7 +205,12 @@
     isNormalUser = true;
     # passwordFile = config.age.secrets.karkinos_pass.path;
     description = "Suganya";
-    extraGroups = ["networkmanager" "wheel" "libvirtd" "qemu-libvirtd"];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "libvirtd"
+      "qemu-libvirtd"
+    ];
     openssh.authorizedKeys.keyFiles = [
       ../../homes/suganya/id_ed25519.pub
     ];
@@ -195,7 +222,12 @@
     isNormalUser = true;
     # passwordFile = config.age.secrets.karkinos_pass.path;
     description = "Le Lui";
-    extraGroups = ["networkmanager" "wheel" "libvirtd" "qemu-libvirtd"];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "libvirtd"
+      "qemu-libvirtd"
+    ];
     openssh.authorizedKeys.keyFiles = [
       ../../homes/leliu/id_ed25519.pub
     ];
@@ -207,57 +239,68 @@
     isNormalUser = true;
     # passwordFile = config.age.secrets.karkinos_pass.path;
     description = "Sara Khosravi";
-    extraGroups = ["networkmanager" "wheel" "libvirtd" "qemu-libvirtd"];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "libvirtd"
+      "qemu-libvirtd"
+    ];
     openssh.authorizedKeys.keyFiles = [
       ../../homes/skhosrav/id_ed25519.pub
     ];
   };
+  home-manager = {
 
-  # Enable home-manager for users
-  home-manager.useGlobalPkgs = true;
-  home-manager.useUserPackages = true;
-  home-manager.extraSpecialArgs = {inherit inputs outputs;};
-  home-manager.users.ank = {
-    imports = [
-      inputs.agenix.homeManagerModules.default
-      ../../homes/ank/machines/karkinos.nix
-    ];
-  };
-  home-manager.users.niv = {
-    imports = [
-      inputs.agenix.homeManagerModules.default
-      ../../homes/niv/machines/karkinos.nix
-    ];
-  };
-  home-manager.users.jarevalo = {
-    imports = [
-      inputs.agenix.homeManagerModules.default
-      ../../homes/jarevalo/machines/karkinos.nix
-    ];
-  };
-  home-manager.users.suganya = {
-    imports = [
-      inputs.agenix.homeManagerModules.default
-      ../../homes/suganya/machines/karkinos.nix
-    ];
-  };
-  home-manager.users.leliu = {
-    imports = [
-      inputs.agenix.homeManagerModules.default
-      ../../homes/leliu/machines/karkinos.nix
-    ];
-  };
-  home-manager.users.skhosrav = {
-    imports = [
-      inputs.agenix.homeManagerModules.default
-      ../../homes/skhosrav/machines/karkinos.nix
-    ];
-  };
-  home-manager.users.ashah = {
-    imports = [
-      inputs.agenix.homeManagerModules.default
-      ../../homes/ashah/machines/karkinos.nix
-    ];
+    useGlobalPkgs = true;
+    useUserPackages = true;
+    backupFileExtension = "bak";
+    extraSpecialArgs = { inherit inputs outputs; };
+
+    # Enable home-manager for users
+    users = {
+      ank = {
+        imports = [
+          inputs.agenix.homeManagerModules.default
+          ../../homes/ank/machines/karkinos.nix
+        ];
+      };
+      niv = {
+        imports = [
+          inputs.agenix.homeManagerModules.default
+          ../../homes/niv/machines/karkinos.nix
+        ];
+      };
+      jarevalo = {
+        imports = [
+          inputs.agenix.homeManagerModules.default
+          ../../homes/jarevalo/machines/karkinos.nix
+        ];
+      };
+      suganya = {
+        imports = [
+          inputs.agenix.homeManagerModules.default
+          ../../homes/suganya/machines/karkinos.nix
+        ];
+      };
+      leliu = {
+        imports = [
+          inputs.agenix.homeManagerModules.default
+          ../../homes/leliu/machines/karkinos.nix
+        ];
+      };
+      skhosrav = {
+        imports = [
+          inputs.agenix.homeManagerModules.default
+          ../../homes/skhosrav/machines/karkinos.nix
+        ];
+      };
+      ashah = {
+        imports = [
+          inputs.agenix.homeManagerModules.default
+          ../../homes/ashah/machines/karkinos.nix
+        ];
+      };
+    };
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion

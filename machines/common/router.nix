@@ -49,7 +49,7 @@ in {
   '';
 
   services.kea.dhcp4 = {
-    enable = true;
+    enable = false;
     settings = {
       interfaces-config = {
         interfaces = ["enp2s0"];

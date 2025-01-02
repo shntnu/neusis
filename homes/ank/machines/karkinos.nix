@@ -8,10 +8,12 @@
     ../home.nix
     ../../common/home_manager.nix
     ../../common/dev
+    ../../common/dev/kalam.nix
+    ../../common/themes
     (import ../../common/dev/editors.nix {
       inherit pkgs config inputs;
-      enableNvim = true;
-      enableAstro = true;
+      enableNvim = false;
+      enableAstro = false;
     })
     (import ../../common/dev/git.nix {
       username = "Ankur Kumar";

@@ -1,5 +1,8 @@
-{ ... }:
+{ inputs, ... }:
 {
+  imports = [
+      inputs.stylix.homeManagerModules.stylix
+  ];
   stylix = {
     enable = true;
     opacity.terminal = 0.8;
