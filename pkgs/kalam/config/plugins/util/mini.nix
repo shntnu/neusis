@@ -3,6 +3,10 @@
     mini = {
       enable = true;
       modules = {
+        ai = {
+          n_lines = 100;
+          search_method = "cover_or_next";
+        };
         comment = {
           options = {
             customCommentString = ''
