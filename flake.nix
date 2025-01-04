@@ -191,7 +191,7 @@
 
       overlays = import ./overlays { inherit inputs outputs; };
 
-      packages = forEachSystem (pkgs: import ./pkgs { inherit pkgs inputs; });
+      packages = forEachSystem (pkgs: import ./pkgs { inherit pkgs inputs outputs; });
       devShells = forEachSystem (pkgs: import ./shell.nix { inherit pkgs inputs; });
       formatter = forEachSystem (pkgs: pkgs.nixfmt-rfc-style);
 
@@ -240,5 +240,9 @@
           ];
         };
       };
+    }
+    // {
+      # Expose custom templates
+      templates = import ./templates;
     };
 }
