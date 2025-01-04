@@ -6,7 +6,7 @@
   ];
 
   plugins.nvim-colorizer = {
-    enable = true;
+    enable = false;
     userDefaultOptions = {
       css = true;
       mode = "virtualtext";
