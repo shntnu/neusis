@@ -2,6 +2,7 @@
   lib,
   pkgs,
   inputs,
+  outputs,
   ...
 }:
 let
@@ -12,7 +13,7 @@ let
     module = import ./config; # import the module directly
     # You can use `extraSpecialArgs` to pass additional arguments to your module files
     extraSpecialArgs = {
-      inherit inputs;
+      inherit inputs outputs;
     } // import ./lib { inherit lib pkgs; };
   };
 in

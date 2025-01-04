@@ -5,13 +5,13 @@
     todo-comments.enable = true;
     web-devicons.enable = true;
     dressing = {
-      enable = false;
-      settings = {
-        input = {
-          enabled = false;
-        };
-
-      };
+      enable = true;
+      # settings = {
+      #   input = {
+      #     enabled = false;
+      #   };
+      #
+      # };
     };
   };
 }
