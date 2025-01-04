@@ -1,6 +1,13 @@
+{ pkgs, ... }:
 {
+
+  extraPlugins = [
+    pkgs.git-worktree-custom
+  ];
+
   plugins.git-worktree = {
-    enable = true;
+    enable = false;
+    package = pkgs.git-worktree-custom;
     enableTelescope = true;
   };
   keymaps = [
@@ -31,7 +38,7 @@
       key = "<leader>gws";
       action.__raw = ''
         function()
-          require('telescope').extensions.git_worktree.git_worktrees()
+          require('telescope').extensions.git_worktree.git_worktree()
         end
       '';
       options = {

@@ -24,10 +24,10 @@
         mappings = {
           i = {
             # Have Telescope not to enter a normal-like mode when hitting escape (and instead exiting), you can map <Esc> to do so via:
-            "<esc>".__raw = ''
-              function(...)
-                return require("telescope.actions").close(...)
-              end'';
+            # "<esc>".__raw = ''
+            #   function(...)
+            #     return require("telescope.actions").close(...)
+            #   end'';
             "<c-t>".__raw = ''
               function(...)
                 require('trouble.providers.telescope').open_with_trouble(...);
@@ -38,6 +38,11 @@
             "<c-t>".__raw = ''
               function(...)
                 require('trouble.providers.telescope').open_with_trouble(...);
+              end
+            '';
+            "d".__raw = ''
+              function(...)
+                require('telescope').extensions.git_worktree.delete_worktree(...);
               end
             '';
           };
@@ -71,10 +76,6 @@
           action = "undo";
           options.desc = "Search Undo";
         };
-        # "<leader><space>" = {
-        #   action = "find_files";
-        #   options.desc = "Find project files";
-        # };
         "<leader>ff" = {
           action = "find_files hidden=true";
           options.desc = "Find project files";

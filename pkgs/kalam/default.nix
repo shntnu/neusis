@@ -14,6 +14,7 @@ let
         inherit (pkgs) system;
         config.allowUnfree = true;
         config.cudaSupport = true;
+        overlays = [ outputs.overlays.git-worktree ];
       };
     in
     {
