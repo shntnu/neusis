@@ -2,7 +2,7 @@
 {
   extraPlugins = [
     (mkPkgs "volt" inputs.volt)
-    (mkPkgs "minty" inputs.minty)
+    # (mkPkgs "minty" inputs.minty)
   ];
 
   plugins.nvim-colorizer = {

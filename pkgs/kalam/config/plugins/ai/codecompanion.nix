@@ -2,7 +2,7 @@
 {
   plugins.codecompanion = {
     enable = true;
-    package = inputs.nixpkgs-unstable.${pkgs.system}.vimPlugins.codecompanion-nvim;
+    package = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.vimPlugins.codecompanion-nvim;
     settings = {
       adapters = {
         ollama.__raw = ''

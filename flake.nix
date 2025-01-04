@@ -17,30 +17,10 @@
     # nixvim
     nixvim = {
       url = "github:nix-community/nixvim/nixos-24.11";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
     stylix.url = "github:danth/stylix";
-
-    tokyodark = {
-      url = "github:tiagovla/tokyodark.nvim";
-      flake = false;
-    };
-
-    typr = {
-      url = "github:nvzone/typr";
-      flake = false;
-    };
-
-    calendar = {
-      url = "github:itchyny/calendar.vim";
-      flake = false;
-    };
-
-    buffer-manager = {
-      url = "github:j-morano/buffer_manager.nvim";
-      flake = false;
-    };
 
     minty = {
       url = "github:NvChad/minty";
@@ -54,24 +34,6 @@
 
     nvim-window-picker = {
       url = "github:s1n7ax/nvim-window-picker";
-      flake = false;
-    };
-
-    md-pdf = {
-      url = "github:arminveres/md-pdf.nvim";
-      flake = false;
-    };
-
-    windows = {
-      url = "github:anuvyklack/windows.nvim";
-      flake = false;
-    };
-    windows-mc = {
-      url = "github:anuvyklack/middleclass";
-      flake = false;
-    };
-    windows-a = {
-      url = "github:anuvyklack/animation.nvim";
       flake = false;
     };
 

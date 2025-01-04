@@ -1,7 +1,7 @@
 {
   imports = [
     ./ai/codeium.nix
-    ./ai/codecompanion.nix
+    # ./ai/codecompanion.nix
 
     ./completion/cmp.nix
     ./completion/lspkind.nix
