@@ -104,7 +104,7 @@
   keymaps = [
     {
       mode = "n";
-      key = "<leader>go";
+      key = "<leader>gO";
       action = "<cmd>lua Snacks.gitbrowse()<CR>";
       options = {
         desc = "Open file in browser";

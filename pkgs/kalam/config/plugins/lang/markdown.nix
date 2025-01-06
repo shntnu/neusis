@@ -5,6 +5,7 @@
   ];
 
   plugins = {
+    render-markdown.enable = true;
     clipboard-image = {
       enable = true;
       clipboardPackage = pkgs.wl-clipboard;
