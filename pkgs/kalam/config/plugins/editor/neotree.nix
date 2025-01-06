@@ -38,15 +38,15 @@
     };
   };
 
-  keymaps = [
-    {
-      mode = "n";
-      key = "<leader>e";
-      action = "<cmd>Neotree toggle<cr>";
-      options = {
-        silent = true;
-        desc = "Explorer NeoTree (root dir)";
-      };
-    }
-  ];
+  # keymaps = [
+  #   {
+  #     mode = "n";
+  #     key = "<leader>e";
+  #     action = "<cmd>Neotree toggle<cr>";
+  #     options = {
+  #       silent = true;
+  #       desc = "Explorer NeoTree (root dir)";
+  #     };
+  #   }
+  # ];
 }
