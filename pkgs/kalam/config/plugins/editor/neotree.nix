@@ -1,7 +1,7 @@
 { icons, ... }:
 {
   plugins.neo-tree = {
-    enable = true;
+    enable = false;
     closeIfLastWindow = true;
     sources = [
       "filesystem"
