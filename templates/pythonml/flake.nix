@@ -64,7 +64,7 @@
                 python_with_pkgs
                 python311Packages.venvShellHook
                 # We # We now recommend to use uv for package management inside nix env
-                uv
+                mpkgs.uv
 
                 # Data sharing tools
                 # syncthing
