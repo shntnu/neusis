@@ -6,4 +6,5 @@
   "arc"
   "tailscale"
   "microsoft-teams"
+  "bitwarden"
 ]
