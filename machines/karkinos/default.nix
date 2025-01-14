@@ -111,7 +111,6 @@
     dive
     podman-tui
     unstable.ollama
-    docker-compose
     gnomeExtensions.forge
     gnomeExtensions.blur-my-shell
     gnomeExtensions.burn-my-windows
@@ -140,6 +139,8 @@
       "libvirtd"
       "qemu-libvirtd"
       "input"
+      "podman"
+      "docker"
     ];
     openssh.authorizedKeys.keyFiles = [
       ../../homes/ank/id_rsa.pub

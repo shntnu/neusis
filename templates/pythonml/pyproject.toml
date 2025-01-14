@@ -27,7 +27,8 @@ dev = [
   "ipython",
   "marimo",
   "pytest",
-  "ruff"
+  "ruff",
+  "marimo"
 ]
 
 [tool.uv]

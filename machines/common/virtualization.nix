@@ -1,15 +1,16 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   environment.systemPackages = with pkgs; [
     looking-glass-client
     scream
     virt-manager
-    docker-compose
   ];
 
   programs.singularity = {
     enable = true;
     package = pkgs.apptainer;
   };
+
   virtualisation = {
     libvirtd = {
       enable = true;
@@ -26,23 +27,24 @@
         open-webui = import ./open-webui-container.nix;
       };
     };
+
     podman = {
       enable = true;
-      enableNvidia = true;
       dockerCompat = true;
+      dockerSocket.enable = true;
       defaultNetwork.settings.dns_enabled = true;
     };
   };
 
-  environment.extraInit = ''
-    if [ -z "$DOCKER_HOST" -a -n "$XDG_RUNTIME_DIR" ]; then
-      export DOCKER_HOST="unix://$XDG_RUNTIME_DIR/podman/podman.sock"
-    fi
-  '';
+  # environment.extraInit = ''
+  #   if [ -z "$DOCKER_HOST" -a -n "$XDG_RUNTIME_DIR" ]; then
+  #     export DOCKER_HOST="unix://$XDG_RUNTIME_DIR/podman/podman.sock"
+  #   fi
+  # '';
 
   # boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.kernelParams = ["amd_iommu=on"];
-  boot.kernelModules = ["kvm-amd"];
+  boot.kernelParams = [ "amd_iommu=on" ];
+  boot.kernelModules = [ "kvm-amd" ];
 
   # boot.initrd.availableKernelModules = [ "nvidia" "vfio-pci" ];
   # boot.initrd.preDeviceCommands = ''

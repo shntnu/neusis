@@ -18,7 +18,7 @@
   '';
 
   globals = {
-    maplocalleader = " t"; # Set the local leader to "<leader>t"
+    maplocalleader = ","; # Set the local leader to ","
   };
 
   plugins.which-key.settings.spec = [

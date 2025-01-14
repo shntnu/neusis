@@ -35,8 +35,26 @@
     {
       mode = "n";
       key = "<C-\\>";
-      action = "<cmd>ToggleTerm<cr>";
+      action = "<cmd>exe v:count1 . 'ToggleTerm'<cr>";
       options.desc = "Open/Close Terminal";
+    }
+    {
+      mode = "n";
+      key = "<leader>tt";
+      action = "<cmd>ToggleTermSendCurrentLine<cr>";
+      options.desc = "Send current line to terminal";
+    }
+    {
+      mode = "v";
+      key = "<leader>tv";
+      action = "<cmd>ToggleTermSendVisualLines<cr>";
+      options.desc = "Send visual lines to terminal";
+    }
+    {
+      mode = "v";
+      key = "<leader>tV";
+      action = "<cmd>ToggleTermSendVisualSelection<cr>";
+      options.desc = "Send visual selection to terminal";
     }
     {
       mode = "t";
@@ -49,30 +67,6 @@
       key = "<leader><esc>";
       action = "<C-\\><C-n>";
       options.desc = "Escape to normal mode";
-    }
-    {
-      mode = "t";
-      key = "<C-h>";
-      action = "<cmd>wincmd h<cr>";
-      options.desc = "Go to Left window";
-    }
-    {
-      mode = "t";
-      key = "<C-l>";
-      action = "<cmd>wincmd l<cr>";
-      options.desc = "Go to Right window";
-    }
-    {
-      mode = "t";
-      key = "<C-j>";
-      action = "<cmd>wincmd k<cr>";
-      options.desc = "Go to Up window";
-    }
-    {
-      mode = "t";
-      key = "<C-k>";
-      action = "<cmd>wincmd j<cr>";
-      options.desc = "Go to Down window";
     }
   ];
 }

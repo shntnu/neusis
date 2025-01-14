@@ -58,11 +58,11 @@
           }
           {
             name = "codeium";
-            priority = 60;
+            priority = 50;
           }
           {
             name = "buffer";
-            priority = 50;
+            priority = 60;
             # Words from other open buffers can also be suggested.
             option.get_bufnrs.__raw = "vim.api.nvim_list_bufs";
             keywordLength = 3;

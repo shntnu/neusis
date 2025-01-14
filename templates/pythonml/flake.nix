@@ -73,6 +73,7 @@
                 # Data inspections tools
                 # duckdb
                 # mongodb
+                arion
 
                 # video tools
                 ffmpeg

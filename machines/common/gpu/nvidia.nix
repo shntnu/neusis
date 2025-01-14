@@ -9,9 +9,9 @@ in
 {
   hardware = {
     # Enable OpenGL
-    opengl = {
+    graphics = {
       enable = true;
-      driSupport32Bit = true;
+      enable32Bit = true;
       extraPackages = with pkgs; [
         vaapiVdpau
       ];
@@ -31,7 +31,7 @@ in
   };
 
   # Nvidia and Cuda support
-  services.xserver.videoDrivers = ["nvidia"];
+  services.xserver.videoDrivers = [ "nvidia" ];
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.cudaSupport = true;
 }
