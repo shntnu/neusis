@@ -7,4 +7,5 @@
   "tailscale"
   "microsoft-teams"
   "bitwarden"
+  "docker"
 ]

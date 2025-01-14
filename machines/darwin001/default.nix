@@ -53,7 +53,7 @@
   # Configure homebrew
   homebrew = {
     enable = true;
-    # brews = ["input-leap"]; # Example of brew
+    brews = [ ]; # Example of brew
     taps = map (key: builtins.replaceStrings [ "homebrew-" ] [ "" ] key) (
       builtins.attrNames config.nix-homebrew.taps
     );
