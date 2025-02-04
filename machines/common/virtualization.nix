@@ -4,6 +4,7 @@
     looking-glass-client
     scream
     virt-manager
+    podman-compose
   ];
 
   programs.singularity = {
@@ -36,14 +37,14 @@
     };
   };
 
-  # environment.extraInit = ''
-  #   if [ -z "$DOCKER_HOST" -a -n "$XDG_RUNTIME_DIR" ]; then
-  #     export DOCKER_HOST="unix://$XDG_RUNTIME_DIR/podman/podman.sock"
-  #   fi
-  # '';
+  environment.extraInit = ''
+    if [ -z "$DOCKER_HOST" -a -n "$XDG_RUNTIME_DIR" ]; then
+      export DOCKER_HOST="unix://$XDG_RUNTIME_DIR/podman/podman.sock"
+    fi
+  '';
 
   # boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.kernelParams = [ "amd_iommu=on" ];
+  boot.kernelParams = [ "amd_iommu=off" ];
   boot.kernelModules = [ "kvm-amd" ];
 
   # boot.initrd.availableKernelModules = [ "nvidia" "vfio-pci" ];

@@ -115,6 +115,7 @@
     gnomeExtensions.blur-my-shell
     gnomeExtensions.burn-my-windows
     gnomeExtensions.appindicator
+    gnomeExtensions.unite
   ];
   environment.shells = [ pkgs.zsh ];
   programs.zsh.enable = true;
@@ -125,131 +126,154 @@
   networking.hostId = "df6b910c"; # The primary use case is to ensure when using ZFS that a pool isn’t imported accidentally on a wrong machine.
   # networking.bridges.br0.interfaces = [ "enp2s0" "wlp131s0" ];
   services.tailscale.enable = true;
+  users.users = {
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.ank = {
-    shell = pkgs.zsh;
-    isNormalUser = true;
-    initialPassword = "changeme";
-    # passwordFile = config.age.secrets.karkinos_pass.path;
-    description = "Ankur Kumar";
-    extraGroups = [
-      "networkmanager"
-      "wheel"
-      "libvirtd"
-      "qemu-libvirtd"
-      "input"
-      "podman"
-      "docker"
-    ];
-    openssh.authorizedKeys.keyFiles = [
-      ../../homes/ank/id_rsa.pub
-      ../../homes/ank/id_ed25519.pub
-      ../../homes/ank/id2_ed25519.pub
-    ];
+    # Define a user account. Don't forget to set a password with ‘passwd’.
+    ank = {
+      shell = pkgs.zsh;
+      isNormalUser = true;
+      initialPassword = "changeme";
+      # passwordFile = config.age.secrets.karkinos_pass.path;
+      description = "Ankur Kumar";
+      extraGroups = [
+        "networkmanager"
+        "wheel"
+        "libvirtd"
+        "qemu-libvirtd"
+        "input"
+        "podman"
+        "docker"
+      ];
+      openssh.authorizedKeys.keyFiles = [
+        ../../homes/ank/id_rsa.pub
+        ../../homes/ank/id_ed25519.pub
+        ../../homes/ank/id2_ed25519.pub
+      ];
+    };
+
+    niv = {
+      shell = pkgs.zsh;
+      isNormalUser = true;
+      # passwordFile = config.age.secrets.karkinos_pass.path;
+      description = "Niveditha";
+      extraGroups = [
+        "networkmanager"
+        "wheel"
+        "libvirtd"
+        "qemu-libvirtd"
+        "input"
+      ];
+      openssh.authorizedKeys.keyFiles = [
+        ../../homes/niv/id_ed25519.pub
+      ];
+    };
+
+    # Define a user account. Don't forget to set a password with ‘passwd’.
+    jarevalo = {
+      shell = pkgs.zsh;
+      isNormalUser = true;
+      # passwordFile = config.age.secrets.karkinos_pass.path;
+      description = "John Arevalo";
+      extraGroups = [
+        "networkmanager"
+        "wheel"
+        "libvirtd"
+        "qemu-libvirtd"
+      ];
+      openssh.authorizedKeys.keyFiles = [
+        ../../homes/jarevalo/id_ed25519.pub
+      ];
+    };
+
+    # Define a user account. Don't forget to set a password with ‘passwd’.
+    ashah = {
+      shell = pkgs.zsh;
+      isNormalUser = true;
+      # passwordFile = config.age.secrets.karkinos_pass.path;
+      description = "Adit Shah";
+      extraGroups = [
+        "networkmanager"
+        "wheel"
+        "libvirtd"
+        "qemu-libvirtd"
+      ];
+      openssh.authorizedKeys.keyFiles = [
+        ../../homes/ashah/id_rsa.pub
+      ];
+    };
+
+    # Define a user account. Don't forget to set a password with ‘passwd’.
+    suganya = {
+      shell = pkgs.zsh;
+      isNormalUser = true;
+      # passwordFile = config.age.secrets.karkinos_pass.path;
+      description = "Suganya";
+      extraGroups = [
+        "networkmanager"
+        "wheel"
+        "libvirtd"
+        "qemu-libvirtd"
+      ];
+      openssh.authorizedKeys.keyFiles = [
+        ../../homes/suganya/id_ed25519.pub
+      ];
+    };
+
+    # Define a user account. Don't forget to set a password with ‘passwd’.
+    leliu = {
+      shell = pkgs.zsh;
+      isNormalUser = true;
+      # passwordFile = config.age.secrets.karkinos_pass.path;
+      description = "Le Lui";
+      extraGroups = [
+        "networkmanager"
+        "wheel"
+        "libvirtd"
+        "qemu-libvirtd"
+      ];
+      openssh.authorizedKeys.keyFiles = [
+        ../../homes/leliu/id_ed25519.pub
+      ];
+    };
+
+    # Define a user account. Don't forget to set a password with ‘passwd’.
+    skhosrav = {
+      shell = pkgs.zsh;
+      isNormalUser = true;
+      # passwordFile = config.age.secrets.karkinos_pass.path;
+      description = "Sara Khosravi";
+      extraGroups = [
+        "networkmanager"
+        "wheel"
+        "libvirtd"
+        "qemu-libvirtd"
+      ];
+      openssh.authorizedKeys.keyFiles = [
+        ../../homes/skhosrav/id_ed25519.pub
+      ];
+    };
+
+    # Define a user account. Don't forget to set a password with ‘passwd’.
+    eweisbar = {
+      shell = pkgs.zsh;
+      isNormalUser = true;
+      # passwordFile = config.age.secrets.karkinos_pass.path;
+      description = "Erin Weisbar";
+      extraGroups = [
+        "networkmanager"
+        "wheel"
+        "libvirtd"
+        "qemu-libvirtd"
+        "input"
+        "podman"
+        "docker"
+      ];
+      openssh.authorizedKeys.keyFiles = [
+        ../../homes/eweisbar/id_ed25519.pub
+      ];
+    };
   };
 
-  users.users.niv = {
-    shell = pkgs.zsh;
-    isNormalUser = true;
-    # passwordFile = config.age.secrets.karkinos_pass.path;
-    description = "Niveditha";
-    extraGroups = [
-      "networkmanager"
-      "wheel"
-      "libvirtd"
-      "qemu-libvirtd"
-      "input"
-    ];
-    openssh.authorizedKeys.keyFiles = [
-      ../../homes/niv/id_ed25519.pub
-    ];
-  };
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.jarevalo = {
-    shell = pkgs.zsh;
-    isNormalUser = true;
-    # passwordFile = config.age.secrets.karkinos_pass.path;
-    description = "John Arevalo";
-    extraGroups = [
-      "networkmanager"
-      "wheel"
-      "libvirtd"
-      "qemu-libvirtd"
-    ];
-    openssh.authorizedKeys.keyFiles = [
-      ../../homes/jarevalo/id_ed25519.pub
-    ];
-  };
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.ashah = {
-    shell = pkgs.zsh;
-    isNormalUser = true;
-    # passwordFile = config.age.secrets.karkinos_pass.path;
-    description = "Adit Shah";
-    extraGroups = [
-      "networkmanager"
-      "wheel"
-      "libvirtd"
-      "qemu-libvirtd"
-    ];
-    openssh.authorizedKeys.keyFiles = [
-      ../../homes/ashah/id_rsa.pub
-    ];
-  };
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.suganya = {
-    shell = pkgs.zsh;
-    isNormalUser = true;
-    # passwordFile = config.age.secrets.karkinos_pass.path;
-    description = "Suganya";
-    extraGroups = [
-      "networkmanager"
-      "wheel"
-      "libvirtd"
-      "qemu-libvirtd"
-    ];
-    openssh.authorizedKeys.keyFiles = [
-      ../../homes/suganya/id_ed25519.pub
-    ];
-  };
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.leliu = {
-    shell = pkgs.zsh;
-    isNormalUser = true;
-    # passwordFile = config.age.secrets.karkinos_pass.path;
-    description = "Le Lui";
-    extraGroups = [
-      "networkmanager"
-      "wheel"
-      "libvirtd"
-      "qemu-libvirtd"
-    ];
-    openssh.authorizedKeys.keyFiles = [
-      ../../homes/leliu/id_ed25519.pub
-    ];
-  };
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.skhosrav = {
-    shell = pkgs.zsh;
-    isNormalUser = true;
-    # passwordFile = config.age.secrets.karkinos_pass.path;
-    description = "Sara Khosravi";
-    extraGroups = [
-      "networkmanager"
-      "wheel"
-      "libvirtd"
-      "qemu-libvirtd"
-    ];
-    openssh.authorizedKeys.keyFiles = [
-      ../../homes/skhosrav/id_ed25519.pub
-    ];
-  };
   home-manager = {
 
     useGlobalPkgs = true;
@@ -293,6 +317,12 @@
         imports = [
           inputs.agenix.homeManagerModules.default
           ../../homes/skhosrav/machines/karkinos.nix
+        ];
+      };
+      eweisbar = {
+        imports = [
+          inputs.agenix.homeManagerModules.default
+          ../../homes/eweisbar/machines/karkinos.nix
         ];
       };
       ashah = {
