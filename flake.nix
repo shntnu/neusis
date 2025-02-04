@@ -172,6 +172,7 @@
       };
 
       # Darwin configuration entrypoint
+      # Initial run: nix run nix-darwin -- switch --flake .#darwin001
       # Available through 'darwin-rebuild --flake .#your-hostname'
       darwinConfigurations = {
         darwin001 = inputs.darwin.lib.darwinSystem {
