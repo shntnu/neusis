@@ -7,6 +7,7 @@
     packages = with pkgs; [
       duckdb
       jq
+      mpv
     ];
   };
 }
