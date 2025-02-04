@@ -30,7 +30,10 @@
   };
 
   nix.settings = {
-    trusted-users = [ "kumarank" ];
+    trusted-users = [
+      "@admin"
+      "kumarank"
+    ];
   };
 
   # Create users
@@ -80,19 +83,20 @@
 
   # sudo with touch id
   security.pam.enableSudoTouchIdAuth = true;
-
-  # remap keys : Caps -> Esc
-  system.keyboard.enableKeyMapping = true;
-  system.keyboard.remapCapsLockToEscape = true;
-
-  # Disable press and hold for diacritics.
-  # I want to be able to press and hold j and k
-  # in vim to move around.
-  system.defaults.NSGlobalDomain.ApplePressAndHoldEnabled = false;
-
-  # Turn off NIX_PATH warnings now that we're using flakes
-  system.checks.verifyNixPath = false;
   system = {
+
+    # remap keys : Caps -> Esc
+    keyboard.enableKeyMapping = true;
+    keyboard.remapCapsLockToEscape = true;
+
+    # Disable press and hold for diacritics.
+    # I want to be able to press and hold j and k
+    # in vim to move around.
+    defaults.NSGlobalDomain.ApplePressAndHoldEnabled = false;
+
+    # Turn off NIX_PATH warnings now that we're using flakes
+    checks.verifyNixPath = false;
+
     stateVersion = 4;
 
     #   defaults = {
@@ -128,5 +132,6 @@
     #       TrackpadThreeFingerDrag = true;
     #     };
     #   };
+
   };
 }

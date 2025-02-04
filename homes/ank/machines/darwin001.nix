@@ -23,6 +23,6 @@
 
   home.packages = with pkgs; [
     dockutil
-    starship
+    mpv
   ];
 }
