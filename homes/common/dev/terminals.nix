@@ -6,21 +6,26 @@
 {
   home.packages = [
     inputs.superfile.packages.${pkgs.system}.default
-    pkgs.wezterm
+    pkgs.master.wezterm
   ];
 
   programs.kitty = {
     enable = true;
+    settings = {
+      hide_window_decorations = "true";
+      draw_minimal_borders = "yes";
+    };
+
   };
 
   programs.zellij = {
     enable = true;
     settings = {
       theme = "gruvbox-dark";
-      simpified_ui = true;
+      simplified_ui = true;
       default_mode = "locked";
     };
-    enableZshIntegration = true;
+    enableZshIntegration = false;
   };
   xdg.configFile = {
 

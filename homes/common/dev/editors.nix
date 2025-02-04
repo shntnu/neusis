@@ -181,7 +181,7 @@ in
       theme = "fino-time";
     };
   };
-  programs.starship.enable = true;
+  programs.starship.enable = false;
   programs.fzf.enable = true;
   programs.zoxide = {
     enable = true;
