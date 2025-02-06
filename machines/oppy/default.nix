@@ -46,9 +46,6 @@
   # Required for nvidia dc drivers
   services.xserver.enable = false;
 
-  # Enable sunshine
-  modules.services.sunshine.enable = true;
-
   nixpkgs = {
     # You can add overlays here
     overlays = builtins.attrValues outputs.overlays;
