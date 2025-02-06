@@ -32,9 +32,9 @@ in
   };
 
   # Set xserver driver to nvidia
-  services.xserver.drivers = [ "nvidia" ];
+  services.xserver.videoDrivers = [ "nvidia" ];
 
   # Nvidia and Cuda support
-  services.xserver.videoDrivers = [ "nvidia" ];
+  nixpkgs.config.allowUnfree = true;
   nixpkgs.config.cudaSupport = true;
 }
