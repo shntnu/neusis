@@ -117,11 +117,6 @@
       inputs.hyprland.follows = "hyprland";
     };
 
-    superfile = {
-      url = "github:yorukot/superfile";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
-
   };
 
   outputs =

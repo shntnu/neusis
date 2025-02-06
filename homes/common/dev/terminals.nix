@@ -5,7 +5,6 @@
 }:
 {
   home.packages = [
-    inputs.superfile.packages.${pkgs.system}.default
     pkgs.master.wezterm
   ];
 
