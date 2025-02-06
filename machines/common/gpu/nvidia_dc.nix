@@ -4,7 +4,7 @@
   ...
 }:
 let
-  package_ver = config.boot.kernelPackages.nvidiaPackages.dc;
+  package_ver = config.boot.kernelPackages.nvidiaPackages.production;
 in
 {
   hardware = {
