@@ -4,7 +4,7 @@
       # root ssd - 4 TB Drive
       ssd00 = {
         type = "disk";
-        device = "/dev/nvme4n1";
+        device = "/dev/by-id/nvme-Samsung_SSD_990_PRO_4TB_S7KGNJ0X130041T";
         content = {
           type = "gpt";
           partitions = {
@@ -83,7 +83,7 @@
       # ssd cluster - intel 4 * 3.2 TB drives
       intel00 = {
         type = "disk";
-        device = "/dev/nvme0n1";
+        device = "/dev/by-id/nvme-INTEL_SSDPF2KE032T1_PHAX352405LZ3P8CGN";
         content = {
           type = "gpt";
           partitions = {
@@ -100,7 +100,7 @@
 
       intel01 = {
         type = "disk";
-        device = "/dev/nvme1n1";
+        device = "/dev/by-id/nvme-INTEL_SSDPF2KE032T1_PHAX35240B063P8CGN";
         content = {
           type = "gpt";
           partitions = {
@@ -117,7 +117,7 @@
 
       intel02 = {
         type = "disk";
-        device = "/dev/nvme2n1";
+        device = "/dev/by-id/nvme-INTEL_SSDPF2KE032T1_PHAX35230AYH3P8CGN";
         content = {
           type = "gpt";
           partitions = {
@@ -134,7 +134,7 @@
 
       intel03 = {
         type = "disk";
-        device = "/dev/nvme3n1";
+        device = "/dev/by-id/nvme-INTEL_SSDPF2KE032T1_PHAX352405L33P8CGN";
         content = {
           type = "gpt";
           partitions = {
