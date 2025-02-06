@@ -159,6 +159,7 @@
 
       # NixOS configuration entrypoint
       # Available through 'nixos-rebuild --flake .#your-hostname'
+      # Fresh install with disko: sudo nix run 'github:nix-community/disko/latest#disko-install' -- --flake .#machine
       nixosConfigurations = {
         karkinos = lib.nixosSystem {
           modules = [ ./machines/karkinos ];
@@ -167,6 +168,11 @@
 
         chiral = lib.nixosSystem {
           modules = [ ./machines/chiral ];
+          specialArgs = { inherit inputs outputs; };
+        };
+
+        oppy = lib.nixosSystem {
+          modules = [ ./machines/oppy ];
           specialArgs = { inherit inputs outputs; };
         };
       };

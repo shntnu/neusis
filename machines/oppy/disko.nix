@@ -4,7 +4,7 @@
       # root ssd - 4 TB Drive
       ssd00 = {
         type = "disk";
-        device = "/dev/nvme7n1";
+        device = "/dev/nvme4n1";
         content = {
           type = "gpt";
           partitions = {
@@ -15,13 +15,15 @@
                 type = "filesystem";
                 format = "vfat";
                 mountpoint = "/boot";
+                mountOptions = [ "umask=0077" ];
               };
             };
-            zfs = {
+            root = {
               size = "100%";
               content = {
-                type = "zfs";
-                pool = "zroot";
+                type = "filesystem";
+                format = "ext4";
+                mountpoint = "/";
               };
             };
           };
@@ -29,54 +31,54 @@
       };
 
       # SSD cluster kioxia 3 * 16TB drives
-      kioxia00 = {
-        type = "disk";
-        device = "/dev/nvme2n1";
-        content = {
-          type = "gpt";
-          partitions = {
-            zfs = {
-              size = "100%";
-              content = {
-                type = "zfs";
-                pool = "zstore16";
-              };
-            };
-          };
-        };
-      };
-      kioxia01 = {
-        type = "disk";
-        device = "/dev/nvme5n1";
-        content = {
-          type = "gpt";
-          partitions = {
-            zfs = {
-              size = "100%";
-              content = {
-                type = "zfs";
-                pool = "zstore16";
-              };
-            };
-          };
-        };
-      };
-      kioxia02 = {
-        type = "disk";
-        device = "/dev/nvme6n1";
-        content = {
-          type = "gpt";
-          partitions = {
-            zfs = {
-              size = "100%";
-              content = {
-                type = "zfs";
-                pool = "zstore16";
-              };
-            };
-          };
-        };
-      };
+      # kioxia00 = {
+      #   type = "disk";
+      #   device = "/dev/nvme2n1";
+      #   content = {
+      #     type = "gpt";
+      #     partitions = {
+      #       zfs = {
+      #         size = "100%";
+      #         content = {
+      #           type = "zfs";
+      #           pool = "zstore16";
+      #         };
+      #       };
+      #     };
+      #   };
+      # };
+      # kioxia01 = {
+      #   type = "disk";
+      #   device = "/dev/nvme5n1";
+      #   content = {
+      #     type = "gpt";
+      #     partitions = {
+      #       zfs = {
+      #         size = "100%";
+      #         content = {
+      #           type = "zfs";
+      #           pool = "zstore16";
+      #         };
+      #       };
+      #     };
+      #   };
+      # };
+      # kioxia02 = {
+      #   type = "disk";
+      #   device = "/dev/nvme6n1";
+      #   content = {
+      #     type = "gpt";
+      #     partitions = {
+      #       zfs = {
+      #         size = "100%";
+      #         content = {
+      #           type = "zfs";
+      #           pool = "zstore16";
+      #         };
+      #       };
+      #     };
+      #   };
+      # };
 
       # ssd cluster - intel 4 * 3.2 TB drives
       intel00 = {
@@ -115,7 +117,7 @@
 
       intel02 = {
         type = "disk";
-        device = "/dev/nvme3n1";
+        device = "/dev/nvme2n1";
         content = {
           type = "gpt";
           partitions = {
@@ -132,7 +134,7 @@
 
       intel03 = {
         type = "disk";
-        device = "/dev/nvme4n1";
+        device = "/dev/nvme3n1";
         content = {
           type = "gpt";
           partitions = {
@@ -147,83 +149,42 @@
         };
       };
     };
+
     # Z pool definitions
     zpool = {
-      zroot = {
-        type = "zpool";
-        mode = "";
-        rootFsOptions = {
-          # Make sure these options are correct
-          canmount = "off";
-          acltype = "posixacl";
-          dnodesize = "auto";
-          normalization = "formD";
-          atime = "off";
-          compression = "lz4";
-          mountpoint = "none";
-          xattr = "sa";
-          "com.sun:auto-snapshot" = "false";
-        };
-        options.ashift = "12";
-        options.autotrim = "on";
-
-        datasets = {
-          "local" = {
-            type = "zfs_fs";
-            options.mountpoint = "none";
-          };
-          "local/home" = {
-            type = "zfs_fs";
-            mountpoint = "/home";
-            options."com.sun:auto-snapshot" = "true";
-          };
-          "local/nix" = {
-            type = "zfs_fs";
-            mountpoint = "/nix";
-            options."com.sun:auto-snapshot" = "false";
-          };
-          "local/root" = {
-            type = "zfs_fs";
-            mountpoint = "/";
-            options."com.sun:auto-snapshot" = "false";
-            postCreateHook = "zfs snapshot zroot/local/root@blank";
-          };
-        };
-      };
-
-      zstore16 = {
-        type = "zpool";
-        mode = "";
-        rootFsOptions = {
-          # Make sure these options are correct
-          canmount = "off";
-          acltype = "posixacl";
-          dnodesize = "auto";
-          normalization = "formD";
-          atime = "off";
-          compression = "lz4";
-          mountpoint = "none";
-          xattr = "sa";
-          "com.sun:auto-snapshot" = "false";
-        };
-        options.ashift = "12";
-        options.autotrim = "on";
-
-        datasets = {
-          datastore = {
-            type = "zfs_fs";
-            mountpoint = "/datastore16";
-            options."com.sun:auto-snapshot" = "false";
-            postCreateHook = "zfs snapshot zstore16/datastore@blank";
-          };
-        };
-      };
+      # zstore16 = {
+      #   type = "zpool";
+      #   mode = "";
+      #   rootFsOptions = {
+      #     # Make sure these options are correct
+      #     canmount = "off";
+      #     acltype = "posixacl";
+      #     dnodesize = "auto";
+      #     normalization = "formD";
+      #     atime = "off";
+      #     compression = "lz4";
+      #     mountpoint = "none";
+      #     xattr = "sa";
+      #     "com.sun:auto-snapshot" = "false";
+      #   };
+      #   options.ashift = "12";
+      #   options.autotrim = "on";
+      #
+      #   datasets = {
+      #     datastore = {
+      #       type = "zfs_fs";
+      #       mountpoint = "/datastore16";
+      #       options."com.sun:auto-snapshot" = "false";
+      #       postCreateHook = "zfs snapshot zstore16/datastore@blank";
+      #     };
+      #   };
+      # };
       zstore03 = {
         type = "zpool";
         mode = "";
+        mountpoint = "/datastore03";
         rootFsOptions = {
           # Make sure these options are correct
-          canmount = "off";
           acltype = "posixacl";
           dnodesize = "auto";
           normalization = "formD";
@@ -237,7 +198,7 @@
         options.autotrim = "on";
 
         datasets = {
-          datastore = {
+          root = {
             type = "zfs_fs";
             mountpoint = "/datastore03";
             options."com.sun:auto-snapshot" = "false";

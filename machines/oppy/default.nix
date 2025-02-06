@@ -37,6 +37,7 @@
     ../common/us_eng.nix
     ../common/nosleep.nix
     ../common/nix.nix
+    ../common/printing.nix
   ];
 
   # FHS
