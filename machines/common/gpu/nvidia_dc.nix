@@ -32,7 +32,6 @@ in
   };
 
   # Nvidia and Cuda support
-  services.xserver.videoDrivers = [ "nvidia" ];
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.cudaSupport = true;
 }
