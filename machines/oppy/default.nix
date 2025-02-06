@@ -42,8 +42,8 @@
 
   # FHS
   programs.nix-ld.enable = true;
-  # disable the X11 windowing system. Required for nvidia datacenter drivers
-  services.xserver.enable = false;
+  # Required for nvidia container toolkit
+  services.xserver.enable = true;
 
   # Enable sunshine
   modules.services.sunshine.enable = true;

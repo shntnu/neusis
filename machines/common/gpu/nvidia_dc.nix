@@ -31,7 +31,10 @@ in
     nvidia-container-toolkit.enable = true;
   };
 
+  # Set xserver driver to nvidia
+  services.xserver.drivers = [ "nvidia" ];
+
   # Nvidia and Cuda support
-  nixpkgs.config.allowUnfree = true;
+  services.xserver.videoDrivers = [ "nvidia" ];
   nixpkgs.config.cudaSupport = true;
 }
