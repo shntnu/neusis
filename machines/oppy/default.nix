@@ -43,8 +43,8 @@
 
   # FHS
   programs.nix-ld.enable = true;
-  # Required for nvidia container toolkit
-  services.xserver.enable = true;
+  # Required for nvidia dc drivers
+  services.xserver.enable = false;
 
   # Enable sunshine
   modules.services.sunshine.enable = true;

@@ -4,7 +4,7 @@
   ...
 }:
 let
-  package_ver = config.boot.kernelPackages.nvidiaPackages.production;
+  package_ver = config.boot.kernelPackages.nvidiaPackages.dc_535;
 in
 {
   hardware = {
@@ -20,7 +20,7 @@ in
     # Configure Nvidia driver
     nvidia = {
       modesetting.enable = true;
-      datacenter.enable = false;
+      datacenter.enable = true;
       powerManagement.enable = false;
       open = false;
       nvidiaSettings = true;
@@ -31,10 +31,12 @@ in
     nvidia-container-toolkit.enable = true;
   };
 
-  # Set xserver driver to nvidia
-  services.xserver.videoDrivers = [ "nvidia" ];
-
-  # Nvidia and Cuda support
-  nixpkgs.config.allowUnfree = true;
-  nixpkgs.config.cudaSupport = true;
+  # Nvidia related nix configs
+  nixpkgs = {
+    config = {
+      allowUnfree = true;
+      cudaSupport = true;
+      nvidia.acceptLicense = true;
+    };
+  };
 }
