@@ -20,7 +20,7 @@ in
     # Configure Nvidia driver
     nvidia = {
       modesetting.enable = true;
-      datacenter.enable = true;
+      datacenter.enable = false;
       powerManagement.enable = false;
       open = false;
       nvidiaSettings = true;
