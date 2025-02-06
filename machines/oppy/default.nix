@@ -38,6 +38,7 @@
     ../common/nosleep.nix
     ../common/nix.nix
     ../common/printing.nix
+    ../common/grub_bootloader.nix
   ];
 
   # FHS
