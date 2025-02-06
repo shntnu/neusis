@@ -159,7 +159,7 @@
 
       # NixOS configuration entrypoint
       # Available through 'nixos-rebuild --flake .#your-hostname'
-      # Fresh install with disko: sudo nix run 'github:nix-community/disko/latest#disko-install' -- --flake .#machine
+      # Fresh install with disko: sudo nix run --extra-experimental-features 'nix-command flakes' 'github:nix-community/disko/latest#disko-install' -- --flake .#machine
       nixosConfigurations = {
         karkinos = lib.nixosSystem {
           modules = [ ./machines/karkinos ];
@@ -178,7 +178,7 @@
       };
 
       # Darwin configuration entrypoint
-      # Initial run: nix run nix-darwin -- switch --flake .#darwin001
+      # Initial run: nix run --extra-experimental-features 'nix-command flakes' nix-darwin -- switch --flake .#darwin001
       # Available through 'darwin-rebuild --flake .#your-hostname'
       darwinConfigurations = {
         darwin001 = inputs.darwin.lib.darwinSystem {
