@@ -38,7 +38,7 @@
     ../common/nosleep.nix
     ../common/nix.nix
     ../common/printing.nix
-    ../common/bootloader_systemd.nix
+    ../common/grub_bootloader.nix
 
     # oppy networking config
     ./network.nix
