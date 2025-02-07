@@ -1,18 +1,9 @@
-{ ... }: {
-  boot.kernelParams = ["nohibernate"];
-  boot.loader.grub = {
-    enable = true;
-    zfsSupport = true;
-    efiSupport = true;
-    efiInstallAsRemovable = true;
-    mirroredBoots = [
-      {
-        devices = ["nodev"];
-        path = "/boot";
-      }
-    ];
+{ ... }:
+{
+  boot.kernelParams = [ "nohibernate" ];
+  services = {
+    zfs.autoScrub.enable = true;
+    zfs.trim.enable = true;
+    nfs.server.enable = true;
   };
-  services.zfs.autoScrub.enable = true;
-  services.zfs.trim.enable = true;
-  services.nfs.server.enable = true;
 }

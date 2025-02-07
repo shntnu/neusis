@@ -1,4 +1,5 @@
 {
+  boot.zfs.extraPools = [ "zstore03" ];
   disko.devices = {
     disk = {
       # root ssd - 4 TB Drive
@@ -179,6 +180,7 @@
       #     };
       #   };
       # };
+      # https://github.com/nix-community/disko/issues/581
       zstore03 = {
         type = "zpool";
         mode = "";
@@ -200,7 +202,7 @@
         datasets = {
           root = {
             type = "zfs_fs";
-            mountpoint = "/datastore03";
+            options.mountpoint = "/datastore03";
             options."com.sun:auto-snapshot" = "false";
             postCreateHook = "zfs snapshot zstore03/datastore@blank";
           };
