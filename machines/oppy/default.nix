@@ -83,6 +83,7 @@
   ];
   environment.shells = [ pkgs.zsh ];
   programs.zsh.enable = true;
+  programs.fish.enable = true;
 
   # Networking
   networking.hostName = "oppy";
