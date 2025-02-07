@@ -10,7 +10,7 @@
           type = "gpt";
           partitions = {
             MBR = {
-              type = "EF002";
+              type = "EF02";
               size = "1M";
               priority = 1;
             };
