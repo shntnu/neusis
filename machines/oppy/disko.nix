@@ -9,12 +9,12 @@
         content = {
           type = "gpt";
           partitions = {
-            MBR = {
+            mbr = {
               type = "EF02";
               size = "1M";
               priority = 1;
             };
-            ESP = {
+            boot = {
               size = "1G";
               type = "EF00";
               content = {
@@ -93,6 +93,21 @@
         content = {
           type = "gpt";
           partitions = {
+            mbr = {
+              type = "EF02";
+              size = "1M";
+              priority = 1;
+            };
+            boot = {
+              size = "1G";
+              type = "EF00";
+              content = {
+                type = "filesystem";
+                format = "vfat";
+                mountpoint = "/boot";
+                mountOptions = [ "umask=0077" ];
+              };
+            };
             zfs = {
               size = "100%";
               content = {

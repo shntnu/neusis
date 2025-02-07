@@ -3,8 +3,17 @@
   # Bootloader
   boot.loader.grub = {
     enable = true;
+    zfsSupport = true;
     efiSupport = true;
     efiInstallAsRemovable = true;
-    devices = "/dev/nvme4n1";
+    mirroredBoots = [
+      {
+        devices = [
+          "/dev/nvme4n1"
+          "/dev/nvme0n1"
+        ];
+        path = "/boot";
+      }
+    ];
   };
 }
