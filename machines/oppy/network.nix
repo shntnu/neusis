@@ -1,4 +1,4 @@
-{ }:
+{ ... }:
 {
   systemd.network.wait-online.enable = false;
   systemd.network = {
