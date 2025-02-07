@@ -1,11 +1,16 @@
 { ... }:
 {
   # Bootloader
+  boot.shell_on_fail = true;
   boot.loader.grub = {
     enable = true;
-    zfsSupport = true;
     efiSupport = true;
     efiInstallAsRemovable = true;
-    device = "/dev/nvme4n1";
+    mirroredBoots = [
+      {
+        devices = [ "/dev/nvme4n1" ];
+        path = "/boot";
+      }
+    ];
   };
 }
