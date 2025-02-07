@@ -204,7 +204,7 @@
             type = "zfs_fs";
             options.mountpoint = "/datastore03";
             options."com.sun:auto-snapshot" = "false";
-            postCreateHook = "zfs snapshot zstore03/datastore@blank";
+            postCreateHook = "zfs snapshot zstore03/root@blank";
           };
         };
       };
