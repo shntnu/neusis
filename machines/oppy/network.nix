@@ -1,5 +1,6 @@
 { }:
 {
+  systemd.network.wait-online.enable = false;
   systemd.network = {
     enable = true;
     netdevs = {
