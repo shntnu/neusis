@@ -9,11 +9,6 @@
         content = {
           type = "gpt";
           partitions = {
-            mbr = {
-              type = "EF02";
-              size = "1M";
-              priority = 1;
-            };
             boot = {
               size = "1G";
               type = "EF00";
@@ -93,21 +88,6 @@
         content = {
           type = "gpt";
           partitions = {
-            mbr = {
-              type = "EF02";
-              size = "1M";
-              priority = 1;
-            };
-            boot = {
-              size = "1G";
-              type = "EF00";
-              content = {
-                type = "filesystem";
-                format = "vfat";
-                mountpoint = "/boot01";
-                mountOptions = [ "umask=0077" ];
-              };
-            };
             zfs = {
               size = "100%";
               content = {

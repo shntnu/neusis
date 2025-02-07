@@ -14,7 +14,6 @@
     # If you want to use modules from other flakes (such as nixos-hardware):
     inputs.hardware.nixosModules.common-pc-ssd
     inputs.home-manager.nixosModule
-    outputs.nixosModules.sunshine
 
     # Import your generated (nixos-generate-config) hardware configuration
     ./hardware-configuration.nix
