@@ -40,7 +40,7 @@
     ../common/bootloader_systemd.nix
 
     # oppy networking config
-    ./network.nix
+    #./network.nix
   ];
 
   # FHS
