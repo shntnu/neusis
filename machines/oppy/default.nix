@@ -39,6 +39,9 @@
     ../common/nix.nix
     ../common/printing.nix
     ../common/bootloader_systemd.nix
+
+    # oppy networking config
+    ./network.nix
   ];
 
   # FHS
