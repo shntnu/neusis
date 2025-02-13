@@ -208,7 +208,7 @@
           ];
         };
 
-        "ngogobe@karkinos" = lib.homeManagerConfiguration {
+        "ngogobe@oppy" = lib.homeManagerConfiguration {
           pkgs = pkgsFor.x86_64-linux;
           extraSpecialArgs = { inherit inputs outputs; };
           # > Our main home-manager configuration file <
