@@ -5,6 +5,7 @@
 ## Overview
 
 In the Neusis system, you can create different types of environments:
+
 1. General Nix environments for any type of project
 2. Python-specific virtual environments for Python projects
 

@@ -1,10 +1,10 @@
 # Getting Started with Neusis
 
-**Purpose**: This document provides a complete guide for new users to set up their account and environment in the Neusis system. It covers everything from initial SSH key generation to customizing your home environment, with clear steps and explanations for each part of the process.
+This guide documents the process for setting up an account and environment in the Neusis system. It covers SSH key generation, user configuration, and Home Manager setup. Home Manager enables users to customize their environment and test changes without administrator intervention. The guide also explains how to ensure changes persist through system rebuilds. Following these procedures will result in a functional, customized development environment.
 
 ## Initial Setup
 
-### 1. Generate SSH Keys
+### Generate SSH Keys
 
 First, you'll need to generate a secure SSH key pair using the ED25519 algorithm:
 
@@ -12,91 +12,123 @@ First, you'll need to generate a secure SSH key pair using the ED25519 algorithm
 ssh-keygen -t ed25519
 ```
 
+FIXME: Do this on your local machine if on Linux or Mac, or through WSL on Windows.
+
 This will create your SSH key pair that will be used for secure authentication across the system.
 
-### 2. Create Your User Configuration
+### Create Your User Configuration
 
-1. Fork and check out this repository.
-
-2. Create your user config directory: `homes/<your-username>`
-
-Copy the example user directory structure from `homes/shsingh` to your new user config directory to get started:
-
-```
-shsingh/
-├── home.nix
-├── id_ed25519.pub
-└── machines/
-    ├── oppy.nix
-    └── spirit.nix
-```
-
+1. Fork and check out this repository. FIXME: neusis
+2. Create your user config directory: `homes/<your-username>`. Copy the example user directory structure from `homes/shsingh` to your new user config directory to get started:
+   ```
+   <your-username>/
+   ├── home.nix         # Core configuration for username, home dir, and packages
+   ├── id_ed25519.pub   # Your SSH public key for authentication
+   └── machines/
+       ├── oppy.nix     # Machine-specific config that imports modules and sets Git info
+       └── spirit.nix   # Same as above but for a different machine
+   ```
 3. Replace the SSH public key in `id_ed25519.pub` with your own public key (which is in your `~/.ssh/id_ed25519.pub`)
-
 4. Configure `home.nix`:
-```nix
-home = {
-  username = "<your-username>";
-  homeDirectory = "/home/<your-username>";
-  # ... existing code ...
-};
-```
-
+   ```nix
+   home = {
+     username = "<your-username>";
+     homeDirectory = "/home/<your-username>";
+     # ... existing code ...
+   };
+   ```
 5. Set your Git information in `machines/*.nix`:
-```nix
-(import ../../common/dev/git.nix {
-  username = "Your Full Name";
-  userEmail = "your.email@example.com";
-  id_ed25519_pub = builtins.readFile ../id_ed25519.pub;
-})
-```
+   ```nix
+   (import ../../common/dev/git.nix {
+     username = "Your Full Name";
+     userEmail = "your.email@example.com";
+     id_ed25519_pub = builtins.readFile ../id_ed25519.pub;
+   })
+   ```
 
-## Customizing Your Home Environment
+### Enable Home Manager Functionality 
 
-You will want to customize your home environment in a number of ways. For example installing programs specific to your user account, customizing your shell prompt, modifying your `.bashrc` or `.zshrc`, etc.
+Home Manager is a tool that allows you to customize your environment without administrator intervention. Its main advantage is that it lets you test changes immediately without waiting for admin approval.
 
-To do this you will need to modify `neusis/homes/<username>/home.nix`. The normal process is to make changes there, send a PR to the `neusis` repo, have the admin pull the changes and rebuild (`nix switch`).
+You will want to customize your home environment in various ways, such as:
+- Installing programs, that you want to always have around, and are specific to your user account
+- Customizing your shell prompt
+- Modifying your `.bashrc` or `.zshrc`
+- Setting up development tools and environments
 
-However that process is time-consuming, and requires the admin to manually approve your changes (or set up some automation to do so), which would defeat one of the advantages of using nix which is the ability to install programs without `sudo`. It also doesn't afford any way to check if your changes are valid or work as expected. Going through the above process only to find a syntax error would be highly annoying.
+Without Home Manager, the process to make these changes is slow and cumbersome:
+1. Make changes to your configuration files
+2. Send a PR to the `neusis` repo
+3. Wait for admin to merge changes and rebuild (`nixos-rebuild`)
+4. Only then can you see if your changes work as expected
 
-Instead you can use `home-manager` to iteratively modify your `home.nix` and rebuild locally to see the changes.
+With Home Manager, you get an immediate feedback loop:
+1. Set up Home Manager access once (requiring an initial PR)
+2. Then iteratively modify your `home.nix` and test immediately with `home-manager switch`
+3. Submit final changes as PR when you're satisfied
 
-### Setting Up Local Development
+This immediate testing capability is crucial, as going through the admin approval process only to find syntax errors would be frustrating.
 
-To enable this, you will first need to make an entry in `neusis/flake.nix` allowing you access to `home-manger`. Copy-paste one of the entries already there, under `homeConfigurations`, and replace the necessary parts specific to your `<username>` and `<machine>`. A standard entry will look like this:
+To enable Home Manager:
 
-```
-"<username>@<machine>" = lib.homeManagerConfiguration {
-  pkgs = pkgsFor.x86_64-linux;
-  extraSpecialArgs = { inherit inputs outputs; };
+1. Add an entry for yourself in `neusis/flake.nix` under the `homeConfigurations` section:
+   ```nix
+   "<your-username>@<machine>" = lib.homeManagerConfiguration {
+     pkgs = pkgsFor.x86_64-linux;
+     extraSpecialArgs = { inherit inputs outputs; };
 
-  modules = [
-    inputs.agenix.homeManagerModules.default
-    ./homes/<username>/machines/<machine>.nix
-  ];
-```
+     modules = [
+       inputs.agenix.homeManagerModules.default
+       ./homes/<your-username>/machines/<machine>.nix
+     ];
+   }
+   ```
+   Replace `<your-username>` with your user name, and `<machine>` with the relevant server (e.g., `oppy` or `spirit`).
 
-Replace `<username>` with your user name, and `<machine>` with the relevant server (e.g. `oppy` or `spirit`).
+2. Submit your changes as a PR with all the configuration created so far.
 
-You will need to issue a PR, and have the admin accept these changes. However this is a one-time process, and from then on you will be able to make changes to your home without needing to go through a PR each time.
+3. After the admin approves and merges these changes, you'll be able to use Home Manager to customize your environment.
+
+## Using Home Manager to Customize Your Environment
+
+Once your initial PR has been merged, you can begin customizing your environment by modifying `neusis/homes/<your-username>/home.nix`. This file controls your user-specific configuration, including installed packages, shell settings, and more.
 
 ### Testing Your Changes
 
-Once the above change is made, you may modify `neusis/homes/<username>/home.nix`. After making changes run the following from the root of `neusis` (the top level directory):
+After making changes to your configuration, apply them using Home Manager:
 
 ```bash
 cd ~/neusis # or wherever the neusis repo lives for you
 nix-shell -p home-manager
-home-manager switch --flake .#<username>@<machine>
+home-manager switch --flake .#<your-username>@<machine>
 exit
 ```
 
-Note that the `#` symbol above in `.#<username>@<machine>` does not denote a comment. It is part of the syntax to the `home-manager switch --flake` command.
+Note that the `#` symbol above in `.#<your-username>@<machine>` does not denote a comment. It is part of the syntax to the `home-manager switch --flake` command.
 
-Again, make sure to replace with your actual `username` and the `machine` you're targeting (e.g. `oppy` or `spirit`).
+Again, make sure to replace `<your-username>` with your actual username and `<machine>` with the machine you're targeting (e.g., `oppy` or `spirit`).
 
-If you have installed new programs, they should now be available (try `which <program_name>`). If you have modified your shell login file (e.g. `.bashrc` or `.zshrc`), you will need to source it (e.g. `source ~/.zshrc`) or logout and log back in to see the changes.
+If you have installed new programs, they should now be available (try `which <program_name>`). If you have modified your shell login file (e.g., `.bashrc` or `.zshrc`), you will need to source it (e.g., `source ~/.zshrc`) or logout and log back in to see the changes.
 
 ### Submitting Changes
 
-Once you are satisfied with your customizations, issue a PR. Since running `home-manager switch` immediately reflects your changes to `home.nix`, you do not have to wait for the PR to be merged, however it is still important to make a PR with your changes so that they can *eventually* be incorporated into the `main` branch. 
+**IMPORTANT:** After you've customized your home environment to your satisfaction using Home Manager, you **must** commit and push these changes to the main repository. This step is critical for several reasons:
+
+1. While `home-manager switch` immediately applies your changes locally, these changes aren't automatically synchronized with the main system configuration.
+
+2. When the admin performs a global system rebuild (`nixos-rebuild`), the system will use the configuration files from the main branch.
+
+3. If you haven't pushed your changes, your home environment will revert to its previous state during the next system rebuild.
+
+To ensure your changes persist:
+
+```bash
+# From the neusis repository
+git add homes/<your-username>/
+git commit -m "Update home configuration for <your-username>"
+git push 
+```
+
+Then create a pull request so the admin can review and merge your changes into the main branch. This ensures your customizations become part of the system's permanent configuration.
+
+Even though your changes are already active due to running `home-manager switch` locally, completing this PR process is essential for maintaining your preferred configuration long-term. 
