@@ -40,7 +40,7 @@
     ../common/bootloader_systemd.nix
 
     # oppy networking config
-    ./network.nix
+    #./network.nix
   ];
 
   # FHS
@@ -83,6 +83,7 @@
   ];
   environment.shells = [ pkgs.zsh ];
   programs.zsh.enable = true;
+  programs.fish.enable = true;
 
   # Networking
   networking.hostName = "oppy";
@@ -255,6 +256,26 @@
       ];
     };
 
+    akalinin = {
+      shell = pkgs.bash;
+      isNormalUser = true;
+      initialPassword = "changeme";
+      # passwordFile = config.age.secrets.karkinos_pass.path;
+      description = "Alex";
+      extraGroups = [
+        "networkmanager"
+        "wheel"
+        "libvirtd"
+        "qemu-libvirtd"
+        "input"
+        "podman"
+        "docker"
+      ];
+      openssh.authorizedKeys.keyFiles = [
+        ../../homes/akalinin/id_ed25519.pub
+      ];
+    };
+
   };
 
   home-manager = {
@@ -316,6 +337,13 @@
         imports = [
           inputs.agenix.homeManagerModules.default
           ../../homes/jfredinh/machines/oppy.nix
+        ];
+      };
+
+      akalinin = {
+        imports = [
+          inputs.agenix.homeManagerModules.default
+          ../../homes/akalinin/machines/oppy.nix
         ];
       };
     };
