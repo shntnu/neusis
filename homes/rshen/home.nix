@@ -19,7 +19,7 @@
       btop # nicer btop
 
       # python
-      python310 # the standard python
+      #python310 # the standard python
       poetry # python package management
     ];
   };
