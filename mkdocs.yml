@@ -1,0 +1,25 @@
+site_name: neusis
+
+nav:
+  - Home: index.md
+  - Architecture:
+    - Architecture: architecture.md
+    - Machine Configurations: machines.md
+  - User Setup:
+    - Creating a User: create_user.md
+    - Adding Users to a Machine: add_users.md
+    - Customizing Your Home: modify_home.md
+    - Managing SSH Keys: create-keys.md
+  - Development:
+    - Creating Environments: create_env.md
+    - Python Environments: create-venv.md
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - pymdownx.snippets
+  - admonition
+
+plugins:
+  - search
