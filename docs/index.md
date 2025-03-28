@@ -1,5 +1,7 @@
 # Neusis: Multi-machine Nix Configuration System
 
+**Purpose**: This is the main entry point for the Neusis documentation. It provides an overview of the system, its capabilities, and quick reference commands for common operations. This document serves as the starting point for understanding and using the Neusis system.
+
 Welcome to the Neusis documentation. This repository contains a comprehensive Nix-based configuration system for managing multiple machines and user environments.
 
 ## What is Neusis?

@@ -2,17 +2,12 @@ site_name: neusis
 
 nav:
   - Home: index.md
-  - Architecture:
-    - Architecture: architecture/architecture.md
-    - Machine Configurations: architecture/machines.md
+  - Architecture: architecture/architecture.md
   - User Setup:
-    - Creating a User: user_setup/create_user.md
-    - Adding Users to a Machine: user_setup/add_users.md
-    - Customizing Your Home: user_setup/modify_home.md
-    - Managing SSH Keys: user_setup/create_keys.md
+    - Getting Started: user_setup/getting_started.md
+    - User Management: user_setup/user_management.md
   - Development:
-    - Creating Environments: development/create_env.md
-    - Python Environments: development/create_venv.md
+    - Environment Setup: development/environment_setup.md
 
 markdown_extensions:
   - pymdownx.highlight

@@ -1,5 +1,7 @@
 # Adding new users
 
+**Purpose**: This document provides instructions for system administrators on how to add new users to specific machines in the Neusis system. It explains the configuration changes needed in machine-specific files to grant user access and set up appropriate permissions and groups. This is an administrative task that should be performed by system administrators.
+
 In the file `machines/<machine_name>/default.nx`, under the `users.users` key, add a user dictionary with the key corresponding to the name of a folder in `homes/`, where `<machine_name>` is e.g. `spirit`, `oppy`, etc.
 
 The easiest way is to copy an existing user, and paste it, changing the name as necessary.

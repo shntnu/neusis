@@ -1,5 +1,7 @@
 # Neusis: Multi-machine Nix Configuration System
 
+**Purpose**: This document provides a comprehensive technical overview of the Neusis system architecture. It explains the core concepts, dependency structure, and implementation details of the Nix-based configuration system. This document is essential for understanding how different components interact and how the system is organized.
+
 A reproducible, declarative infrastructure-as-code system for managing multiple machines and user environments using the Nix ecosystem (NixOS, nix-darwin, and home-manager).
 
 ## Nix Fundamentals
