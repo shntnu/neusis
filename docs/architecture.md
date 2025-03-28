@@ -24,25 +24,7 @@ The system follows Nix's pure functional composition principles where configurat
 
 ### Visualizing the Dependency Graph
 
-You can programmatically visualize different aspects of this dependency structure:
-
-```bash
-# Visualize flake input dependencies
-nix flake metadata --json | jq -r '.locks.nodes | to_entries[] | .key + " -> " + (.value.inputs | to_entries[] | .value)' | sort | uniq > flake_deps.dot
-echo "digraph G { $(cat flake_deps.dot) }" > flake_deps.dot
-
-# Visualize package dependencies for a specific system
-nix-store --query --graph $(nix-build --no-out-link) > package_deps.dot
-
-# Visualize module imports for a NixOS system
-nixos-rebuild build --flake .#karkinos
-nix show-derivation /nix/store/*karkinos*.drv > system_deps.json
-
-# Convert to visualization
-dot -Tpng flake_deps.dot -o flake_deps.png
-```
-
-For a comprehensive view, you can also use specialized tools:
+For a comprehensive view of dependency structure, you can use specialized tools:
 - [nix-visualize](https://github.com/craigmbooth/nix-visualize)
 - [nix-du](https://github.com/symphorien/nix-du)
 - [nix-tree](https://github.com/utdemir/nix-tree)
