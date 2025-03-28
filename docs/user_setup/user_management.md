@@ -76,5 +76,4 @@ This links to the user's home configuration for this specific machine, which was
 - Users cannot add themselves to machines - this is strictly an administrator task
 - You decide which machines each user should have access to
 - The user's home configuration will be applied during the next system rebuild
-- Both steps must be completed for each machine the user should have access to
 
