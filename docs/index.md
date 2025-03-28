@@ -10,14 +10,6 @@ Neusis is a declarative infrastructure-as-code system built on the Nix ecosystem
 - **Multi-platform Support**: Configurations for both NixOS (Linux) and nix-darwin (macOS)
 - **User Management**: Per-user, per-machine home-manager configurations
 
-## Getting Started
-
-- [Understanding the Architecture](architecture/architecture.md)
-- [Creating a User](user_setup/create_user.md)
-- [Customizing Your Home](user_setup/modify_home.md)
-- [Creating Environments](development/create_env.md)
-- [Machine Configurations](architecture/machines.md) 
-
 ## Machines
 
 The repository currently manages configurations for:

@@ -9,10 +9,10 @@ nav:
     - Creating a User: user_setup/create_user.md
     - Adding Users to a Machine: user_setup/add_users.md
     - Customizing Your Home: user_setup/modify_home.md
-    - Managing SSH Keys: user_setup/create-keys.md
+    - Managing SSH Keys: user_setup/create_keys.md
   - Development:
     - Creating Environments: development/create_env.md
-    - Python Environments: development/create-venv.md
+    - Python Environments: development/create_venv.md
 
 markdown_extensions:
   - pymdownx.highlight
