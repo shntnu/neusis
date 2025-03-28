@@ -12,11 +12,11 @@ Neusis is a declarative infrastructure-as-code system built on the Nix ecosystem
 
 ## Getting Started
 
-- [Understanding the Architecture](architecture.md)
-- [Creating a User](create_user.md)
-- [Customizing Your Home](modify_home.md)
-- [Creating Environments](create_env.md)
-- [Machine Configurations](machines.md)
+- [Understanding the Architecture](architecture/architecture.md)
+- [Creating a User](user_setup/create_user.md)
+- [Customizing Your Home](user_setup/modify_home.md)
+- [Creating Environments](development/create_env.md)
+- [Machine Configurations](architecture/machines.md) 
 
 ## Machines
 
