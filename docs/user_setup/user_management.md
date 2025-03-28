@@ -1,8 +1,20 @@
 # Adding new users
 
-**Purpose**: This document provides instructions for system administrators on how to add new users to specific machines in the Neusis system. It explains the configuration changes needed in machine-specific files to grant user access and set up appropriate permissions and groups. This is an administrative task that should be performed by system administrators.
+This document outlines the process for system administrators to add new users to the Neusis environment. It describes the end-to-end workflow from user PR submission to account activation, including required configuration changes across machine-specific files. Followzing these instructions will ensure proper user access management, permission configuration, and home directory setup across the system. This guide assumes familiarity with NixOS configuration principles and the Neusis repository structure.
 
-In the file `machines/<machine_name>/default.nx`, under the `users.users` key, add a user dictionary with the key corresponding to the name of a folder in `homes/`, where `<machine_name>` is e.g. `spirit`, `oppy`, etc.
+## Workflow Overview
+
+1. Users request access by submitting a PR that creates their home configuration (as described in `getting_started.md`)
+2. Administrators review the PR and then add the user to specific machines
+3. The system rebuild applies the user's configuration to their home directory on approved machines
+
+## Administrator Actions
+
+As an administrator, you will respond to user PRs by adding their user account to specific machines they should have access to. This requires updating two sections in the machine-specific configuration file.
+
+### Step 1: Add User Account
+
+In the file `machines/<machine_name>/default.nx`, under the `users.users` key, add a user dictionary with the key corresponding to the name of the folder in `homes/` that the user created in their PR.
 
 The easiest way is to copy an existing user, and paste it, changing the name as necessary.
 
@@ -32,13 +44,14 @@ users.users = {
         ../../homes/<some_user>/id_ed25519.pub
       ];
     };
+}
 ```
 
-The key, `<some_user>`, would need to be replaced with the name of a directory in `homes/`, and `<name of user>` is the human name of the user.
+The key, `<some_user>`, must match the name of the directory in `homes/` created by the user in their PR.
 
-Then in `home-manager.users`, create a user dictionary with the key again maching the name of a directory in `homes/`. The dictionary should be customized for the user preferences, per machine (e.g. `oppy`, `spirit`, etc.).
+### Step 2: Link Home Manager Configuration
 
-Here is an example:
+In the same file, locate the `home-manager.users` section and add an entry for the user that imports their machine-specific configuration:
 
 ```
 home-manager = {
@@ -49,10 +62,19 @@ home-manager = {
         <some_user> = {
             imports = [
               inputs.agenix.homeManagerModules.default
-              ../../homes/ngogober/machines/oppy.nix
+              ../../homes/<some_user>/machines/<machine_name>.nix
             ];
         };
     }
 }
 ```
+
+This links to the user's home configuration for this specific machine, which was provided in their PR.
+
+## Important Notes
+
+- Users cannot add themselves to machines - this is strictly an administrator task
+- You decide which machines each user should have access to
+- The user's home configuration will be applied during the next system rebuild
+- Both steps must be completed for each machine the user should have access to
 
