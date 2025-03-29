@@ -70,6 +70,7 @@ in
 
     };
     enableZshIntegration = true;
+    enableBashIntegration = true;
     plugins = {
       max-preview = ./yazi_img_max;
     };

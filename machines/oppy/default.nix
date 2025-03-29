@@ -25,6 +25,8 @@
     ./filesystem.nix
     # common zfs configs
     ../common/zfs.nix
+    # bonded networking
+    #./network.nix
 
     # You can also split up your configuration and import pieces of it here:
     ../common/networking.nix
@@ -153,6 +155,26 @@
       ];
       openssh.authorizedKeys.keyFiles = [
         ../../homes/ngogober/id_ed25519.pub
+      ];
+    };
+
+    spathak = {
+      shell = pkgs.zsh;
+      isNormalUser = true;
+      initialPassword = "changeme";
+      # passwordFile = config.age.secrets.karkinos_pass.path;
+      description = "Suraj";
+      extraGroups = [
+        "networkmanager"
+        "wheel"
+        "libvirtd"
+        "qemu-libvirtd"
+        "input"
+        "podman"
+        "docker"
+      ];
+      openssh.authorizedKeys.keyFiles = [
+        ../../homes/spathak/id_ed25519.pub
       ];
     };
 
@@ -303,6 +325,12 @@
         imports = [
           inputs.agenix.homeManagerModules.default
           ../../homes/ngogober/machines/oppy.nix
+        ];
+      };
+      spathak = {
+        imports = [
+          inputs.agenix.homeManagerModules.default
+          ../../homes/spathak/machines/oppy.nix
         ];
       };
       jarevalo = {

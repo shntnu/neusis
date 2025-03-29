@@ -12,6 +12,7 @@
         bondConfig = {
           Mode = "802.3ad";
           MIIMonitorSec = "0.100s";
+          TransmitHashPolicy = "layer3+4";
         };
       };
     };
