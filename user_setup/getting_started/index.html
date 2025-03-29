@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>Getting Started - neusis</title>
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../css/brands.min.css" rel="stylesheet">
+        <link href="../../css/solid.min.css" rel="stylesheet">
+        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../..">neusis</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../.." class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../architecture/architecture/" class="nav-link">Architecture</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">User Setup</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="./" class="dropdown-item active" aria-current="page">Getting Started</a>
+</li>
+                                    
+<li>
+    <a href="../user_management/" class="dropdown-item">User Management</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Development</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../development/environment_setup/" class="dropdown-item">Environment Setup</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../../architecture/architecture/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../user_management/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#getting-started-with-neusis" class="nav-link">Getting Started with Neusis</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#initial-setup" class="nav-link">Initial Setup</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#using-home-manager-to-customize-your-environment" class="nav-link">Using Home Manager to Customize Your Environment</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="getting-started-with-neusis">Getting Started with Neusis</h1>
+<p>This guide documents the process for setting up an account and environment in the Neusis system. It covers SSH key generation, user configuration, and Home Manager setup. Home Manager enables users to customize their environment and test changes without administrator intervention. The guide also explains how to ensure changes persist through system rebuilds. Following these procedures will result in a functional, customized development environment.</p>
+<h2 id="initial-setup">Initial Setup</h2>
+<h3 id="generate-ssh-keys">Generate SSH Keys</h3>
+<p>First, you'll need to generate a secure SSH key pair using the ED25519 algorithm:</p>
+<div class="highlight"><pre><span></span><code>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ed25519
+</code></pre></div>
+<p>FIXME: Do this on your local machine if on Linux or Mac, or through WSL on Windows.</p>
+<p>This will create your SSH key pair that will be used for secure authentication across the system.</p>
+<h3 id="create-your-user-configuration">Create Your User Configuration</h3>
+<ol>
+<li>Fork and check out this repository. FIXME: neusis</li>
+<li>Create your user config directory: <code>homes/&lt;your-username&gt;</code>. Copy the example user directory structure from <code>homes/shsingh</code> to your new user config directory to get started:
+   <div class="highlight"><pre><span></span><code>&lt;your-username&gt;/
+├── home.nix         # Core configuration for username, home dir, and packages
+├── id_ed25519.pub   # Your SSH public key for authentication
+└── machines/
+    ├── oppy.nix     # Machine-specific config that imports modules and sets Git info
+    └── spirit.nix   # Same as above but for a different machine
+</code></pre></div></li>
+<li>Replace the SSH public key in <code>id_ed25519.pub</code> with your own public key (which is in your <code>~/.ssh/id_ed25519.pub</code>)</li>
+<li>Configure <code>home.nix</code>:
+   <div class="highlight"><pre><span></span><code><span class="ss">home</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="ss">username</span> <span class="o">=</span> <span class="s2">&quot;&lt;your-username&gt;&quot;</span><span class="p">;</span>
+  <span class="ss">homeDirectory</span> <span class="o">=</span> <span class="s2">&quot;/home/&lt;your-username&gt;&quot;</span><span class="p">;</span>
+  <span class="c1"># ... existing code ...</span>
+<span class="p">};</span>
+</code></pre></div></li>
+<li>Set your Git information in <code>machines/*.nix</code>:
+   <div class="highlight"><pre><span></span><code><span class="p">(</span><span class="nb">import</span> <span class="l">../../common/dev/git.nix</span> <span class="p">{</span>
+  <span class="ss">username</span> <span class="o">=</span> <span class="s2">&quot;Your Full Name&quot;</span><span class="p">;</span>
+  <span class="ss">userEmail</span> <span class="o">=</span> <span class="s2">&quot;your.email@example.com&quot;</span><span class="p">;</span>
+  <span class="ss">id_ed25519_pub</span> <span class="o">=</span> <span class="nb">builtins</span><span class="o">.</span>readFile <span class="l">../id_ed25519.pub</span><span class="p">;</span>
+<span class="p">})</span>
+</code></pre></div></li>
+</ol>
+<h3 id="enable-home-manager-functionality">Enable Home Manager Functionality</h3>
+<p>Home Manager is a tool that allows you to customize your environment without administrator intervention. Its main advantage is that it lets you test changes immediately without waiting for admin approval.</p>
+<p>You will want to customize your home environment in various ways, such as:
+- Installing programs, that you want to always have around, and are specific to your user account
+- Customizing your shell prompt
+- Modifying your <code>.bashrc</code> or <code>.zshrc</code>
+- Setting up development tools and environments</p>
+<p>Without Home Manager, the process to make these changes is slow and cumbersome:
+1. Make changes to your configuration files
+2. Send a PR to the <code>neusis</code> repo
+3. Wait for admin to merge changes and rebuild (<code>nixos-rebuild</code>)
+4. Only then can you see if your changes work as expected</p>
+<p>With Home Manager, you get an immediate feedback loop:
+1. Set up Home Manager access once (requiring an initial PR)
+2. Then iteratively modify your <code>home.nix</code> and test immediately with <code>home-manager switch</code>
+3. Submit final changes as PR when you're satisfied</p>
+<p>This immediate testing capability is crucial, as going through the admin approval process only to find syntax errors would be frustrating.</p>
+<p>To enable Home Manager:</p>
+<ol>
+<li>
+<p>Add an entry for yourself in <code>neusis/flake.nix</code> under the <code>homeConfigurations</code> section:
+   <div class="highlight"><pre><span></span><code><span class="s2">&quot;&lt;your-username&gt;@&lt;machine&gt;&quot;</span> <span class="o">=</span> lib<span class="o">.</span>homeManagerConfiguration <span class="p">{</span>
+  <span class="ss">pkgs</span> <span class="o">=</span> pkgsFor<span class="o">.</span>x86_64-linux<span class="p">;</span>
+  <span class="ss">extraSpecialArgs</span> <span class="o">=</span> <span class="p">{</span> <span class="k">inherit</span> inputs outputs<span class="p">;</span> <span class="p">};</span>
+
+  <span class="ss">modules</span> <span class="o">=</span> <span class="p">[</span>
+    inputs<span class="o">.</span>agenix<span class="o">.</span>homeManagerModules<span class="o">.</span>default
+    <span class="l">./homes</span><span class="o">/</span><span class="l">&lt;your-username&gt;/machines</span><span class="o">/</span><span class="l">&lt;machine&gt;</span><span class="o">.</span>nix
+  <span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div>
+   Replace <code>&lt;your-username&gt;</code> with your user name, and <code>&lt;machine&gt;</code> with the relevant server (e.g., <code>oppy</code> or <code>spirit</code>).</p>
+</li>
+<li>
+<p>Submit your changes as a PR with all the configuration created so far.</p>
+</li>
+<li>
+<p>After the admin approves and merges these changes, you'll be able to use Home Manager to customize your environment.</p>
+</li>
+</ol>
+<h2 id="using-home-manager-to-customize-your-environment">Using Home Manager to Customize Your Environment</h2>
+<p>Once your initial PR has been merged, you can begin customizing your environment by modifying <code>neusis/homes/&lt;your-username&gt;/home.nix</code>. This file controls your user-specific configuration, including installed packages, shell settings, and more.</p>
+<h3 id="testing-your-changes">Testing Your Changes</h3>
+<p>After making changes to your configuration, apply them using Home Manager:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/neusis<span class="w"> </span><span class="c1"># or wherever the neusis repo lives for you</span>
+nix-shell<span class="w"> </span>-p<span class="w"> </span>home-manager
+home-manager<span class="w"> </span>switch<span class="w"> </span>--flake<span class="w"> </span>.#&lt;your-username&gt;@&lt;machine&gt;
+<span class="nb">exit</span>
+</code></pre></div>
+<p>Note that the <code>#</code> symbol above in <code>.#&lt;your-username&gt;@&lt;machine&gt;</code> does not denote a comment. It is part of the syntax to the <code>home-manager switch --flake</code> command.</p>
+<p>Again, make sure to replace <code>&lt;your-username&gt;</code> with your actual username and <code>&lt;machine&gt;</code> with the machine you're targeting (e.g., <code>oppy</code> or <code>spirit</code>).</p>
+<p>If you have installed new programs, they should now be available (try <code>which &lt;program_name&gt;</code>). If you have modified your shell login file (e.g., <code>.bashrc</code> or <code>.zshrc</code>), you will need to source it (e.g., <code>source ~/.zshrc</code>) or logout and log back in to see the changes.</p>
+<h3 id="submitting-changes">Submitting Changes</h3>
+<p><strong>IMPORTANT:</strong> After you've customized your home environment to your satisfaction using Home Manager, you <strong>must</strong> commit and push these changes to the main repository. This step is critical for several reasons:</p>
+<ol>
+<li>
+<p>While <code>home-manager switch</code> immediately applies your changes locally, these changes aren't automatically synchronized with the main system configuration.</p>
+</li>
+<li>
+<p>When the admin performs a global system rebuild (<code>nixos-rebuild</code>), the system will use the configuration files from the main branch.</p>
+</li>
+<li>
+<p>If you haven't pushed your changes, your home environment will revert to its previous state during the next system rebuild.</p>
+</li>
+</ol>
+<p>To ensure your changes persist:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># From the neusis repository</span>
+git<span class="w"> </span>add<span class="w"> </span>homes/&lt;your-username&gt;/
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Update home configuration for &lt;your-username&gt;&quot;</span>
+git<span class="w"> </span>push<span class="w"> </span>
+</code></pre></div>
+<p>Then create a pull request so the admin can review and merge your changes into the main branch. This ensures your customizations become part of the system's permanent configuration.</p>
+<p>Even though your changes are already active due to running <code>home-manager switch</code> locally, completing this PR process is essential for maintaining your preferred configuration long-term. </p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js"></script>
+        <script src="../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

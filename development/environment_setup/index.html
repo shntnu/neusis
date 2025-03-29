@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>Environment Setup - neusis</title>
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../css/brands.min.css" rel="stylesheet">
+        <link href="../../css/solid.min.css" rel="stylesheet">
+        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../..">neusis</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../.." class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../architecture/architecture/" class="nav-link">Architecture</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">User Setup</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../user_setup/getting_started/" class="dropdown-item">Getting Started</a>
+</li>
+                                    
+<li>
+    <a href="../../user_setup/user_management/" class="dropdown-item">User Management</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Development</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="./" class="dropdown-item active" aria-current="page">Environment Setup</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../../user_setup/user_management/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" class="nav-link disabled">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#environment-setup-guide" class="nav-link">Environment Setup Guide</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#overview" class="nav-link">Overview</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#general-nix-environments" class="nav-link">General Nix Environments</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#python-virtual-environments" class="nav-link">Python Virtual Environments</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="environment-setup-guide">Environment Setup Guide</h1>
+<p><strong>Purpose</strong>: This document provides comprehensive guidance for creating and managing different types of environments in the Neusis system. It covers both general Nix environments and Python-specific virtual environments, explaining when to use each type and how to manage them effectively.</p>
+<h2 id="overview">Overview</h2>
+<p>In the Neusis system, you can create different types of environments:</p>
+<ol>
+<li>General Nix environments for any type of project</li>
+<li>Python-specific virtual environments for Python projects</li>
+</ol>
+<p>Each type serves different needs and has its own management approach.</p>
+<h2 id="general-nix-environments">General Nix Environments</h2>
+<p><code>homes/&lt;username&gt;/home.nix</code> describes the base environment for your user account (e.g. programs available specifically to your user account, dotfiles, etc.).</p>
+<p>For a given project, you may want to create a separate project-specific environment with additional tools. For this you can create a new environment (nix shell) that is specific to the project.</p>
+<h3 id="creating-from-template">Creating from Template</h3>
+<p>In your home folder run:</p>
+<div class="highlight"><pre><span></span><code>nix<span class="w"> </span>flake<span class="w"> </span>new<span class="w"> </span>-t<span class="w"> </span>github:leoank/neusis#pythonml<span class="w"> </span>&lt;project_name&gt;
+</code></pre></div>
+<p>This will create a new environment using the template in <code>templates/pythonml</code>.</p>
+<p><code>cd</code> into <code>&lt;project_name&gt;</code></p>
+<p>You may edit the <code>flake.nix</code> file to include any additional programs you wish. Since the template creates a python project, there is no need to specify any python-specific packages (packages from PyPI) in the <code>flake.nix</code>, as those will instead be handled by <code>uv</code> and go in <code>pyproject.toml</code> instead.</p>
+<p>To activate the virtual environment, from within the <code>&lt;project_name&gt;</code> directory run: <code>nix develop .</code></p>
+<p>"Activating" the virtual environment, in nix parlance, means you are put into a new "nix shell".</p>
+<p>You can verify this by running:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="nv">$VIRTUAL_ENV</span>
+</code></pre></div>
+<p>Which will show something like:</p>
+<div class="highlight"><pre><span></span><code>&gt; /home/&lt;username&gt;/&lt;project_name&gt;/.venv
+</code></pre></div>
+<h3 id="editing-the-shell">Editing the Shell</h3>
+<p>If you want to edit the shell (not the <code>uv</code> environment, but the nix shell), you will need to edit the <code>flake.nix</code> file.</p>
+<p>This requires a basic understanding of the <a href="https://nix.dev/manual/nix/2.24/language/index.html">nix language</a>.</p>
+<h2 id="python-virtual-environments">Python Virtual Environments</h2>
+<p>We normally want to create a separate virtual environment for each project (repository). Navigate to the root of your project repo, and create a new base virtual environment using Ank's template:</p>
+<div class="highlight"><pre><span></span><code>nix<span class="w"> </span>flake<span class="w"> </span>new<span class="w"> </span>-t<span class="w"> </span>github:leoank/neusis#pythonml<span class="w"> </span>axiom-env
+</code></pre></div>
+<p>This folder now looks like a normal Python project, with a pyproject.toml file, etc. The difference from a normal Python project is that it won't work without the flake.nix file. With Nix, we build a new shell from scratch, based on exactly we need inside of that shell. Since Nix is declarative, it has an internal map of where different software and packages are installed and what depends on what. When you run 'nix develop .', it builds a whole virtual environment with the specified software down to the base OS so that everything is where it's supposed to be and there are no dependency conflicts. Each software/package is only installed on Nix in one location, so you are really just linking to it and that's why this is so fast - we aren't re-downloading or installing anything. In contrast, with conda or mamba, each user must download and install each Python package separately, and sometimes separately for each virtual environment that they create. </p>
+<h3 id="first-time-setup">First-Time Setup</h3>
+<p>To activate the virtual environment for the first time:</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>init
+git<span class="w"> </span>add<span class="w"> </span>.
+
+nix<span class="w"> </span>develop<span class="w"> </span>.
+</code></pre></div>
+<p>If you are using bash, you should see (.venv) after your shell. If you are using something else like zsh, your shell should look different now. </p>
+<p>While inside of axiom-env (or whatever your environment folder is called), run:</p>
+<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>sync
+</code></pre></div>
+<p>This is now adding each of the software specified in the flake.nix file into the virtual environment. </p>
+<h3 id="managing-python-dependencies">Managing Python Dependencies</h3>
+<p>If we want to add a new Python package, we want to add it to the "dependencies" part of the pyproject.toml file:</p>
+<div class="highlight"><pre><span></span><code>    <span class="n">dependencies</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;ultralytics&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;fiftyone&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;label-studio&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;label-studio-sdk&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sh&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;plotnine&quot;</span>
+    <span class="p">]</span>
+</code></pre></div>
+<p>Go to pypi.org and search the package to make sure you are using the right name. After adding to the pyproject.toml, we have to run:
+<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>sync
+</code></pre></div></p>
+<h3 id="managing-system-dependencies">Managing System Dependencies</h3>
+<p>If the software is not a Python dependency (ie. awscli), we need to add it to the packages part of the flake.nix file:</p>
+<div class="highlight"><pre><span></span><code><span class="w">              </span><span class="nv">packages</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>
+<span class="w">                </span>python_with_pkgs
+<span class="w">                </span>python311Packages.venvShellHook
+<span class="w">                </span><span class="c1"># We now recommend to use uv for package management inside nix env</span>
+<span class="w">                </span>mpkgs.uv
+<span class="w">                </span>awscli2
+
+<span class="w">                </span><span class="c1"># Data sharing tools</span>
+<span class="w">                </span><span class="c1"># syncthing</span>
+<span class="w">                </span><span class="c1"># jq</span>
+
+<span class="w">                </span><span class="c1"># Data inspections tools</span>
+<span class="w">                </span><span class="c1"># duckdb</span>
+<span class="w">                </span><span class="c1"># mongodb</span>
+<span class="w">                </span>arion
+
+<span class="w">                </span><span class="c1"># video tools</span>
+<span class="w">                </span>ffmpeg
+<span class="w">              </span><span class="o">]</span><span class="w"> </span>++<span class="w"> </span>libList<span class="p">;</span>
+</code></pre></div>
+<p>After adding to flake.nix, we have to run:
+<div class="highlight"><pre><span></span><code><span class="nb">exit</span>
+
+nix<span class="w"> </span>develop<span class="w"> </span>.
+</code></pre></div></p>
+<p>To know exactly what name to use, search on https://search.nixos.org/packages.</p>
+<h3 id="environment-management-commands">Environment Management Commands</h3>
+<p>To get out of the virtual environment:
+<div class="highlight"><pre><span></span><code><span class="nb">exit</span>
+</code></pre></div></p>
+<p>To activate a pre-existing environment:
+<div class="highlight"><pre><span></span><code>nix<span class="w"> </span>develop<span class="w"> </span>.
+</code></pre></div></p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js"></script>
+        <script src="../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
