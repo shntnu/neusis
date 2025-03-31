@@ -9,7 +9,7 @@
     description = "Generic python machine learning environment";
   };
 
-  fshpythonml = {
+  fhspythonml = {
     path = ./fhspythonml;
     description = "FHS python machine learning environment";
   };
