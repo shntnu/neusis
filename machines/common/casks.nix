@@ -12,4 +12,5 @@
   "docker"
   "zoom"
   "vlc"
+  "nvidia-nsight-compute"
 ]
