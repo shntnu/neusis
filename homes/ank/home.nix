@@ -23,6 +23,7 @@
       nvd
       nurl
       statix
+      extra-container
     ];
   };
 }
