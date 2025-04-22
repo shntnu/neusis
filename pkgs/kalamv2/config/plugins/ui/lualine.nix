@@ -20,6 +20,9 @@
         lualine_a = [ "mode" ];
         lualine_b = [ "branch" ];
         lualine_y = [
+          "filesize"
+          "lsp_status"
+          "hostname"
           "progress"
         ];
       };
