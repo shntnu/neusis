@@ -86,7 +86,7 @@
     }
     {
       mode = "n";
-      key = "zK";
+      key = "zkk";
       action = helpers.mkRaw "function() local winid = require('ufo').peekFoldedLinesUnderCursor() if not winid then vim.lsp.buf.hover() end end";
       options.desc = "Peek Folded Lines";
     }
