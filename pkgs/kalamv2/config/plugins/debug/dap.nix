@@ -74,16 +74,16 @@
       };
     };
 
-    which-key.settings.spec = [
-      {
-        __unkeyed-1 = "<leader>d";
-        mode = [
-          "n"
-          "v"
-        ];
-        group = "+debug";
-      }
-    ];
+    # which-key.settings.spec = [
+    #   {
+    #     __unkeyed-1 = "<leader>d";
+    #     mode = [
+    #       "n"
+    #       "v"
+    #     ];
+    #     group = "+debug";
+    #   }
+    # ];
   };
 
   keymaps = [

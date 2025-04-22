@@ -41,7 +41,7 @@
     #./ui/general.nix
     ./ui/flash.nix
     ./ui/indent-blankline.nix
-    #./ui/lualine.nix
+    ./ui/lualine.nix
     #./ui/noice.nix
     #./ui/notify.nix
     ./ui/nui.nix

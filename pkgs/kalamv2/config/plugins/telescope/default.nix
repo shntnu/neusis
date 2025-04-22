@@ -1,6 +1,8 @@
 { pkgs, ... }:
 {
   plugins = {
+
+    web-devicons.enable = true;
     telescope = {
       enable = true;
       extensions = {
@@ -41,6 +43,10 @@
           action = "live_grep";
           options.desc = "Grep (root dir)";
         };
+        "<leader>fb" = {
+          action = "buffers";
+          options.desc = "Select open buffers";
+        };
         "<leader>:" = {
           action = "command_history";
           options.desc = "Command History";
@@ -57,35 +63,35 @@
           action = "registers";
           options.desc = "Select register to paste";
         };
-        "<leader>sc" = {
+        "<leader>fc" = {
           action = "commands";
           options.desc = "Commands";
         };
-        "<leader>sd" = {
+        "<leader>fd" = {
           action = "diagnostics bufnr=0";
           options.desc = "Workspace diagnostics";
         };
-        "<leader>sh" = {
+        "<leader>fh" = {
           action = "help_tags";
           options.desc = "Help pages";
         };
-        "<leader>sk" = {
+        "<leader>fk" = {
           action = "keymaps";
           options.desc = "Key maps";
         };
-        "<leader>sM" = {
+        "<leader>fM" = {
           action = "man_pages";
           options.desc = "Man pages";
         };
-        "<leader>sm" = {
+        "<leader>fm" = {
           action = "marks";
           options.desc = "Jump to Mark";
         };
-        "<leader>so" = {
+        "<leader>fo" = {
           action = "vim_options";
           options.desc = "Options";
         };
-        "<leader>uC" = {
+        "<leader>fC" = {
           action = "colorscheme";
           options.desc = "Colorscheme preview";
         };
