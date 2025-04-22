@@ -6,10 +6,10 @@
         "BufEnter"
         "BufNew"
       ];
-      desc = "disable statuscolumn for neo-tree and dashboard";
+      desc = "disable statuscolumn for dashboard";
       callback = helpers.mkRaw ''
         function()
-          local ft_ignore = { "dashboard", "neo-tree" }
+          local ft_ignore = { "dashboard" }
           if vim.tbl_contains(ft_ignore, vim.bo.filetype) then
             vim.cmd("setlocal foldcolumn=0")
           end
@@ -25,7 +25,6 @@
         relculright = true;
         ft_ignore = [
           "dashboard"
-          "neo-tree"
         ];
         segments = [
           {
