@@ -1,6 +1,6 @@
 {
   plugins = {
-    #lsp-signature.enable = true;
+    lsp-signature.enable = true;
 
     lsp = {
       enable = true;
