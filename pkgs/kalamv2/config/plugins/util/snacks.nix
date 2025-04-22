@@ -71,9 +71,9 @@
         profiler.enabled = true;
         zen.enabled = true;
         animate.enabled = true;
-        quickfile.enabled = true;
+        quickfile.enabled = false;
         dashboard = {
-          enabled = true;
+          enabled = false;
           preset.header = [
             ''
               .-.__      \\ .-.  ___  __

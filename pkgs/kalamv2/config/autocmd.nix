@@ -25,6 +25,7 @@
       event = [ "FileType" ];
       pattern = [
         "help"
+        "alpha"
         "Startup"
         "startup"
         "neo-tree"

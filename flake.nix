@@ -17,7 +17,7 @@
     # nixvim
     nixvim = {
       url = "github:nix-community/nixvim/nixos-24.11";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
     stylix.url = "github:danth/stylix/release-24.11";

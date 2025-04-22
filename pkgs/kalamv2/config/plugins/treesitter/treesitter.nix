@@ -5,7 +5,10 @@
       settings = {
         highlight = {
           enable = true;
-          disable = [ "latex" ];
+          disable = [
+            "latex"
+            "alpha"
+          ];
           additional_vim_regex_highlighting = [
             "latex"
             "markdown"

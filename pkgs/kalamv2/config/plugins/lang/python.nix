@@ -20,7 +20,7 @@
     };
 
     lsp.servers = {
-      pyright = {
+      basedpyright = {
         enable = true;
       };
 
