@@ -1,7 +1,6 @@
 { pkgs, ... }:
 {
   plugins = {
-    project-nvim.enableTelescope = true;
     telescope = {
       enable = true;
       extensions = {
@@ -21,32 +20,6 @@
         color_devicons = true;
         set_env.COLORTERM = "truecolor";
 
-        mappings = {
-          i = {
-            # Have Telescope not to enter a normal-like mode when hitting escape (and instead exiting), you can map <Esc> to do so via:
-            # "<esc>".__raw = ''
-            #   function(...)
-            #     return require("telescope.actions").close(...)
-            #   end'';
-            "<c-t>".__raw = ''
-              function(...)
-                require('trouble.providers.telescope').open_with_trouble(...);
-              end
-            '';
-          };
-          n = {
-            "<c-t>".__raw = ''
-              function(...)
-                require('trouble.providers.telescope').open_with_trouble(...);
-              end
-            '';
-            # "d".__raw = ''
-            #   function(...)
-            #     require('telescope').extensions.git_worktree.delete_worktree(...);
-            #   end
-            # '';
-          };
-        };
         # trim leading whitespace from grep
         vimgrep_arguments = [
           "${pkgs.ripgrep}/bin/rg"
@@ -60,22 +33,6 @@
         ];
       };
       keymaps = {
-        "<leader>fp" = {
-          action = "projects";
-          options.desc = "Search Projects";
-        };
-        "<leader>st" = {
-          action = "todo-comments";
-          options.desc = "Search Todo";
-        };
-        "<leader>sn" = {
-          action = "notify";
-          options.desc = "Search Notifications";
-        };
-        "<leader>su" = {
-          action = "undo";
-          options.desc = "Search Undo";
-        };
         "<leader>ff" = {
           action = "find_files hidden=true";
           options.desc = "Find project files";
@@ -99,14 +56,6 @@
           ];
           action = "registers";
           options.desc = "Select register to paste";
-        };
-        "<leader>gc" = {
-          action = "git_commits";
-          options.desc = "commits";
-        };
-        "<leader>sa" = {
-          action = "autocommands";
-          options.desc = "Auto Commands";
         };
         "<leader>sc" = {
           action = "commands";
