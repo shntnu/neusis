@@ -3,6 +3,7 @@
   pkgs,
   inputs,
   outputs,
+  avante-nvim,
   ...
 }:
 let
@@ -10,24 +11,33 @@ let
   nixvim' = inputs.nixvim.legacyPackages.${pkgs.system};
   nixvimModule =
     let
-      upkgs = import inputs.nixpkgs {
+      upkgs = import inputs.nixpkgs-unstable {
         inherit (pkgs) system;
         config.allowUnfree = true;
         config.cudaSupport = true;
-        overlays = [ outputs.overlays.git-worktree ];
+      };
+
+      mpkgs = import inputs.nixpkgs-master {
+        inherit (pkgs) system;
+        config.allowUnfree = true;
+        config.cudaSupport = true;
       };
     in
     {
-      pkgs = upkgs;
       module = import ./config; # import the module directly
       # You can use `extraSpecialArgs` to pass additional arguments to your module files
       extraSpecialArgs =
         {
-          inherit inputs outputs;
+          inherit
+            inputs
+            outputs
+            mpkgs
+            upkgs
+            avante-nvim
+            ;
         }
         // import ./lib {
-          inherit lib;
-          pkgs = upkgs;
+          inherit pkgs lib;
         };
     };
 in

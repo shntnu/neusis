@@ -17,25 +17,10 @@
     # nixvim
     nixvim = {
       url = "github:nix-community/nixvim/nixos-24.11";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     stylix.url = "github:danth/stylix/release-24.11";
-
-    minty = {
-      url = "github:NvChad/minty";
-      flake = false;
-    };
-
-    volt = {
-      url = "github:NvChad/volt";
-      flake = false;
-    };
-
-    nvim-window-picker = {
-      url = "github:s1n7ax/nvim-window-picker";
-      flake = false;
-    };
 
     #------------------------------------------------------------
 
@@ -94,28 +79,6 @@
     agenix.url = "github:ryantm/agenix";
 
     hardware.url = "github:nixos/nixos-hardware";
-
-    nix-colors.url = "github:misterio77/nix-colors";
-
-    nh = {
-      url = "github:viperml/nh";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    hyprland = {
-      url = "github:hyprwm/hyprland";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    hyprwm-contrib = {
-      url = "github:hyprwm/contrib";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    hyprland-plugins = {
-      url = "github:hyprwm/hyprland-plugins";
-      inputs.hyprland.follows = "hyprland";
-    };
 
   };
 

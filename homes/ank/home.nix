@@ -24,6 +24,8 @@
       nurl
       statix
       extra-container
+      bat
+      eza
     ];
   };
 }

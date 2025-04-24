@@ -7,6 +7,7 @@
     ./keymaps.nix
     ./settings.nix
     ./plugins
+    ./extra_plugins.nix
   ];
 
   extraPackages = with pkgs; [

@@ -1,10 +1,11 @@
 {
   imports = [
+    ./ai/avante.nix
     ./completion/blink.nix
 
     ./debug/dap.nix
 
-    #./editor/whichkey.nix
+    ./editor/whichkey.nix
     ./editor/yazi.nix
     ./editor/oil.nix
 
@@ -37,6 +38,7 @@
     #./treesitter/treesitter-textobjects.nix
 
     #./ui/alpha.nix
+    ./ui/nui.nix
     ./ui/bufferline.nix
     #./ui/general.nix
     ./ui/flash.nix

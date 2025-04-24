@@ -1,8 +1,8 @@
-{ pkgs, ... }:
+{ avante-nvim, ... }:
 {
   plugins.avante = {
     enable = true;
-    package = pkgs.vimPlugins.avante-nvim;
+    package = avante-nvim;
     settings = {
       diff = {
         autojump = true;
@@ -31,34 +31,34 @@
       provider = "ollama";
       ollama = {
         endpoint = "karkinos:11434";
-        model = "deepseek-r1:70b";
-        max_completion_tokens = 100000;
+        model = "gemma3:27b";
+        max_tokens = 100000;
       };
 
       #auto_suggestion_provider = "";
 
-      # web_search_engine = {
-      #   provider = "kagi";
-      # };
+      web_search_engine = {
+        provider = "kagi";
+      };
 
-      # windows = {
-      #   sidebar_header = {
-      #     align = "center";
-      #     rounded = true;
-      #   };
-      #   width = 30;
-      #   wrap = true;
-      # };
+      windows = {
+        sidebar_header = {
+          align = "center";
+          rounded = true;
+        };
+        width = 30;
+        wrap = true;
+      };
     };
 
   };
 
-  # plugins.render-markdown = {
-  #   enable = true;
-  #   settings = {
-  #     file_types = [
-  #       "Avante"
-  #     ];
-  #   };
-  # };
+  plugins.render-markdown = {
+    enable = true;
+    settings = {
+      file_types = [
+        "Avante"
+      ];
+    };
+  };
 }
