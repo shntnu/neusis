@@ -39,6 +39,10 @@
       --- setup llm-nvim
       require("llm").setup({
         model = "starcoder2:3b",
+        context_window = 8192,
+        tokenizer = {
+          repository = "bigcode/starcoder2",
+        },
         backend = "ollama",
         url = "http://karkinos:11434",
         tokens_to_clear = { "<|end_of_text|>", "<file_sep>" },
