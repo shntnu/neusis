@@ -25,11 +25,19 @@ cu124 = [
   "torchvision",
 ]
 dev = [
-  "ipython",
-  "marimo",
   "pytest",
   "ruff",
-  "marimo"
+  "build",
+  "twine",
+  "jupytext",
+  "ipython",
+  "ipyflow",
+  "jupyterlab",
+  "jupyterlab-quarto",
+  "jupyter-collaboration",
+  "jupyterlab-horizon-theme"
+  "nbdotrun",
+  "nbdev"
 ]
 
 [tool.uv]
@@ -61,8 +69,12 @@ url = "https://download.pytorch.org/whl/cu124"
 explicit = true
 
 [project.scripts]
-cellir = "cellir.cli:main"
+yourproject = "yourproject.cli:main"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.jupytext.formats]
+"notebooks/ipynb" = "ipynb"
+"notebooks/pypct" = "py:percent"
