@@ -10,7 +10,6 @@
       mpv
       nix-output-monitor
       nh
-      nixos-shell
       television
       comma
       manix
@@ -23,9 +22,12 @@
       nvd
       nurl
       statix
-      extra-container
       bat
       eza
+      nixos-shell
+      extra-container
+      quickemu
+      nixos-generators
     ];
   };
 }

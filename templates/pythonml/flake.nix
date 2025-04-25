@@ -48,6 +48,11 @@
       in
       with pkgs;
       {
+        packages = pkgs.callPackage ./nix/packages {
+          inherit inputs outputs;
+          python3Packages = pkgs.python311Packages;
+        };
+
         devShells = {
           default =
             let
@@ -63,8 +68,11 @@
               packages = [
                 python_with_pkgs
                 python311Packages.venvShellHook
-                # We # We now recommend to use uv for package management inside nix env
+                # We now recommend to use uv for package management inside nix env
                 mpkgs.uv
+
+                # Quatro is used for doc generation with nbdev
+                quatro
 
                 # Data sharing tools
                 # syncthing
