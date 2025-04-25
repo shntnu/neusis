@@ -101,9 +101,9 @@
       msg "''${YELLOW}Adjusting origin fetch locations...''${NOFORMAT}"
       git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
       popd >/dev/null
-      msg "''${YELLOW}Setting .git file contents...''${NOFORMAT}"
-      echo "gitdir: ./''$location" >.git
       pushd "''$(dirname ''$location)" >/dev/null
+      msg "''${YELLOW}Setting .git file contents...''${NOFORMAT}"
+      echo "gitdir: .bare" >.git
       msg "''${YELLOW}Creating default branch from remote...''${NOFORMAT}"
       branch=''$(git remote show origin | sed -n '/HEAD branch/s/.*: //p')
       git worktree add "''$branch" "''$branch"

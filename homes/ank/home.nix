@@ -4,30 +4,6 @@
     username = "ank";
     homeDirectory = "/home/ank";
 
-    packages = with pkgs; [
-      duckdb
-      jq
-      mpv
-      nix-output-monitor
-      nh
-      television
-      comma
-      manix
-      nix-index
-      nix-diff
-      nix-du
-      nix-melt
-      nix-tree
-      nix-init
-      nvd
-      nurl
-      statix
-      bat
-      eza
-      nixos-shell
-      extra-container
-      quickemu
-      nixos-generators
-    ];
+    packages = import ./packages.nix { inherit pkgs; };
   };
 }
