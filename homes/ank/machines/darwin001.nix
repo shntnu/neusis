@@ -22,8 +22,5 @@
     ../../common/themes
   ];
 
-  home.packages = with pkgs; [
-    dockutil
-    mpv
-  ];
+  home.packages = import ../packages.nix { inherit pkgs; };
 }

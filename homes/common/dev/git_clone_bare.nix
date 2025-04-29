@@ -48,8 +48,25 @@
         exit "''$code"
       }
 
+      # Function to extract repository name from GitHub clone URL
+      extract_repo_name() {
+          # The URL passed as an argument
+          local url="''${1-}"
+
+          # Check if the URL is empty
+          if [ -z "''$url" ]; then
+              echo ".bare"
+          fi
+
+          # Regular expression to match GitHub clone URL (https or ssh)
+          if [[ "''$url" =~ github\.com[:/].*/([^/]+)(\.git)?$ ]]; then
+              repo_name="''${BASH_REMATCH[1]}"
+              echo ''${repo_name%.git}
+          fi
+      }
+
       parse_params() {
-        location='.bare'
+        location="''$(extract_repo_name ''${!#})/.bare"
 
         while :; do
           case "''${1-}" in
@@ -84,8 +101,13 @@
       msg "''${YELLOW}Adjusting origin fetch locations...''${NOFORMAT}"
       git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
       popd >/dev/null
+      pushd "''$(dirname ''$location)" >/dev/null
       msg "''${YELLOW}Setting .git file contents...''${NOFORMAT}"
-      echo "gitdir: ./''$location" >.git
+      echo "gitdir: .bare" >.git
+      msg "''${YELLOW}Creating default branch from remote...''${NOFORMAT}"
+      branch=''$(git remote show origin | sed -n '/HEAD branch/s/.*: //p')
+      git worktree add "''$branch" "''$branch"
+      popd >/dev/null
       msg "''${GREEN}Success.''${NOFORMAT}"
     '')
   ];

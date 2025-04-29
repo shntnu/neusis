@@ -170,5 +170,13 @@ cython_debug/
 # Ruff stuff:
 .ruff_cache/
 
+# nix stuff
+.devenv
+.direnv
+result
+
 # PyPI configuration file
 .pypirc
+scratch
+.jupyter_ystore.db
+__marimo__/

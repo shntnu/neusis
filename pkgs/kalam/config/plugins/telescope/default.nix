@@ -40,11 +40,11 @@
                 require('trouble.providers.telescope').open_with_trouble(...);
               end
             '';
-            "d".__raw = ''
-              function(...)
-                require('telescope').extensions.git_worktree.delete_worktree(...);
-              end
-            '';
+            # "d".__raw = ''
+            #   function(...)
+            #     require('telescope').extensions.git_worktree.delete_worktree(...);
+            #   end
+            # '';
           };
         };
         # trim leading whitespace from grep

@@ -1,7 +1,7 @@
 {
   imports = [
     ./ai/codeium.nix
-    # ./ai/codecompanion.nix
+    #./ai/avante.nix
 
     ./completion/cmp.nix
     ./completion/lspkind.nix
@@ -20,7 +20,7 @@
 
     ./git/gitsigns.nix
     ./git/neogit.nix
-    ./git/git-worktree.nix
+    #./git/git-worktree.nix
 
     ./lsp/conform.nix
     ./lsp/fidget.nix

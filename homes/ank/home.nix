@@ -4,10 +4,6 @@
     username = "ank";
     homeDirectory = "/home/ank";
 
-    packages = with pkgs; [
-      duckdb
-      jq
-      mpv
-    ];
+    packages = import ./packages.nix { inherit pkgs; };
   };
 }

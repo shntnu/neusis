@@ -1,5 +1,6 @@
-{pkgs, outputs, ...}: {
+{ pkgs, outputs, ... }:
+{
   home.packages = [
-    outputs.packages.${pkgs.system}.kalam
+    outputs.packages.${pkgs.system}.kalamv2
   ];
 }
