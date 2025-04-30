@@ -46,7 +46,7 @@
         backend = "ollama",
         url = "http://karkinos:11434",
         tokens_to_clear = { "<|end_of_text|>", "<file_sep>" },
-        accept_keymap = "<C-;>",
+        accept_keymap = "<C-l>",
         dismiss_keymap = "<C-e>",
         fim = {
           enabled = true,

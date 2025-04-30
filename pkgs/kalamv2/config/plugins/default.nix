@@ -12,6 +12,7 @@
     ./theme
     ./luasnip
     ./telescope
+    ./notes/obsidian.nix
 
     ./git/gitsigns.nix
     ./git/neogit.nix
