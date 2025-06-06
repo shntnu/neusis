@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>User Management - neusis</title>
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../css/brands.min.css" rel="stylesheet">
+        <link href="../../css/solid.min.css" rel="stylesheet">
+        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../..">neusis</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../.." class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../architecture/architecture/" class="nav-link">Architecture</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">User Setup</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../getting_started/" class="dropdown-item">Getting Started</a>
+</li>
+                                    
+<li>
+    <a href="./" class="dropdown-item active" aria-current="page">User Management</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Development</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../development/environment_setup/" class="dropdown-item">Environment Setup</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../getting_started/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../../development/environment_setup/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#adding-new-users" class="nav-link">Adding new users</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#workflow-overview" class="nav-link">Workflow Overview</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#administrator-actions" class="nav-link">Administrator Actions</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#important-notes" class="nav-link">Important Notes</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="adding-new-users">Adding new users</h1>
+<p>This document outlines the process for system administrators to add new users to the Neusis environment. It describes the end-to-end workflow from user PR submission to account activation, including required configuration changes across machine-specific files. Followzing these instructions will ensure proper user access management, permission configuration, and home directory setup across the system. This guide assumes familiarity with NixOS configuration principles and the Neusis repository structure.</p>
+<h2 id="workflow-overview">Workflow Overview</h2>
+<ol>
+<li>Users request access by submitting a PR that creates their home configuration (as described in <code>getting_started.md</code>)</li>
+<li>Administrators review the PR and then add the user to specific machines</li>
+<li>The system rebuild applies the user's configuration to their home directory on approved machines</li>
+</ol>
+<h2 id="administrator-actions">Administrator Actions</h2>
+<p>As an administrator, you will respond to user PRs by adding their user account to specific machines they should have access to. This requires updating two sections in the machine-specific configuration file.</p>
+<h3 id="step-1-add-user-account">Step 1: Add User Account</h3>
+<p>In the file <code>machines/&lt;machine_name&gt;/default.nx</code>, under the <code>users.users</code> key, add a user dictionary with the key corresponding to the name of the folder in <code>homes/</code> that the user created in their PR.</p>
+<p>The easiest way is to copy an existing user, and paste it, changing the name as necessary.</p>
+<p>Here is an example:</p>
+<div class="highlight"><pre><span></span><code>users.users = {
+
+    # ... existing users ...
+
+    &lt;some_user&gt; = {
+      shell = pkgs.zsh;
+      isNormalUser = true;
+      initialPassword = &quot;changeme&quot;;
+      # passwordFile = config.age.secrets.karkinos_pass.path;
+      description = &quot;&lt;name of user&gt;&quot;;
+      extraGroups = [
+        &quot;networkmanager&quot;
+        &quot;wheel&quot;
+        &quot;libvirtd&quot;
+        &quot;qemu-libvirtd&quot;
+        &quot;input&quot;
+        &quot;podman&quot;
+        &quot;docker&quot;
+      ];
+      openssh.authorizedKeys.keyFiles = [
+        ../../homes/&lt;some_user&gt;/id_ed25519.pub
+      ];
+    };
+}
+</code></pre></div>
+<p>The key, <code>&lt;some_user&gt;</code>, must match the name of the directory in <code>homes/</code> created by the user in their PR.</p>
+<h3 id="step-2-link-home-manager-configuration">Step 2: Link Home Manager Configuration</h3>
+<p>In the same file, locate the <code>home-manager.users</code> section and add an entry for the user that imports their machine-specific configuration:</p>
+<div class="highlight"><pre><span></span><code>home-manager = {
+    users = {
+
+        # ... existing users ...
+
+        &lt;some_user&gt; = {
+            imports = [
+              inputs.agenix.homeManagerModules.default
+              ../../homes/&lt;some_user&gt;/machines/&lt;machine_name&gt;.nix
+            ];
+        };
+    }
+}
+</code></pre></div>
+<p>This links to the user's home configuration for this specific machine, which was provided in their PR.</p>
+<h2 id="important-notes">Important Notes</h2>
+<ul>
+<li>Users cannot add themselves to machines - this is strictly an administrator task</li>
+<li>You decide which machines each user should have access to</li>
+<li>The user's home configuration will be applied during the next system rebuild</li>
+</ul></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js"></script>
+        <script src="../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
