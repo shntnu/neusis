@@ -72,7 +72,7 @@
                 mpkgs.uv
 
                 # Quatro is used for doc generation with nbdev
-                quatro
+                quarto
 
                 # Data sharing tools
                 # syncthing
