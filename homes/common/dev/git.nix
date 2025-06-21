@@ -5,7 +5,7 @@
   ...
 }:
 {
-  imports = [ ./git_clone_bare.nix ];
+
   home.file.".ssh/allowed_signers".text = "* ${id_ed25519_pub}";
   programs.git = {
     enable = true;
