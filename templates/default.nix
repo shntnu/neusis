@@ -29,4 +29,9 @@
     description = "FHS python machine learning environment";
   };
 
+  rust = {
+    path = ./rust;
+    description = "Generic rust environment";
+  };
+
 }

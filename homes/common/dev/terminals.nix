@@ -6,6 +6,7 @@
 {
   home.packages = [
     pkgs.master.wezterm
+    (pkgs.writers.writePython3Bin "gclb" { } ./gclb.py)
   ];
   programs = {
 
