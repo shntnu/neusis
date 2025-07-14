@@ -42,7 +42,10 @@ if __name__ == "__main__":
     print(f"Cloning bare repository to {location}...")
     run(["git", "clone", "--bare", args.url, str(location)], check=True)
     print("Adjusting origin fetch location...")
-    run(["git", "config", "remote.origin.fetch", "+refs/heads/*:refs/remotes/origin/*"])
+    run(
+        ["git", "config", "remote.origin.fetch", "+refs/heads/*:refs/remotes/origin/*"],
+        cwd=location.parent,
+    )
     print("Setting .git file contents...")
     location.parent.joinpath(".git").write_text(f"gitdir: {location.name}")
     print("Creating default branch from remote...")

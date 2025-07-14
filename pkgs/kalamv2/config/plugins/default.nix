@@ -12,7 +12,7 @@
     ./theme
     ./luasnip
     ./telescope
-    ./notes/obsidian.nix
+    #./notes/obsidian.nix
 
     ./git/gitsigns.nix
     ./git/neogit.nix
@@ -33,6 +33,8 @@
     ./lang/shell.nix
     ./lang/typescript.nix
     ./lang/yaml.nix
+    ./lang/zig.nix
+    ./lang/rust.nix
     #./lang/tex.nix
 
     ./treesitter/treesitter.nix

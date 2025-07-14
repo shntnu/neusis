@@ -44,6 +44,10 @@ in
       rclone
       chafa
       ouch
+      eza
+      bat
+      duf
+      nix-output-monitor
     ]
     ++ pdf_viewer;
 
@@ -146,9 +150,14 @@ in
     ];
 
     shellAliases = {
-      ll = "ls -l";
+      ls = "eza";
+      ll = "eza -lah";
       n = "nvim";
       ns = "nix search nixpkgs";
+      nix = "nom";
+      cat = "bat";
+      df = "duf";
+
     };
     initExtra = ''
       function update() {

@@ -260,6 +260,26 @@
       ];
     };
 
+    shsingh = {
+      shell = pkgs.bash;
+      isNormalUser = true;
+      initialPassword = "changeme";
+      # passwordFile = config.age.secrets.karkinos_pass.path;
+      description = "Shantanu";
+      extraGroups = [
+        "networkmanager"
+        "wheel"
+        "libvirtd"
+        "qemu-libvirtd"
+        "input"
+        "podman"
+        "docker"
+      ];
+      openssh.authorizedKeys.keyFiles = [
+        ../../homes/shsingh/id_ed25519.pub
+      ];
+    };
+
     # Define a user account. Don't forget to set a password with ‘passwd’.
     eweisbar = {
       shell = pkgs.zsh;
@@ -302,6 +322,14 @@
           ../../homes/ngogober/machines/oppy.nix
         ];
       };
+
+      shsingh = {
+        imports = [
+          inputs.agenix.homeManagerModules.default
+          ../../homes/shsingh/machines/oppy.nix
+        ];
+      };
+
       niv = {
         imports = [
           inputs.agenix.homeManagerModules.default

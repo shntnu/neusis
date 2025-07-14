@@ -20,12 +20,12 @@
     };
 
     lsp.servers = {
-      basedpyright = {
+      pyright = {
         enable = true;
         extraOptions.settings = {
           # Using Ruff's import organizer
-          basedpyright.disableOrganizeImports = true;
-          basedpython.analysis = {
+          pyright.disableOrganizeImports = true;
+          python.analysis = {
             # Ignore all files for analysis to exclusively use Ruff for linting
             ignore.__raw = ''{ '*' }'';
           };

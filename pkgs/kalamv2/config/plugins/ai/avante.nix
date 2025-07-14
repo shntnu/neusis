@@ -29,10 +29,12 @@
         };
       };
       provider = "ollama";
-      ollama = {
-        endpoint = "karkinos:11434";
-        model = "gemma3:27b";
-        max_tokens = 100000;
+      providers = {
+        ollama = {
+          endpoint = "karkinos:11434";
+          model = "devstral:latest";
+          max_tokens = 100000;
+        };
       };
 
       #auto_suggestion_provider = "";

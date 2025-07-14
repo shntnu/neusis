@@ -20,6 +20,10 @@ with pkgs;
   statix
   bat
   eza
+  glances
+  gping
+  procs
+  bandwhich
 ]
 ++ pkgs.lib.optionals pkgs.stdenv.isLinux [
   extra-container
