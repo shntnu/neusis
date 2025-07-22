@@ -21,8 +21,6 @@ in
       bottom
       python3
       nodejs_22
-      nerdfonts
-      meslo-lgs-nf
       deno
       cargo
       rustc
@@ -55,7 +53,7 @@ in
     enable = true;
     package = pkgs.unstable.yazi;
     keymap = {
-      manager.prepend_keymap = [
+      mgr.prepend_keymap = [
         {
           on = [ "T" ];
           run = "plugin max-preview";
@@ -154,12 +152,11 @@ in
       ll = "eza -lah";
       n = "nvim";
       ns = "nix search nixpkgs";
-      nix = "nom";
       cat = "bat";
       df = "duf";
 
     };
-    initExtra = ''
+    initContent = ''
       function update() {
         sudo nixos-rebuild switch --flake .#$1 -v
       }

@@ -62,5 +62,6 @@
     ./util/persistence.nix
     #./util/project-nvim.nix
     #./util/snacks.nix
+    ./util/csvview.nix
   ];
 }

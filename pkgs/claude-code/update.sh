@@ -9,3 +9,7 @@ version=$(npm view @anthropic-ai/claude-code version)
 cd "$(dirname "${BASH_SOURCE[0]}")"
 npm i --package-lock-only @anthropic-ai/claude-code@"$version"
 rm -f package.json
+
+# Update version and hashes
+cd -
+nix-update claude-code --version "$version"

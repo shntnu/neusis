@@ -13,7 +13,7 @@
   imports = [
     # If you want to use modules from other flakes (such as nixos-hardware):
     inputs.hardware.nixosModules.common-pc-ssd
-    inputs.home-manager.nixosModule
+    inputs.home-manager.nixosModules.home-manager
     #outputs.nixosModules.sunshine
 
     # Import your generated (nixos-generate-config) hardware configuration
@@ -376,5 +376,5 @@
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
-  system.stateVersion = "24.11";
+  system.stateVersion = "25.05";
 }

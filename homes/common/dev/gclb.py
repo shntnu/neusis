@@ -43,7 +43,13 @@ if __name__ == "__main__":
     run(["git", "clone", "--bare", args.url, str(location)], check=True)
     print("Adjusting origin fetch location...")
     run(
-        ["git", "config", "remote.origin.fetch", "+refs/heads/*:refs/remotes/origin/*"],
+        [
+            "git",
+            "config",
+            "--add",
+            "remote.origin.fetch",
+            "+refs/heads/*:refs/remotes/origin/*",
+        ],
         cwd=location.parent,
     )
     print("Setting .git file contents...")
