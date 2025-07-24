@@ -63,7 +63,7 @@ in
 
     };
     settings = {
-      manager.show_hidden = true;
+      mgr.show_hidden = true;
       plugin.preloaders = [ ];
       preview = {
         max_width = 2000;
