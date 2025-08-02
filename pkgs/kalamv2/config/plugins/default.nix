@@ -35,6 +35,7 @@
     ./lang/yaml.nix
     ./lang/zig.nix
     ./lang/rust.nix
+    ./lang/lean.nix
     #./lang/tex.nix
 
     ./treesitter/treesitter.nix
