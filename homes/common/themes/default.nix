@@ -43,7 +43,7 @@
     fonts = {
       monospace = {
         package = pkgs.nerd-fonts.iosevka-term;
-        name = "Iosevka Mono Nerd Font";
+        name = "IosevkaTerm Nerd Font Mono";
       };
       sansSerif = {
         package = pkgs.nerd-fonts.iosevka;

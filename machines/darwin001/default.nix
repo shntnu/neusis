@@ -9,7 +9,7 @@
   imports = [
     inputs.home-manager.darwinModules.home-manager
     inputs.nix-homebrew.darwinModules.nix-homebrew
-    ../common/darwin_home_manager.nix
+    #../common/darwin_home_manager.nix
     (import ../common/nix-homebrew.nix {
       inherit inputs;
       user = "kumarank";
@@ -77,7 +77,7 @@
 
   # Configure home manager
   home-manager = {
-    useGlobalPkgs = true;
+    #useGlobalPkgs = true;
     # Look into why enabling this break shell for starship
     useUserPackages = true;
     extraSpecialArgs = { inherit inputs outputs; };
@@ -88,10 +88,11 @@
     };
   };
 
+  security.pam.services.sudo_local.touchIdAuth = true;
   # sudo with touch id
-  security.pam.enableSudoTouchIdAuth = true;
   system = {
 
+    primaryUser = "kumarank";
     # remap keys : Caps -> Esc
     keyboard.enableKeyMapping = true;
     keyboard.remapCapsLockToEscape = true;
@@ -104,7 +105,7 @@
     # Turn off NIX_PATH warnings now that we're using flakes
     checks.verifyNixPath = false;
 
-    stateVersion = 4;
+    stateVersion = 5;
 
     #   defaults = {
     #     NSGlobalDomain = {
