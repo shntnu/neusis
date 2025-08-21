@@ -5,14 +5,14 @@
 }:
 {
   home.packages = [
-    pkgs.master.wezterm
+    pkgs.wezterm
     (pkgs.writers.writePython3Bin "gclb" { } ./gclb.py)
   ];
   programs = {
 
     wezterm = {
       enable = true;
-      package = pkgs.master.wezterm;
+      package = pkgs.wezterm;
       enableZshIntegration = true;
       extraConfig = builtins.readFile ./wezterm.lua;
     };

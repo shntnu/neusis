@@ -4,7 +4,7 @@
   ...
 }:
 let
-  package_ver = config.boot.kernelPackages.nvidiaPackages.dc_535;
+  package_ver = config.boot.kernelPackages.nvidiaPackages.dc_565;
 in
 # package_ver = config.boot.kernelPackages.nvidiaPackages.mkDriver rec {
 #   version = "565.57.01";

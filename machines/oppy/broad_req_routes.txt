@@ -1,0 +1,7 @@
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         10.192.6.1      0.0.0.0         UG    100    0        0 nm-bond22
+10.0.6.79       10.192.6.1      255.255.255.255 UGH   100    0        0 nm-bond22
+10.2.1.1        10.192.6.1      255.255.255.255 UGH   100    0        0 nm-bond22
+10.192.6.0      0.0.0.0         255.255.255.0   U     100    0        0 nm-bond22
+10.192.6.1      0.0.0.0         255.255.255.255 UH    100    0        0 nm-bond22

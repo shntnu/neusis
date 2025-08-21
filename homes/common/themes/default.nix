@@ -3,6 +3,7 @@
   imports = [
     inputs.stylix.homeModules.stylix
   ];
+
   stylix = {
     enable = true;
     opacity.terminal = 0.8;

@@ -51,7 +51,7 @@ in
 
   programs.yazi = {
     enable = true;
-    package = pkgs.unstable.yazi;
+    package = pkgs.yazi;
     keymap = {
       mgr.prepend_keymap = [
         {
@@ -89,7 +89,7 @@ in
     if enableNvim then
       {
         enable = true;
-        package = pkgs.unstable.neovim-unwrapped;
+        package = pkgs.neovim-unwrapped;
         # whatever other neovim configuration you have
         extraPackages = with pkgs; [
           # ... other packages

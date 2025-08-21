@@ -1,7 +1,8 @@
-{...}: {
+{ ... }:
+{
   imports = [
-    ./tsauthkey.nix
+    #./tsauthkey.nix
   ];
 
-  age.identityPaths = ["/home/ank/.ssh/id_ed25519"];
+  #age.identityPaths = [ "/home/ank/.ssh/id_ed25519" ];
 }
