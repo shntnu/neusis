@@ -20,7 +20,7 @@
     ./filesystem.nix
 
     # oppy networking config
-    #./network.nix
+    ./network.nix
 
     # oppy misc
     ./misc.nix

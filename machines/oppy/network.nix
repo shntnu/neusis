@@ -37,7 +37,7 @@ let
 in
 {
 
-  systemd.network.wait-online.enable = true;
+  systemd.network.wait-online.enable = false;
   systemd.network = {
     # Enable networkd
     enable = true;
@@ -109,7 +109,6 @@ in
           DHCP = "no";
         };
         linkConfig.RequiredForOnline = "no";
-
       };
     };
 
