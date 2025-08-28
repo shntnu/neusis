@@ -2,7 +2,7 @@
 
 # Intel X710 10G SFP+
 # enp206s0f0 = 40:a6:b7:cc:d9:00
-# enp206s0f0 = 40:a6:b7:cc:d9:01
+# enp206s0f1 = 40:a6:b7:cc:d9:01
 
 # Mellanox 400G QSFP+
 # ibp69s0 = 80:00:04:db:fe:80:00:00:00:00:00:00:a0:88:c2:03:00:88:a3:14

@@ -1,4 +1,4 @@
-sudo nix run 'github:nix-community/disko/latest#disko-install' -- --write-efi-boot-entries --flake .#oppy \
+sudo nix run --experimental-features 'nix-command flakes' 'github:nix-community/disko/latest#disko-install' -- --write-efi-boot-entries --flake .#oppy \
  --disk intel00 /dev/disk/by-id/nvme-INTEL_SSDPF2KE032T1_PHAX352405LZ3P8CGN \
  --disk intel01 /dev/disk/by-id/nvme-INTEL_SSDPF2KE032T1_PHAX35240B063P8CGN \
  --disk intel02 /dev/disk/by-id/nvme-INTEL_SSDPF2KE032T1_PHAX35230AYH3P8CGN \
