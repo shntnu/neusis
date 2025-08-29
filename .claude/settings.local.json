@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tree:*)",
+      "Bash(mv:*)",
+      "Bash(rmdir:*)",
+      "Bash(rm:*)",
+      "Bash(git add:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr diff:*)",
+      "Bash(gh pr edit:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
