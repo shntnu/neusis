@@ -18,21 +18,30 @@ The repository currently manages configurations for:
 - **oppy, spirit**: Compute servers with GPU support
 - **chiral**: Specialized system configurations
 
-## Directory Layout
+## Repository Structure
 
 ```
 neusis/
-├── flake.nix           # Entry point
-├── machines/           # Machine configurations
-│   ├── karkinos/       # Linux workstation
-│   ├── darwin001/      # macOS machine  
-│   └── common/         # Shared modules
-├── homes/              # User home configs
-│   ├── <username>/     # Per-user directory
-│   └── common/         # Shared user modules
-├── users/              # User definitions
-├── templates/          # Project templates
-└── lib/                # Helper functions
+├── flake.nix              # Entry point - defines inputs, outputs, and system configurations
+├── machines/              # Machine-specific configurations
+│   ├── karkinos/          # NixOS developer workstation
+│   ├── darwin001/         # macOS M-series machine
+│   ├── oppy/              # Compute server with GPU
+│   ├── spirit/            # Compute server with GPU
+│   ├── chiral/            # Specialized system
+│   └── common/            # Shared machine modules (GPU, networking, SSH, etc.)
+├── homes/                 # User home configurations (per-user)
+│   ├── <username>/        # Individual user directories
+│   │   ├── home.nix       # Base user profile
+│   │   └── machines/      # Per-machine user configs
+│   └── common/            # Shared home modules (dev tools, browsers, terminals)
+├── users/                 # User definitions and permissions
+├── modules/               # Custom NixOS and home-manager modules
+├── pkgs/                  # Custom packages (Claude Code, NVIDIA vGPU, etc.)
+├── overlays/              # Package modifications and overrides
+├── templates/             # Development environment templates (Python, Rust, FHS)
+├── lib/                   # Neusis utility functions
+└── docs/                  # Documentation including NixOS & Flakes book
 ```
 
 ## How It Works
