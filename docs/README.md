@@ -9,6 +9,15 @@ This Nix configuration manages multiple Linux and macOS machines for a shared la
 - **Self-service workflow**: Users can test changes locally before submitting PRs
 - **Development templates**: Quick-start templates for Python, Rust, etc.
 
+## Machines
+
+The repository currently manages configurations for:
+
+- **karkinos**: NixOS developer workstation
+- **darwin001**: macOS developer machine  
+- **oppy, spirit**: Compute servers with GPU support
+- **chiral**: Specialized system configurations
+
 ## Directory Layout
 
 ```
@@ -39,7 +48,7 @@ Most personal Nix configs manage one user's dotfiles. This repo handles multiple
 
 ## Documentation
 
-- [Getting Started](02_getting_started.md) - Set up your user account and environment
-- [Architecture Overview](03_architecture.md) - Detailed technical overview
-- [Environment Setup](04_environment_setup.md) - Create development environments  
-- [User Management](05_user_management.md) - Admin guide for adding users
+- [Getting Started](01_getting_started.md) - Set up your user account and environment
+- [Architecture Overview](02_architecture.md) - Detailed technical overview
+- [Environment Setup](03_environment_setup.md) - Create development environments  
+- [User Management](04_user_management.md) - Admin guide for adding users
