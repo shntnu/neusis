@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
   plugins = {
-    dap.extensions.dap-python.enable = true;
+    dap-python.enable = true;
     jupytext.enable = true;
 
     conform-nvim.settings = {
@@ -20,12 +20,12 @@
     };
 
     lsp.servers = {
-      basedpyright = {
+      pyright = {
         enable = true;
         extraOptions.settings = {
           # Using Ruff's import organizer
-          basedpyright.disableOrganizeImports = true;
-          basedpython.analysis = {
+          pyright.disableOrganizeImports = true;
+          python.analysis = {
             # Ignore all files for analysis to exclusively use Ruff for linting
             ignore.__raw = ''{ '*' }'';
           };

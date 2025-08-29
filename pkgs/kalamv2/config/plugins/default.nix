@@ -12,7 +12,7 @@
     ./theme
     ./luasnip
     ./telescope
-    ./notes/obsidian.nix
+    #./notes/obsidian.nix
 
     ./git/gitsigns.nix
     ./git/neogit.nix
@@ -33,6 +33,9 @@
     ./lang/shell.nix
     ./lang/typescript.nix
     ./lang/yaml.nix
+    ./lang/zig.nix
+    ./lang/rust.nix
+    ./lang/lean.nix
     #./lang/tex.nix
 
     ./treesitter/treesitter.nix
@@ -60,5 +63,6 @@
     ./util/persistence.nix
     #./util/project-nvim.nix
     #./util/snacks.nix
+    ./util/csvview.nix
   ];
 }

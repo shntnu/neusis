@@ -3,7 +3,8 @@
   config,
   inputs,
   ...
-}: {
+}:
+{
   imports = [
     ../home.nix
     ../../common/home_manager.nix
@@ -22,6 +23,7 @@
     })
     ../../common/secrets
     ../../common/browsers
+    ../../common/browsers/brave.nix
     ../../common/network
     ../../common/misc
     ../../common/gpu_tools.nix

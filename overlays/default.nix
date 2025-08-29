@@ -1,6 +1,7 @@
 {
   inputs,
   outputs,
+  ...
 }:
 {
   # For every flake input, aliases 'pkgs.inputs.${flake}' to
@@ -17,7 +18,7 @@
     ) inputs;
   };
 
-  # Adds pkgs.stable == inputs.nixpkgs-stable.legacyPackages.${pkgs.system}
+  # Adds pkgs.unstable == inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}
   unstable =
     final: _:
     let
@@ -31,6 +32,7 @@
       unstable = upkgs;
     };
 
+  # Adds pkgs.master == inputs.nixpkgs-master.legacyPackages.${pkgs.system}
   master =
     final: _:
     let
@@ -44,6 +46,7 @@
       master = mpkgs;
     };
 
+  # Adds pkgs.git-worktree-custom == A custom version of this package
   git-worktree = final: _: {
     git-worktree-custom = final.vimUtils.buildVimPlugin {
       name = "git-worktree";

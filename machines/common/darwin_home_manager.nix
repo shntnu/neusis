@@ -1,7 +1,8 @@
-{...}: {
+{ ... }:
+{
   # background service
   services = {
-    nix-daemon.enable = true;
+    # nix-daemon.enable = true;
     # tailscale.enable = true;
   };
 }

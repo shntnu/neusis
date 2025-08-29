@@ -1,8 +1,9 @@
 { pkgs, inputs, ... }:
 {
   imports = [
-    inputs.stylix.homeManagerModules.stylix
+    inputs.stylix.homeModules.stylix
   ];
+
   stylix = {
     enable = true;
     opacity.terminal = 0.8;
@@ -40,30 +41,30 @@
     #   size = 24;
     # };
 
-    # fonts = {
-    #   monospace = {
-    #     package = pkgs.nerd-fonts.jetbrains-mono;
-    #     name = "JetBrains Mono Nerd Font";
-    #   };
-    #   sansSerif = {
-    #     package = inputs.apple-fonts.packages.${pkgs.system}.sf-pro-nerd;
-    #     name = "SFProDisplay Nerd Font";
-    #   };
-    #   serif = {
-    #     package = inputs.apple-fonts.packages.${pkgs.system}.sf-pro-nerd;
-    #     name = "SFProDisplay Nerd Font";
-    #   };
-    #   emoji = {
-    #     package = pkgs.noto-fonts-emoji;
-    #     name = "Noto Color Emoji";
-    #   };
-    #   sizes = {
-    #     applications = 13;
-    #     desktop = 13;
-    #     popups = 13;
-    #     terminal = 13;
-    #   };
-    # };
+    fonts = {
+      monospace = {
+        package = pkgs.nerd-fonts.iosevka-term;
+        name = "IosevkaTerm Nerd Font Mono";
+      };
+      sansSerif = {
+        package = pkgs.nerd-fonts.iosevka;
+        name = "Iosevka Nerd Font";
+      };
+      serif = {
+        package = pkgs.nerd-fonts.iosevka-term-slab;
+        name = "Iosevka Nerd Font";
+      };
+      emoji = {
+        package = pkgs.noto-fonts-emoji;
+        name = "Noto Color Emoji";
+      };
+      sizes = {
+        applications = 13;
+        desktop = 13;
+        popups = 13;
+        terminal = 13;
+      };
+    };
 
     polarity = "dark";
     image = ../gui/wallpapers/gruvbox_astro.jpg;

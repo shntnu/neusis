@@ -12,19 +12,19 @@
   pkgs,
 }:
 let
-  version = "0.24";
+  version = "0.0.25-unstable-2025-07-11";
   src = fetchFromGitHub {
     owner = "yetone";
     repo = "avante.nvim";
-    rev = "f755861d939df35b9d28ca3eb667af798750747f";
-    hash = "sha256-Fe1bTsdyY4g1gxbUmsnUOle5DXjuSxVE5vDjqOaCqt8=";
+    rev = "c4ce24e3c047c3283652aeb9a16114603d6f705c";
+    hash = "sha256-ILOISh3+bfN1dEz1BN4+iZ2WJzmt0++QVZUjp24ZjNI=";
   };
   avante-nvim-lib = rustPlatform.buildRustPackage {
     pname = "avante-nvim-lib";
     inherit version src;
 
     useFetchCargoVendor = true;
-    cargoHash = "sha256-pmnMoNdaIR0i+4kwW3cf01vDQo39QakTCEG9AXA86ck=";
+    cargoHash = "sha256-8mBpzndz34RrmhJYezd4hLrJyhVL4S4IHK3plaue1k8=";
 
     nativeBuildInputs = [
       pkg-config
@@ -73,6 +73,7 @@ vimUtils.buildVimPlugin {
 
   passthru = {
     updateScript = nix-update-script {
+      extraArgs = [ "--version=branch" ];
       attrPath = "vimPlugins.avante-nvim.avante-nvim-lib";
     };
 
@@ -84,11 +85,20 @@ vimUtils.buildVimPlugin {
     # Requires setup with corresponding provider
     "avante.providers.azure"
     "avante.providers.copilot"
+    "avante.providers.gemini"
+    "avante.providers.ollama"
+    "avante.providers.vertex"
+    "avante.providers.vertex_claude"
   ];
 
   meta = {
     description = "Neovim plugin designed to emulate the behaviour of the Cursor AI IDE";
     homepage = "https://github.com/yetone/avante.nvim";
     license = lib.licenses.asl20;
+    maintainers = with lib.maintainers; [
+      ttrei
+      aarnphm
+      jackcres
+    ];
   };
 }

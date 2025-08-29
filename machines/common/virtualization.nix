@@ -25,10 +25,11 @@
     oci-containers = {
       backend = "podman";
       containers = {
-        open-webui = import ./open-webui-container.nix;
+        #open-webui = import ./open-webui-container.nix;
       };
     };
 
+    docker.enable = false;
     podman = {
       enable = true;
       dockerCompat = true;
@@ -60,4 +61,5 @@
     "f /dev/shm/looking-glass 0660 ank qemu-libvirtd -"
     "f /dev/shm/scream 0660 ank qemu-libvirtd -"
   ];
+
 }

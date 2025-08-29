@@ -3,9 +3,21 @@
 
   inputs = {
     # Nixpkgs
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-master.url = "github:nixos/nixpkgs/master";
+
+    # flake-parts
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
+    };
+
+    # Auto upgrades
+    comin = {
+      url = "github:nlewo/comin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # submodule
     astroank = {
@@ -16,11 +28,11 @@
     #------------------------------------------------------------
     # nixvim
     nixvim = {
-      url = "github:nix-community/nixvim/nixos-24.11";
+      url = "github:nix-community/nixvim/nixos-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    stylix.url = "github:danth/stylix/release-24.11";
+    stylix.url = "github:danth/stylix/release-25.05";
 
     #------------------------------------------------------------
 
@@ -29,7 +41,7 @@
 
     # darwin inputs
     darwin = {
-      url = "github:LnL7/nix-darwin/nix-darwin-24.11";
+      url = "github:LnL7/nix-darwin/nix-darwin-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-homebrew = {
@@ -60,9 +72,6 @@
       flake = false;
     };
 
-    # system and flake util
-    systems.url = "github:nix-systems/default";
-
     # disko
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
@@ -72,129 +81,103 @@
 
     # Home manager
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.11";
+      url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     agenix.url = "github:ryantm/agenix";
 
     hardware.url = "github:nixos/nixos-hardware";
-
   };
 
   outputs =
-    {
-      self,
-      nixpkgs,
-      home-manager,
-      systems,
-      ...
-    }@inputs:
-    let
-      inherit (self) outputs;
-      lib = nixpkgs.lib // home-manager.lib;
-      forEachSystem = f: lib.genAttrs (import systems) (system: f pkgsFor.${system});
-      pkgsFor = lib.genAttrs (import systems) (
-        system:
-        import nixpkgs {
-          inherit system;
-          config.allowUnfree = true;
-        }
-      );
-    in
-    {
-      inherit lib;
+    inputs@{ flake-parts, ... }:
+    # Define all the reusable modules for external use
+    flake-parts.lib.mkFlake { inherit inputs; } (
+      top@{
+        withSystem,
+        moduleWithSystem,
+        flake-parts-lib,
+        self,
+        lib,
+        ...
+      }:
+      let
+        inherit (flake-parts-lib) importApply;
 
-      # custom modules
-      nixosModules = import ./modules/nixos { inherit inputs outputs; };
-      homeManagerModules = import ./modules/home-manager;
+        # Helper
+        mkImportApply =
+          moduleFileAttrs:
+          builtins.mapAttrs (
+            name: value:
+            importApply value {
+              localFlake = self;
+              inherit withSystem moduleWithSystem flake-parts-lib;
+              #inherit (inputs) nixpkgs;
+            }
+          ) moduleFileAttrs;
 
-      overlays = import ./overlays { inherit inputs outputs; };
+        # Flake modules for external and internal use
+        publicFlakeModules =
+          rec {
+            default = ./flakeModules/lib.nix;
+            neusis = default;
 
-      packages = forEachSystem (pkgs: import ./pkgs { inherit pkgs inputs outputs; });
-      devShells = forEachSystem (pkgs: import ./shell.nix { inherit pkgs inputs; });
-      formatter = forEachSystem (pkgs: pkgs.nixfmt-rfc-style);
+          }
+          // mkImportApply rec {
+          };
+      in
+      {
+        debug = true;
+        systems = [
+          "x86_64-linux"
+          "aarch64-linux"
+          "x86_64-darwin"
+          "aarch64-darwin"
+        ];
 
-      # NixOS configuration entrypoint
-      # Available through 'nixos-rebuild --flake .#your-hostname'
-      # Fresh install with disko: sudo nix run --extra-experimental-features 'nix-command flakes' 'github:nix-community/disko/latest#disko-install' -- --flake .#machine
-      nixosConfigurations = {
-        karkinos = lib.nixosSystem {
-          modules = [ ./machines/karkinos ];
-          specialArgs = { inherit inputs outputs; };
+        imports = [
+          ./flakeModules/neusisOSConfigs
+          ./flakeModules/checks
+          ./flakeModules/packages.nix
+          ./flakeModules/lib.nix
+        ];
+        flake = rec {
+          flakeModules = publicFlakeModules;
+
+          # For backward compat
+          flakeModule = flakeModules.default;
+          overlays = import ./overlays { inherit (self) inputs outputs; };
+          templates = import ./templates;
+
+          # All home configs dynamically generated
+          homeConfigurations = self.lib.neusisOS.mkHomeConfigurations {
+            machinesRegistry = import ./machines/registry.nix {
+              inherit lib;
+              nixpkgs = self.inputs.nixpkgs;
+              overlays = self.outputs.overlays;
+            };
+            userConfig = import ./users/all.nix { inherit self; };
+            specialArgs = { inherit (self) inputs outputs; };
+          };
+
         };
 
-        chiral = lib.nixosSystem {
-          modules = [ ./machines/chiral ];
-          specialArgs = { inherit inputs outputs; };
-        };
-
-        oppy = lib.nixosSystem {
-          modules = [ ./machines/oppy ];
-          specialArgs = { inherit inputs outputs; };
-        };
-      };
-
-      # Darwin configuration entrypoint
-      # Initial run: nix run --extra-experimental-features 'nix-command flakes' nix-darwin -- switch --flake .#darwin001
-      # Available through 'darwin-rebuild --flake .#your-hostname'
-      darwinConfigurations = {
-        darwin001 = inputs.darwin.lib.darwinSystem {
-          system = "aarch64-darwin";
-          modules = [ ./machines/darwin001 ];
-          specialArgs = { inherit inputs outputs; };
-        };
-      };
-
-      # Standalone home-manager configuration entrypoint
-      # Available through 'home-manager switch --flake .#your-username@your-hostname'
-      homeConfigurations = {
-        "ank@karkinos" = lib.homeManagerConfiguration {
-          pkgs = pkgsFor.x86_64-linux;
-          extraSpecialArgs = { inherit inputs outputs; };
-          # > Our main home-manager configuration file <
-          modules = [
-
-            inputs.agenix.homeManagerModules.default
-            ./homes/ank/machines/karkinos.nix
-          ];
-        };
-
-        "ank@oppy" = lib.homeManagerConfiguration {
-          pkgs = pkgsFor.x86_64-linux;
-          extraSpecialArgs = { inherit inputs outputs; };
-          # > Our main home-manager configuration file <
-          modules = [
-
-            inputs.agenix.homeManagerModules.default
-            ./homes/ank/machines/oppy.nix
-          ];
-        };
-
-        "ngogober@oppy" = lib.homeManagerConfiguration {
-          pkgs = pkgsFor.x86_64-linux;
-          extraSpecialArgs = { inherit inputs outputs; };
-          # > Our main home-manager configuration file <
-          modules = [
-
-            inputs.agenix.homeManagerModules.default
-            ./homes/ngogober/machines/oppy.nix
-          ];
-        };
-
-        "ank@chiral" = lib.homeManagerConfiguration {
-          pkgs = pkgsFor.x86_64-linux;
-          extraSpecialArgs = { inherit inputs outputs; };
-          # > Our main home-manager configuration file <
-          modules = [
-            inputs.agenix.homeManagerModules.default
-            ./homes/ank/machines/chiral.nix
-          ];
-        };
-      };
-    }
-    // {
-      # Expose custom templates
-      templates = import ./templates;
-    };
+      }
+    );
 }
+
+# PerSystem template
+
+# perSystem =
+#   {
+#     config,
+#     pkgs,
+#     inputs',
+#     self',
+#     system,
+#     ...
+#   }:
+#   {
+#
+#   };

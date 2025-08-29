@@ -21,8 +21,6 @@ in
       bottom
       python3
       nodejs_22
-      nerdfonts
-      meslo-lgs-nf
       deno
       cargo
       rustc
@@ -44,14 +42,18 @@ in
       rclone
       chafa
       ouch
+      eza
+      bat
+      duf
+      nix-output-monitor
     ]
     ++ pdf_viewer;
 
   programs.yazi = {
     enable = true;
-    package = pkgs.unstable.yazi;
+    package = pkgs.yazi;
     keymap = {
-      manager.prepend_keymap = [
+      mgr.prepend_keymap = [
         {
           on = [ "T" ];
           run = "plugin max-preview";
@@ -61,7 +63,7 @@ in
 
     };
     settings = {
-      manager.show_hidden = true;
+      mgr.show_hidden = true;
       plugin.preloaders = [ ];
       preview = {
         max_width = 2000;
@@ -87,7 +89,7 @@ in
     if enableNvim then
       {
         enable = true;
-        package = pkgs.unstable.neovim-unwrapped;
+        package = pkgs.neovim-unwrapped;
         # whatever other neovim configuration you have
         extraPackages = with pkgs; [
           # ... other packages
@@ -146,11 +148,15 @@ in
     ];
 
     shellAliases = {
-      ll = "ls -l";
+      ls = "eza";
+      ll = "eza -lah";
       n = "nvim";
       ns = "nix search nixpkgs";
+      cat = "bat";
+      df = "duf";
+
     };
-    initExtra = ''
+    initContent = ''
       function update() {
         sudo nixos-rebuild switch --flake .#$1 -v
       }

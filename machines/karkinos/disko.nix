@@ -1,10 +1,12 @@
 {
+  disko.memSize = 16384; # 16GB
   disko.devices = {
     disk = {
       # SSD cluster
       ssd0 = {
         type = "disk";
         device = "/dev/nvme1n1";
+        imageSize = "3G";
         content = {
           type = "gpt";
           partitions = {
@@ -30,6 +32,7 @@
       ssd1 = {
         type = "disk";
         device = "/dev/nvme0n1";
+        imageSize = "3G";
         content = {
           type = "gpt";
           partitions = {
@@ -46,6 +49,7 @@
       ssd2 = {
         type = "disk";
         device = "/dev/nvme2n1";
+        imageSize = "3G";
         content = {
           type = "gpt";
           partitions = {
@@ -64,6 +68,7 @@
       hdd0 = {
         type = "disk";
         device = "/dev/sda";
+        imageSize = "1G";
         content = {
           type = "gpt";
           partitions = {
@@ -81,6 +86,7 @@
       hdd1 = {
         type = "disk";
         device = "/dev/sdb";
+        imageSize = "1G";
         content = {
           type = "gpt";
           partitions = {
@@ -98,6 +104,7 @@
       hdd2 = {
         type = "disk";
         device = "/dev/sdc";
+        imageSize = "1G";
         content = {
           type = "gpt";
           partitions = {
@@ -119,7 +126,7 @@
         mode = "";
         rootFsOptions = {
           # Make sure these options are correct
-          canmount = "off";
+          canmount = "on";
           acltype = "posixacl";
           dnodesize = "auto";
           normalization = "formD";
@@ -133,25 +140,20 @@
         options.autotrim = "on";
 
         datasets = {
-          "local" = {
-            type = "zfs_fs";
-            options.mountpoint = "none";
-          };
-          "local/home" = {
-            type = "zfs_fs";
-            mountpoint = "/home";
-            options."com.sun:auto-snapshot" = "true";
-          };
-          "local/nix" = {
-            type = "zfs_fs";
-            mountpoint = "/nix";
-            options."com.sun:auto-snapshot" = "false";
-          };
-          "local/root" = {
+          "root" = {
             type = "zfs_fs";
             mountpoint = "/";
             options."com.sun:auto-snapshot" = "false";
-            postCreateHook = "zfs snapshot zroot/local/root@blank";
+          };
+          # FIXME: This mounts after user dir creations and overwrites with blank home dir
+          # "home" = { type = "zfs_fs";
+          #   mountpoint = "/home";
+          #   options."com.sun:auto-snapshot" = "true";
+          # };
+          "nix" = {
+            type = "zfs_fs";
+            mountpoint = "/nix";
+            options."com.sun:auto-snapshot" = "false";
           };
         };
       };
@@ -161,7 +163,7 @@
         mode = "";
         rootFsOptions = {
           # Make sure these options are correct
-          canmount = "off";
+          canmount = "on";
           acltype = "posixacl";
           dnodesize = "auto";
           normalization = "formD";
@@ -178,7 +180,6 @@
           datastore = {
             type = "zfs_fs";
             mountpoint = "/datastore";
-            options."com.sun:auto-snapshot" = "false";
             postCreateHook = "zfs snapshot zstore/datastore@blank";
           };
         };

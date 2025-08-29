@@ -5,11 +5,11 @@
   "aerospace"
   "wezterm"
   "arc"
-  "tailscale"
   "microsoft-teams"
   "slack"
   "bitwarden"
-  "docker"
+  #"docker"
   "zoom"
   "vlc"
+  "claude-code"
 ]

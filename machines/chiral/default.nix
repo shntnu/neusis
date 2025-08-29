@@ -13,8 +13,7 @@
   imports = [
     # include NixOS-WSL modules
     inputs.nixos-wsl.nixosModules.default
-    # If you want to use modules from other flakes (such as nixos-hardware):
-    inputs.home-manager.nixosModule
+    inputs.home-manager.nixosModules.home-manager
     inputs.agenix.nixosModules.default
     {
       age.identityPaths = [ "/home/ank/.ssh/id_ed25519" ];
@@ -40,7 +39,6 @@
     docker-desktop = {
       enable = true;
     };
-    nativeSystemd = true;
   };
 
   # FHS
@@ -142,5 +140,5 @@
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
-  system.stateVersion = "24.11";
+  system.stateVersion = "25.05";
 }

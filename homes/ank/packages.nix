@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, outputs, ... }:
 with pkgs;
 [
   duckdb
@@ -20,6 +20,11 @@ with pkgs;
   statix
   bat
   eza
+  glances
+  gping
+  procs
+  bandwhich
+  outputs.packages.${pkgs.system}.claude-code
 ]
 ++ pkgs.lib.optionals pkgs.stdenv.isLinux [
   extra-container

@@ -83,6 +83,9 @@
       local g = vim.g
       local o = vim.o
 
+      -- Add support for loading custom lua config outside of nix
+      vim.opt.runtimepath:append(',~/.config/nvim/lua')
+
       -- Neovide
       if g.neovide then
         -- Neovide options
@@ -138,6 +141,44 @@
       -- Hooks.register(Hooks.type.DELETE, function ()
       --   vim.cmd(config.update_on_change_command)
       -- end)
+
+      -- vim and jupyter integration
+      vim.keymap.set('n', '<Leader>sw', function()
+      local buf = vim.api.nvim_get_current_buf()
+      local filepath = vim.api.nvim_buf_get_name(buf)
+
+      local keys = vim.api.nvim_replace_termcodes('o.<Esc>k', true, false, true)
+      vim.api.nvim_feedkeys(keys, 'n', false)
+
+      -- poll for changes every 500ms up to N times
+      local attempts = 0
+      local max_attempts = 20
+      local last_mtime = nil
+
+      local function poll()
+        if vim.uv.fs_stat(filepath).mtime.sec ~= last_mtime then
+          print('here we go')
+          -- file was changed externally, trigger checktime manually
+          vim.cmd('checktime')
+          return
+        end
+
+        attempts = attempts + 1
+        if attempts < max_attempts then
+          vim.defer_fn(poll, 500)
+        end
+      end
+
+      -- schedule to give time for feedkeys to actually input the keys in buffer
+      -- help says its blocking, but it doesn't seem to be
+      vim.schedule(function()
+        -- save the file
+        vim.cmd('w')
+        -- set the post-save modified time
+        last_mtime = vim.uv.fs_stat(filepath).mtime.sec
+        vim.defer_fn(poll, 500)
+      end)
+      end, { desc = '[W]rite and checktime after 1s' })
     '';
   };
 }

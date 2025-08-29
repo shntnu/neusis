@@ -16,7 +16,7 @@
     ./git/neogit.nix
 
     ./lsp/conform.nix
-    ./lsp/fidget.nix
+    #./lsp/fidget.nix
     ./lsp/lsp.nix
 
     #./lang/cpp.nix

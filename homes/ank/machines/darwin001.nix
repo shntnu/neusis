@@ -2,6 +2,7 @@
   config,
   pkgs,
   inputs,
+  outputs,
   ...
 }:
 {
@@ -9,6 +10,7 @@
     ../../common/home_manager.nix
     ../../common/dev
     ../../common/dev/kalam.nix
+    ../../common/themes
     (import ../../common/dev/editors.nix {
       inherit pkgs config inputs;
       enableNvim = false;
@@ -19,8 +21,7 @@
       userEmail = "ank@leoank.me";
       id_ed25519_pub = builtins.readFile ../id_ed25519.pub;
     })
-    ../../common/themes
   ];
 
-  home.packages = import ../packages.nix { inherit pkgs; };
+  home.packages = import ../packages.nix { inherit pkgs outputs; };
 }
