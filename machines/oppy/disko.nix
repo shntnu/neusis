@@ -179,7 +179,7 @@
         mountpoint = "/datastore16";
         rootFsOptions = {
           # Make sure these options are correct
-          canmount = "off";
+          #canmount = "off";
           acltype = "posixacl";
           dnodesize = "auto";
           normalization = "formD";
@@ -206,7 +206,7 @@
         mountpoint = "/datastore03";
         rootFsOptions = {
           # Make sure these options are correct
-          canmount = "off";
+          #canmount = "off";
           acltype = "posixacl";
           dnodesize = "auto";
           normalization = "formD";
