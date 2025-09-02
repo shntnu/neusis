@@ -8,50 +8,53 @@
 # ibp69s0 = 80:00:04:db:fe:80:00:00:00:00:00:00:a0:88:c2:03:00:88:a3:14
 { ... }:
 let
-  oppyLinks = {
-    "01-slave0" = {
-      enable = true;
-      matchConfig.MACAddress = "40:a6:b7:cc:d9:00";
-      #matchConfig.Type = "ether";
-      linkConfig.Name = "intel_10g_slave0";
-    };
-    "02-slave1" = {
-      enable = true;
-      matchConfig.MACAddress = "40:a6:b7:cc:d9:01";
-      #matchConfig.Type = "ether";
-      linkConfig.Name = "intel_10g_slave1";
-    };
-    "03-infiniband" = {
-      enable = true;
-      matchConfig.MACAddress = "80:00:04:db:fe:80:00:00:00:00:00:00:a0:88:c2:03:00:88:a3:14";
-      #matchConfig.Type = "infiniband";
-      linkConfig.Name = "mellanox_400g";
-    };
-    # "05-salve0".extraConfig = ''
-    #   [Match]
-    #   MACAddress = 40:a6:b7:cc:d9:00
-    #   Type = ether
-    #
-    #   [Link]
-    #   Name = intel_10g_slave0
-    # '';
-    # "05-salve1".extraConfig = ''
-    #   [Match]
-    #   MACAddress = 40:a6:b7:cc:d9:01
-    #   Type = ether
-    #
-    #   [Link]
-    #   Name = intel_10g_slave1
-    # '';
-    # "05-infiniband".extraConfig = ''
-    #   [Match]
-    #   MACAddress = 80:00:04:db:fe:80:00:00:00:00:00:00:a0:88:c2:03:00:88:a3:14
-    #   Type = infiniband
-    #
-    #   [Link]
-    #   Name = mellanox_400g
-    # '';
-  };
+  infiniband_mac = "80:00:04:db:fe:80:00:00:00:00:00:00:a0:88:c2:03:00:88:a3:14";
+  ether_slave_00_mac = "40:a6:b7:cc:d9:00";
+  ether_slave_01_mac = "40:a6:b7:cc:d9:01";
+  # oppyLinks = {
+  #   "01-slave0" = {
+  #     enable = true;
+  #     matchConfig.MACAddress = "40:a6:b7:cc:d9:00";
+  #     #matchConfig.Type = "ether";
+  #     linkConfig.Name = "intel_10g_slave0";
+  #   };
+  #   "02-slave1" = {
+  #     enable = true;
+  #     matchConfig.MACAddress = "40:a6:b7:cc:d9:01";
+  #     #matchConfig.Type = "ether";
+  #     linkConfig.Name = "intel_10g_slave1";
+  #   };
+  #   "03-infiniband" = {
+  #     enable = true;
+  #     matchConfig.MACAddress = "80:00:04:db:fe:80:00:00:00:00:00:00:a0:88:c2:03:00:88:a3:14";
+  #     #matchConfig.Type = "infiniband";
+  #     linkConfig.Name = "mellanox_400g";
+  #   };
+  # "05-salve0".extraConfig = ''
+  #   [Match]
+  #   MACAddress = 40:a6:b7:cc:d9:00
+  #   Type = ether
+  #
+  #   [Link]
+  #   Name = intel_10g_slave0
+  # '';
+  # "05-salve1".extraConfig = ''
+  #   [Match]
+  #   MACAddress = 40:a6:b7:cc:d9:01
+  #   Type = ether
+  #
+  #   [Link]
+  #   Name = intel_10g_slave1
+  # '';
+  # "05-infiniband".extraConfig = ''
+  #   [Match]
+  #   MACAddress = 80:00:04:db:fe:80:00:00:00:00:00:00:a0:88:c2:03:00:88:a3:14
+  #   Type = infiniband
+  #
+  #   [Link]
+  #   Name = mellanox_400g
+  # '';
+  #};
 in
 {
   # Enable infiniband
@@ -66,7 +69,7 @@ in
   systemd.network = {
     # Enable networkd
     enable = true;
-    links = oppyLinks;
+    #links = oppyLinks;
     netdevs = {
       "10-bond001" = {
         netdevConfig = {
@@ -82,54 +85,54 @@ in
     };
     networks = {
       "30-enp206s0f0" = {
-        matchConfig.Name = "intel_10g_slave0";
+        matchConfig.MACAddress = ether_slave_00_mac;
         networkConfig.Bond = "bond001";
         linkConfig.RequiredForOnline = "yes";
       };
 
       "30-enp206s0f1" = {
-        matchConfig.Name = "intel_10g_slave1";
+        matchConfig.MACAddress = ether_slave_01_mac;
         networkConfig.Bond = "bond001";
         linkConfig.RequiredForOnline = "yes";
       };
 
-      # "40-bond001" = {
-      #   matchConfig.Name = "bond001";
-      #   linkConfig.RequiredForOnline = "no";
-      #   networkConfig = {
-      #     DHCP = "yes";
-      #   };
-      #   dhcpV4Config = {
-      #     # Hostname registered with Broad IT
-      #     Hostname = "sn4622121098";
-      #   };
-      #
-      #   # If DHCPv4 fails to work
-      #   # networkConfig = {
-      #   #   Address = "10.192.6.25/24";
-      #   #   Gateway = "10.192.6.1";
-      #   #   DNS = [ "10.2.1.1" ];
-      #   #   DHCP = "no";
-      #   # };
-      #   # extraConfig = ''
-      #   #   [Route]
-      #   #   Gateway = 10.192.6.1
-      #   #   GatewayOnLink = yes
-      #   #   Destination =
-      #   #   Source =
-      #   #   Metric =
-      #   # '';
-      #
-      #   #sn4622121097
-      #   extraConfig = ''
-      #     [DHCPv4]
-      #     Hostname = sn4622121098
-      #
-      #   '';
-      # };
+      "40-bond001" = {
+        matchConfig.Name = "bond001";
+        linkConfig.RequiredForOnline = "no";
+        networkConfig = {
+          DHCP = "yes";
+        };
+        dhcpV4Config = {
+          # Hostname registered with Broad IT
+          Hostname = "sn4622121098";
+        };
+
+        # If DHCPv4 fails to work
+        # networkConfig = {
+        #   Address = "10.192.6.25/24";
+        #   Gateway = "10.192.6.1";
+        #   DNS = [ "10.2.1.1" ];
+        #   DHCP = "no";
+        # };
+        # extraConfig = ''
+        #   [Route]
+        #   Gateway = 10.192.6.1
+        #   GatewayOnLink = yes
+        #   Destination =
+        #   Source =
+        #   Metric =
+        # '';
+
+        #sn4622121097
+        extraConfig = ''
+          [DHCPv4]
+          Hostname = sn4622121098
+
+        '';
+      };
 
       "50-infiniband" = {
-        matchConfig.Name = "mellanox_400g";
+        matchConfig.MACAddress = infiniband_mac;
         networkConfig = {
           Address = "192.0.2.1/24";
           DHCP = "no";
