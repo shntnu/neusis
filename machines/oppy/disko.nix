@@ -176,7 +176,7 @@
       zstore16 = {
         type = "zpool";
         mode = "";
-        mountpoint = "/datastore16";
+        #mountpoint = "/datastore16";
         rootFsOptions = {
           # Make sure these options are correct
           #canmount = "off";
@@ -203,7 +203,7 @@
       zstore03 = {
         type = "zpool";
         mode = "";
-        mountpoint = "/datastore03";
+        #mountpoint = "/datastore03";
         rootFsOptions = {
           # Make sure these options are correct
           #canmount = "off";
