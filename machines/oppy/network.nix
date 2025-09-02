@@ -9,22 +9,22 @@
 { ... }:
 let
   oppyLinks = {
-    "05-slave0" = {
+    "01-slave0" = {
       enable = true;
       matchConfig.MACAddress = "40:a6:b7:cc:d9:00";
-      matchConfig.Type = "ether";
+      #matchConfig.Type = "ether";
       linkConfig.Name = "intel_10g_slave0";
     };
-    "05-slave1" = {
+    "02-slave1" = {
       enable = true;
       matchConfig.MACAddress = "40:a6:b7:cc:d9:01";
-      matchConfig.Type = "ether";
+      #matchConfig.Type = "ether";
       linkConfig.Name = "intel_10g_slave1";
     };
-    "05-infiniband" = {
+    "03-infiniband" = {
       enable = true;
       matchConfig.MACAddress = "80:00:04:db:fe:80:00:00:00:00:00:00:a0:88:c2:03:00:88:a3:14";
-      matchConfig.Type = "infiniband";
+      #matchConfig.Type = "infiniband";
       linkConfig.Name = "mellanox_400g";
     };
     # "05-salve0".extraConfig = ''
@@ -93,40 +93,40 @@ in
         linkConfig.RequiredForOnline = "yes";
       };
 
-      "40-bond001" = {
-        matchConfig.Name = "bond001";
-        linkConfig.RequiredForOnline = "no";
-        networkConfig = {
-          DHCP = "yes";
-        };
-        dhcpV4Config = {
-          # Hostname registered with Broad IT
-          Hostname = "sn4622121098";
-        };
-
-        # If DHCPv4 fails to work
-        # networkConfig = {
-        #   Address = "10.192.6.25/24";
-        #   Gateway = "10.192.6.1";
-        #   DNS = [ "10.2.1.1" ];
-        #   DHCP = "no";
-        # };
-        # extraConfig = ''
-        #   [Route]
-        #   Gateway = 10.192.6.1
-        #   GatewayOnLink = yes
-        #   Destination =
-        #   Source =
-        #   Metric =
-        # '';
-
-        #sn4622121097
-        extraConfig = ''
-          [DHCPv4]
-          Hostname = sn4622121098
-
-        '';
-      };
+      # "40-bond001" = {
+      #   matchConfig.Name = "bond001";
+      #   linkConfig.RequiredForOnline = "no";
+      #   networkConfig = {
+      #     DHCP = "yes";
+      #   };
+      #   dhcpV4Config = {
+      #     # Hostname registered with Broad IT
+      #     Hostname = "sn4622121098";
+      #   };
+      #
+      #   # If DHCPv4 fails to work
+      #   # networkConfig = {
+      #   #   Address = "10.192.6.25/24";
+      #   #   Gateway = "10.192.6.1";
+      #   #   DNS = [ "10.2.1.1" ];
+      #   #   DHCP = "no";
+      #   # };
+      #   # extraConfig = ''
+      #   #   [Route]
+      #   #   Gateway = 10.192.6.1
+      #   #   GatewayOnLink = yes
+      #   #   Destination =
+      #   #   Source =
+      #   #   Metric =
+      #   # '';
+      #
+      #   #sn4622121097
+      #   extraConfig = ''
+      #     [DHCPv4]
+      #     Hostname = sn4622121098
+      #
+      #   '';
+      # };
 
       "50-infiniband" = {
         matchConfig.Name = "mellanox_400g";
