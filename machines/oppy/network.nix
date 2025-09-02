@@ -10,18 +10,21 @@
 let
   oppyLinks = {
     "05-slave0" = {
+      enable = true;
       matchConfig.MACAddress = "40:a6:b7:cc:d9:00";
-      matchConfig.type = "ether";
+      matchConfig.Type = "ether";
       linkConfig.Name = "intel_10g_slave0";
     };
     "05-slave1" = {
+      enable = true;
       matchConfig.MACAddress = "40:a6:b7:cc:d9:01";
-      matchConfig.type = "ether";
+      matchConfig.Type = "ether";
       linkConfig.Name = "intel_10g_slave1";
     };
     "05-infiniband" = {
+      enable = true;
       matchConfig.MACAddress = "80:00:04:db:fe:80:00:00:00:00:00:00:a0:88:c2:03:00:88:a3:14";
-      matchConfig.type = "infiniband";
+      matchConfig.Type = "infiniband";
       linkConfig.Name = "mellanox_400g";
     };
     # "05-salve0".extraConfig = ''
@@ -117,6 +120,7 @@ in
         #   Metric =
         # '';
 
+        #sn4622121097
         extraConfig = ''
           [DHCPv4]
           Hostname = sn4622121098
@@ -124,14 +128,14 @@ in
         '';
       };
 
-      # "50-infiniband" = {
-      #   matchConfig.Name = "mellanox_400g";
-      #   networkConfig = {
-      #     Address = "192.0.2.1/24";
-      #     DHCP = "no";
-      #   };
-      #   linkConfig.RequiredForOnline = "no";
-      # };
+      "50-infiniband" = {
+        matchConfig.Name = "mellanox_400g";
+        networkConfig = {
+          Address = "192.0.2.1/24";
+          DHCP = "no";
+        };
+        linkConfig.RequiredForOnline = "no";
+      };
     };
 
   };
