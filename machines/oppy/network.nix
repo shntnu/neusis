@@ -25,23 +25,23 @@ let
       [Link]
       Name = intel_10g_slave1
     '';
-    # "05-infiniband".extraConfig = ''
-    #   [Match]
-    #   MACAddress = 80:00:04:db:fe:80:00:00:00:00:00:00:a0:88:c2:03:00:88:a3:14
-    #   Type = infiniband
-    #
-    #   [Link]
-    #   Name = mellanox_400g
-    # '';
+    "05-infiniband".extraConfig = ''
+      [Match]
+      MACAddress = 80:00:04:db:fe:80:00:00:00:00:00:00:a0:88:c2:03:00:88:a3:14
+      Type = infiniband
+
+      [Link]
+      Name = mellanox_400g
+    '';
   };
 in
 {
   # Enable infiniband
   hardware.infiniband.enable = true;
-  # hardware.infiniband.guids = [
-  #   "0x0002c90300a39cc1"
-  #   "0x0002c90300a39cc2"
-  # ];
+  hardware.infiniband.guids = [
+    # oppy mellanox port guid
+    "0xa088c2030088a314"
+  ];
 
   systemd.network.wait-online.enable = false;
   systemd.network = {
