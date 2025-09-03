@@ -8,7 +8,7 @@
 # ibp69s0 = 80:00:04:db:fe:80:00:00:00:00:00:00:a0:88:c2:03:00:88:a3:14
 { ... }:
 let
-  infiniband_mac = "80:00:04:db:fe:80:00:00:00:00:00:00:a0:88:c2:03:00:88:a3:14";
+  infiniband_mac = "80:00:04:cf:fe:80:00:00:00:00:00:00:a0:88:c2:03:00:88:a3:14";
   ether_slave_00_mac = "40:a6:b7:cc:d9:00";
   ether_slave_01_mac = "40:a6:b7:cc:d9:01";
   # oppyLinks = {
@@ -124,11 +124,11 @@ in
         # '';
 
         #sn4622121097
-        extraConfig = ''
-          [DHCPv4]
-          Hostname = sn4622121098
-
-        '';
+        # extraConfig = ''
+        #   [DHCPv4]
+        #   Hostname = sn4622121098
+        #
+        # '';
       };
 
       "50-infiniband" = {
