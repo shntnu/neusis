@@ -59,5 +59,4 @@
 
   networking.hostId = "2e39dfae"; # The primary use case is to ensure when using ZFS that a pool isn’t imported accidentally on a wrong machine.
   # networking.bridges.br0.interfaces = [ "enp2s0" "wlp131s0" ];
-  services.tailscale.enable = true;
 }

@@ -6,6 +6,7 @@
   imports = [
     inputs.hardware.nixosModules.common-pc-ssd
     inputs.home-manager.nixosModules.home-manager
+    inputs.agenix.nixosModules.default
 
     ./hardware-configuration.nix
 
@@ -40,6 +41,7 @@
     ../common/nix.nix
     ../common/printing.nix
     ../common/zfs.nix
+    ../common/tailscale.nix
 
   ];
 
