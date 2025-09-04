@@ -79,7 +79,7 @@
   home-manager = {
     #useGlobalPkgs = true;
     # Look into why enabling this break shell for starship
-    useUserPackages = true;
+    #useUserPackages = true;
     extraSpecialArgs = { inherit inputs outputs; };
     users.kumarank = {
       imports = [
