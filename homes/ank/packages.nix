@@ -5,6 +5,7 @@ with pkgs;
   jq
   mpv
   nix-output-monitor
+  nix-fast-build
   nh
   television
   comma

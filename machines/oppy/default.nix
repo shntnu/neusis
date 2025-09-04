@@ -27,7 +27,7 @@
     ./misc.nix
 
     # vm stuff
-    #./vm.nix
+    ./vm.nix
 
     #  common config
     ../common/networking.nix

@@ -49,6 +49,7 @@
     vim
     dive
     podman-tui
+    ipmitool
   ];
   environment.shells = [ pkgs.zsh ];
   programs.zsh.enable = true;
