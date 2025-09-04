@@ -26,6 +26,7 @@ with pkgs;
   procs
   bandwhich
   outputs.packages.${pkgs.system}.claude-code
+  opencode
 ]
 ++ pkgs.lib.optionals pkgs.stdenv.isLinux [
   extra-container
