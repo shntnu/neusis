@@ -118,14 +118,13 @@
           ) moduleFileAttrs;
 
         # Flake modules for external and internal use
-        publicFlakeModules =
-          rec {
-            default = ./flakeModules/lib.nix;
-            neusis = default;
+        publicFlakeModules = rec {
+          default = ./flakeModules/lib.nix;
+          neusis = default;
 
-          }
-          // mkImportApply rec {
-          };
+        }
+        // mkImportApply rec {
+        };
       in
       {
         debug = true;
@@ -142,6 +141,26 @@
           ./flakeModules/packages.nix
           ./flakeModules/lib.nix
         ];
+
+        # Per system stuff
+        perSystem =
+          {
+            config,
+            pkgs,
+            inputs',
+            self',
+            system,
+            ...
+          }:
+          {
+            devShells = import ./shell.nix {
+              inherit (self) inputs;
+              inherit pkgs;
+            };
+
+          };
+
+        # Global flake stuff
         flake = rec {
           flakeModules = publicFlakeModules;
 
@@ -166,18 +185,3 @@
       }
     );
 }
-
-# PerSystem template
-
-# perSystem =
-#   {
-#     config,
-#     pkgs,
-#     inputs',
-#     self',
-#     system,
-#     ...
-#   }:
-#   {
-#
-#   };

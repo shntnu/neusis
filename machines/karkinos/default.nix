@@ -15,19 +15,19 @@
 
     # Disko configuration
     inputs.disko.nixosModules.disko
-    ./old_disko.nix
+    ./disko.nix
 
     # Path to make boot work with zstore pool
     ./filesystem.nix
 
     # networking config
-    #./network.nix
+    ./network.nix
 
     # karinos misc
     ./misc.nix
 
     # vm related
-    #./vm.nix
+    ./vm.nix
 
     # common config
     #../common/grub_bootloader.nix

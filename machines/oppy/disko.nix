@@ -176,17 +176,16 @@
       zstore16 = {
         type = "zpool";
         mode = "";
-        mountpoint = "/datastore16";
+        postCreateHook = "zfs list -t snapshot -H -o name | grep -E '^zstore16@blank$' || zfs snapshot zstore16@blank";
         rootFsOptions = {
           # Make sure these options are correct
-          canmount = "off";
+          mountpoint = "none";
           acltype = "posixacl";
           dnodesize = "auto";
           normalization = "formD";
           atime = "off";
           compression = "lz4";
           xattr = "sa";
-          "com.sun:auto-snapshot" = "false";
         };
         options.ashift = "12";
         options.autotrim = "on";
@@ -194,35 +193,40 @@
         datasets = {
           datastore = {
             type = "zfs_fs";
-            mountpoint = "/datastore16";
-            postCreateHook = "zfs snapshot zstore16/datastore@blank";
+            options = {
+              mountpoint = "/datastore16";
+              dedup = "on";
+            };
           };
         };
       };
-      # https://github.com/nix-community/disko/issues/581
       zstore03 = {
         type = "zpool";
         mode = "";
-        mountpoint = "/datastore03";
+        postCreateHook = "zfs list -t snapshot -H -o name | grep -E '^zstore03@blank$' || zfs snapshot zstore03@blank";
         rootFsOptions = {
           # Make sure these options are correct
-          canmount = "off";
+          mountpoint = "none";
           acltype = "posixacl";
           dnodesize = "auto";
           normalization = "formD";
           atime = "off";
           compression = "lz4";
           xattr = "sa";
-          "com.sun:auto-snapshot" = "false";
+          "com.sun:auto-snapshot" = "true";
         };
         options.ashift = "12";
         options.autotrim = "on";
 
+        # Mountpoints: https://github.com/nix-community/disko/issues/469
+        # Mountpoints: https://github.com/nix-community/disko/issues/581
         datasets = {
           datastore = {
             type = "zfs_fs";
-            mountpoint = "/datastore03";
-            postCreateHook = "zfs snapshot zstore03/datastore@blank";
+            options = {
+              mountpoint = "/datastore03";
+              dedup = "on";
+            };
           };
         };
       };

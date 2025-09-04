@@ -1,10 +1,10 @@
-sudo ip link add bond0 type bond
-sudo ip link set bond0 type bond miimon 100 mode 802.3ad
-sudo ip link set  down enp206s0f0
-sudo ip link set enp206s0f0 master bond0
-sudo ip link set  down enp206s0f1
-sudo ip link set enp206s0f1 master bond0
-sudo ip address add 10.192.6.25/24 dev bond0
+sudo echo "nameserver 10.2.1.1" >> /etc/resolv.conf && \
+sudo ip link add bond0 type bond &&\
+sudo ip link set bond0 down &&\
+sudo ip link set bond0 type bond miimon 100 mode 802.3ad &&\
+sudo ip link set enp206s0f0 down &&\
+sudo ip link set enp206s0f0 master bond0 &&\
+sudo ip link set enp206s0f1 down &&\
+sudo ip link set enp206s0f1 master bond0 &&\
+sudo ip address add 10.192.6.25/24 dev bond0 &&\
 sudo ip route add default via 10.192.6.1 dev bond0
-
-# Then add "nameserver 10.2.1.1" in /etc/resolv.conf for DNS to work properly
