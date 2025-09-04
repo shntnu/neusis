@@ -12,4 +12,12 @@ in
 {
   "ank_userpass.age".publicKeys = [ ank ];
   "tsauthkey.age".publicKeys = users ++ systems;
+
+  # Oppy
+  "oppy_ssh_host_key.age" = {
+    publicKeys = [
+      ank
+      oppy
+    ];
+  };
 }
