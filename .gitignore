@@ -2,3 +2,8 @@ result
 .DS_Store
 fhsexp
 neusis.code-workspace
+oppy-efi-vars.fd
+karkinos-efi-vars.fd
+spirit-efi-vars.fd
+chiral-efi-vars.fd
+darwin001-efi-vars.fd
