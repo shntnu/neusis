@@ -10,14 +10,10 @@ let
   ];
 in
 {
-  "ank_userpass.age".publicKeys = [ ank ];
-  "tsauthkey.age".publicKeys = users ++ systems;
-
   # Oppy
-  "oppy_ssh_host_key.age" = {
-    publicKeys = [
-      ank
-      oppy
-    ];
-  };
+  "oppy/anywhere/etc/ssh/ssh_host_ed25519_key.age".publicKeys = [
+    ank
+    oppy
+  ];
+  "oppy/tsauthkey.age".publicKeys = users ++ systems;
 }
