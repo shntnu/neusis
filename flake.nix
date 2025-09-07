@@ -140,6 +140,7 @@
           ./flakeModules/checks
           ./flakeModules/packages.nix
           ./flakeModules/lib.nix
+          ./flakeModules/nixosModules.nix
         ];
 
         # Per system stuff
@@ -166,6 +167,7 @@
 
           # For backward compat
           flakeModule = flakeModules.default;
+
           overlays = import ./overlays { inherit (self) inputs outputs; };
           templates = import ./templates;
 

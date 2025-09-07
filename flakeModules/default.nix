@@ -5,5 +5,6 @@
     ./checks
     ./packages.nix
     ./lib.nix
+    ./nixosModules.nix
   ];
 }

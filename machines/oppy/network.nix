@@ -11,6 +11,10 @@ let
   ether_slave_01_mac = "40:a6:b7:cc:d9:01";
 in
 {
+
+  networking.hostName = "oppy";
+  networking.hostId = "2e39dfae"; # The primary use case is to ensure when using ZFS that a pool isn’t imported accidentally on a wrong machine.
+
   # Enable infiniband
   hardware.infiniband.enable = true;
   hardware.infiniband.guids = [

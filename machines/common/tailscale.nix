@@ -8,7 +8,7 @@
   environment.systemPackages = [ pkgs.tailscale ];
 
   # add agenix auth key
-  age.secrets.tsauthkey.file = ../../secrets/tsauthkey.age;
+  age.secrets.tsauthkey.file = ../../secrets/oppy/tsauthkey.age;
 
   # enable the tailscale service
   services.tailscale.enable = true;

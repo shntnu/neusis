@@ -17,9 +17,6 @@
     inputs.disko.nixosModules.disko
     ./disko.nix
 
-    # Path to make boot work with zstore pool
-    ./filesystem.nix
-
     # oppy networking config
     ./network.nix
 
