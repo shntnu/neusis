@@ -5,8 +5,10 @@
 # ///
 
 import argparse
+import os
 import stat
 import sys
+import tempfile
 from pathlib import Path
 from subprocess import CalledProcessError, run
 
@@ -91,6 +93,77 @@ def create_root_structure(
     fix_ssh_key_permissions(temp_folder)
 
     print(f"Root structure created in: {temp_folder}")
+
+
+def create_qemu_disk_image(temp_folder: Path, output_path: Path, size_mb: int = 1024):
+    """Create a qcow2 disk image with the contents of temp_folder."""
+
+    # Step 1: Create initial qcow2 image
+    qcow2_path = output_path.with_suffix(".initial.qcow2")
+    print(f"Creating qcow2 image: {qcow2_path}")
+    cmd = ["qemu-img", "create", "-f", "qcow2", str(qcow2_path), f"{size_mb}M"]
+    run(cmd, check=True)
+
+    # Step 2: Convert qcow2 to raw for filesystem operations
+    raw_path = output_path.with_suffix(".img")
+    print(f"Converting to raw image: {raw_path}")
+    cmd = [
+        "qemu-img",
+        "convert",
+        "-f",
+        "qcow2",
+        "-O",
+        "raw",
+        str(qcow2_path),
+        str(raw_path),
+    ]
+    run(cmd, check=True)
+
+    # Step 3: Create ext4 filesystem
+    print(f"Creating ext4 filesystem on {raw_path}")
+    cmd = ["mkfs.ext4", "-F", str(raw_path)]
+    run(cmd, check=True)
+
+    # Step 4: Mount, copy files, and unmount
+    with tempfile.TemporaryDirectory() as mount_dir:
+        mount_path = Path(mount_dir)
+
+        print(f"Mounting {raw_path} at {mount_path}")
+        cmd = ["sudo", "mount", "-o", "loop", str(raw_path), str(mount_path)]
+        run(cmd, check=True)
+
+        try:
+            # Copy all files from temp_folder to mounted image
+            print(f"Copying files from {temp_folder} to {mount_path}")
+            cmd = ["sudo", "cp", "-a", f"{temp_folder}/.", str(mount_path)]
+            run(cmd, check=True)
+        finally:
+            # Always unmount
+            print(f"Unmounting {mount_path}")
+            cmd = ["sudo", "umount", str(mount_path)]
+            run(cmd, check=True)
+
+    # Step 5: Convert raw back to qcow2
+    final_qcow2 = output_path.with_suffix(".final.qcow2")
+    print(f"Converting back to qcow2: {final_qcow2}")
+    cmd = [
+        "qemu-img",
+        "convert",
+        "-f",
+        "raw",
+        "-O",
+        "qcow2",
+        str(raw_path),
+        str(final_qcow2),
+    ]
+    run(cmd, check=True)
+
+    # Clean up intermediate files
+    qcow2_path.unlink(missing_ok=True)  # Remove initial qcow2
+    raw_path.unlink()  # Remove raw image
+
+    print(f"Disk image created successfully: {final_qcow2}")
+    return final_qcow2
 
 
 def run_nixos_anywhere(
@@ -214,6 +287,23 @@ def main():
         help="Disable substitute on destination",
     )
 
+    # mkdisk command
+    mkdisk_parser = subparsers.add_parser(
+        "mkdisk", help="Create a qcow2 disk image from root structure"
+    )
+    mkdisk_parser.add_argument(
+        "temp_folder", type=Path, help="Path to temp folder containing root structure"
+    )
+    mkdisk_parser.add_argument(
+        "output_path", type=Path, help="Output path for the disk image (.qcow2)"
+    )
+    mkdisk_parser.add_argument(
+        "--size",
+        type=int,
+        default=1024,
+        help="Disk image size in MB (default: 1024)",
+    )
+
     args = parser.parse_args()
 
     # Handle case where no subcommand is provided (backward compatibility)
@@ -239,18 +329,31 @@ def main():
             parser.print_help()
             sys.exit(1)
 
-    # Validate input folder exists
-    if not args.extra_files_folder.exists():
-        print(f"Error: {args.extra_files_folder} does not exist", file=sys.stderr)
-        sys.exit(1)
+    # Validate input folder exists (for decrypt and deploy commands)
+    if args.command in ["decrypt", "deploy"]:
+        if not args.extra_files_folder.exists():
+            print(f"Error: {args.extra_files_folder} does not exist", file=sys.stderr)
+            sys.exit(1)
 
-    if not args.extra_files_folder.is_dir():
-        print(f"Error: {args.extra_files_folder} is not a directory", file=sys.stderr)
-        sys.exit(1)
+        if not args.extra_files_folder.is_dir():
+            print(
+                f"Error: {args.extra_files_folder} is not a directory", file=sys.stderr
+            )
+            sys.exit(1)
 
-    if not args.key.exists():
-        print(f"Error: Key {args.key} does not exist", file=sys.stderr)
-        sys.exit(1)
+        if not args.key.exists():
+            print(f"Error: Key {args.key} does not exist", file=sys.stderr)
+            sys.exit(1)
+
+    # Validate temp folder for mkdisk command
+    if args.command == "mkdisk":
+        if not args.temp_folder.exists():
+            print(f"Error: {args.temp_folder} does not exist", file=sys.stderr)
+            sys.exit(1)
+
+        if not args.temp_folder.is_dir():
+            print(f"Error: {args.temp_folder} is not a directory", file=sys.stderr)
+            sys.exit(1)
 
     try:
         if args.command == "decrypt":
@@ -289,6 +392,12 @@ def main():
                 temp_folder=args.temp_folder.resolve(),
                 decryption_key_path=args.key.resolve(),
                 **nixos_anywhere_args,
+            )
+        elif args.command == "mkdisk":
+            create_qemu_disk_image(
+                temp_folder=args.temp_folder.resolve(),
+                output_path=args.output_path.resolve(),
+                size_mb=args.size,
             )
     except Exception as e:
         print(f"Error: {e}", file=sys.stderr)
