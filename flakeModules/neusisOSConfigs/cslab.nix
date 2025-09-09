@@ -16,7 +16,7 @@ in
       machineName = "oppy";
       userModule = ../../machines/oppy;
       specialArgs = { inherit (self) inputs outputs; };
-      userConfig = import ../../users/ank.nix { pkgs = machinesRegistry.oppy; };
+      userConfig = import ../../users/cslab.nix { pkgs = machinesRegistry.oppy; };
       homeManager = true;
     };
 
