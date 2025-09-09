@@ -1,8 +1,12 @@
 let
   # User keys
   ank = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFH40XzfXPtcTwJ8FHxHXCaEteylFOwtuw5TaY5CZ5NS ank@leoank.me";
+  shantanu = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBorbmM9bTSe8qoofrBucyyF+2ALLRKQGrUJrv85g/xF shsingh@wm89a-c9c";
 
-  users = [ ank ];
+  users = [
+    ank
+    shantanu
+  ];
 
   # Machine keys
   karkinos = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINp8DUNWx6rrzqYU8ejdQxxbXpS/rmp+G/3HXDozwNu6 ank@leoank.me";
@@ -17,11 +21,13 @@ in
   # Oppy
   "oppy/anywhere/etc/ssh/ssh_host_ed25519_key.age".publicKeys = [
     ank
+    shantanu
     oppy
   ];
   "oppy/tsauthkey.age".publicKeys = users ++ machines;
   "oppy/alloy_key.age".publicKeys = [
     ank
+    shantanu
     oppy
   ];
 }
