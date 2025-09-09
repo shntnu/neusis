@@ -16,4 +16,5 @@ in
     oppy
   ];
   "oppy/tsauthkey.age".publicKeys = users ++ systems;
+  "oppy/alloy_key.age".publicKeys = [ oppy ];
 }

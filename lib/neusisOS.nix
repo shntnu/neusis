@@ -54,6 +54,7 @@ rec {
         "input"
         "podman"
         "docker"
+        "ipmiusers"
       ];
       openssh.authorizedKeys.keyFiles = adminConfig.sshKeys;
     };

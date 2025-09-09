@@ -8,12 +8,75 @@ with lib;
 let
   cfg = config.neusis.services.monitoring;
 
+  mkAlloyConfig =
+    prometheusPort: secret:
+    pkgs.writeText "config.alloy" ''
+          prometheus.scrape "metrics_hosted_prometheus_node" {
+        targets = [{
+          __address__ = "localhost:${toString prometheusPort}",
+        }]
+        forward_to = [prometheus.remote_write.metrics_hosted_prometheus.receiver]
+        job_name   = "node"
+      }
+
+      local.file "alloy_prometheus_password" {
+        filename = "${secret.path}"
+        is_secret = true
+      }
+
+      prometheus.remote_write "metrics_hosted_prometheus" {
+         endpoint {
+            name = "hosted-prometheus"
+            url  = "https://prometheus-prod-56-prod-us-east-2.grafana.net/api/prom/push"
+          
+            basic_auth {
+              username = "2660759"
+              password = local.file.alloy_prometheus_password.content
+            }
+         }
+      }
+
+    '';
   grafanaDashboardSource = pkgs.fetchFromGitHub {
     owner = "rfrail3";
     repo = "grafana-dashboards";
     rev = "fb8ab3ec1444622f76ffc64162e193623e082062";
     sha256 = "sha256-33Fy5f3DhWqMQQzpHkdezLUrXiWku/HLH/DmuuZ293c=";
   };
+
+  nvidiaDashboardSource = pkgs.fetchFromGitHub {
+    owner = "utkuozdemir";
+    repo = "nvidia_gpu_exporter";
+    rev = "ca6b809235a8b4ed8e92380733104c90be9e8240";
+    sha256 = "sha256-Yh0iTQjV1oSwVmCIAdt7svG9MrKEewEIBBAPqUzsD88=";
+  };
+
+  ipmiExporterYAMLConfig = pkgs.writeText "ipmi_local.yml" ''
+    modules:
+      default:
+        # Available collectors are bmc, bmc-watchdog, ipmi, chassis, dcmi, sel, sel-events and sm-lan-mode
+        collectors:
+          - ipmi
+          # - sel
+          # - sel-events
+          # - sm-lan-mode
+          # - bmc
+          # - bmc-watchdog
+          # - chassis
+          # - dcmi
+        collector_cmd:
+          ipmi: /run/wrappers/bin/sudo
+        #   sel: ${pkgs.sudo}/bin/sudo
+        #   sel-events: ${pkgs.sudo}/bin/sudo
+        #   sm-lan-mode: ${pkgs.sudo}/bin/sudo
+        #   bmc: ${pkgs.sudo}/bin/sudo
+        #   bmc-watchdog: ${pkgs.sudo}/bin/sudo
+        #   chassis: ${pkgs.sudo}/bin/sudo
+        #   dcmi: ${pkgs.sudo}/bin/sudo
+        custom_args:
+          ipmi:
+            - ${pkgs.freeipmi}/bin/ipmimonitoring
+  '';
 in
 {
   options = {
@@ -31,8 +94,13 @@ in
         };
         retention = mkOption {
           type = types.str;
-          default = "30d";
+          default = "3600d";
           description = "Data retention period";
+        };
+        domain = mkOption {
+          type = types.nullOr types.str;
+          default = "prometheus.${toString config.networking.hostName}";
+          description = "Domain for Prometheus (optional)";
         };
       };
 
@@ -52,6 +120,17 @@ in
         };
       };
 
+      alloy = {
+        enable = mkEnableOption "Grafana Alloy" // {
+          default = true;
+        };
+        port = mkOption {
+          type = types.port;
+          default = 9300;
+          description = "Port for Grafana Alloy";
+        };
+      };
+
       nodeExporter = {
         enable = mkEnableOption "Node Exporter" // {
           default = true;
@@ -60,6 +139,39 @@ in
           type = types.port;
           default = 9100;
           description = "Port for Node Exporter";
+        };
+      };
+
+      nvidiaExporter = {
+        enable = mkEnableOption "Nvidia Exporter" // {
+          default = true;
+        };
+        port = mkOption {
+          type = types.port;
+          default = 9835;
+          description = "Port for Nvidia Exporter";
+        };
+      };
+
+      zfsExporter = {
+        enable = mkEnableOption "ZFS Exporter" // {
+          default = true;
+        };
+        port = mkOption {
+          type = types.port;
+          default = 9134;
+          description = "Port for ZFS Exporter";
+        };
+      };
+
+      ipmiExporter = {
+        enable = mkEnableOption "IPMI Exporter" // {
+          default = false;
+        };
+        port = mkOption {
+          type = types.port;
+          default = 9290;
+          description = "Port for IPMI Exporter";
         };
       };
 
@@ -76,6 +188,30 @@ in
           type = types.port;
           default = 9195;
           description = "GRPC ort for Loki";
+        };
+      };
+
+      nginx = {
+        enable = mkEnableOption "nginx reverse proxy for Grafana" // {
+          default = true;
+        };
+        serverName = mkOption {
+          type = types.str;
+          default = "grafana.${config.networking.hostName}";
+          description = "Server name for nginx virtual host";
+        };
+        ssl = {
+          enable = mkEnableOption "SSL/TLS for nginx";
+          certificatePath = mkOption {
+            type = types.nullOr types.path;
+            default = null;
+            description = "Path to SSL certificate";
+          };
+          keyPath = mkOption {
+            type = types.nullOr types.path;
+            default = null;
+            description = "Path to SSL private key";
+          };
         };
       };
 
@@ -108,17 +244,61 @@ in
   };
 
   config = mkIf cfg.enable {
+
+    age.secrets.alloy_key = mkIf cfg.alloy.enable {
+      file = ../../secrets/oppy/alloy_key.age;
+      # Required for alloy to read it dynamically
+      mode = "770";
+      owner = "prometheus";
+      group = "prometheus";
+    };
+
     services.prometheus = mkIf cfg.enable {
       enable = true;
       port = cfg.prometheus.port;
       retentionTime = cfg.prometheus.retention;
-
+      remoteWrite = [
+        # {
+        #   url = "http://127.0.0.1:${toString cfg.alloy.port}/agent/api/v1/metrics/instance/hosted-prometheus/write";
+        # }
+        {
+          url = "https://prometheus-prod-56-prod-us-east-2.grafana.net/api/prom/push";
+          basic_auth = {
+            username = "2660759";
+            password_file = config.age.secrets.alloy_key.path;
+          };
+        }
+      ];
       scrapeConfigs = [
         {
           job_name = "node";
           static_configs = [
             {
               targets = [ "localhost:${toString cfg.nodeExporter.port}" ];
+            }
+          ];
+        }
+        {
+          job_name = "nvidia";
+          static_configs = [
+            {
+              targets = [ "localhost:${toString cfg.nvidiaExporter.port}" ];
+            }
+          ];
+        }
+        {
+          job_name = "zfs";
+          static_configs = [
+            {
+              targets = [ "localhost:${toString cfg.zfsExporter.port}" ];
+            }
+          ];
+        }
+        {
+          job_name = "ipmi";
+          static_configs = [
+            {
+              targets = [ "localhost:${toString cfg.ipmiExporter.port}" ];
             }
           ];
         }
@@ -185,6 +365,23 @@ in
         ];
       };
 
+      exporters.nvidia-gpu = mkIf cfg.nvidiaExporter.enable {
+        enable = true;
+        port = cfg.nvidiaExporter.port;
+      };
+
+      exporters.zfs = mkIf cfg.zfsExporter.enable {
+        enable = true;
+        port = cfg.zfsExporter.port;
+      };
+
+      exporters.ipmi = mkIf cfg.ipmiExporter.enable {
+        enable = true;
+        port = cfg.ipmiExporter.port;
+        extraFlags = [ "--native-ipmi" ];
+        #configFile = ipmiExporterYAMLConfig;
+      };
+
       alertmanager = mkIf cfg.alerts.enable {
         enable = true;
         port = cfg.alerts.port;
@@ -212,6 +409,19 @@ in
           ];
         };
       };
+    };
+
+    systemd.services.alloy.serviceConfig = mkIf cfg.alloy.enable {
+      User = "ank";
+      Group = "users";
+    };
+
+    services.alloy = mkIf cfg.alloy.enable {
+      enable = false;
+      configPath = (mkAlloyConfig cfg.prometheus.port config.age.secrets.alloy_key);
+      extraFlags = [
+        "--server.http.listen-addr=127.0.0.1:${toString cfg.alloy.port}"
+      ];
     };
 
     services.loki = mkIf cfg.loki.enable {
@@ -356,11 +566,86 @@ in
       };
     };
 
+    # nginx configuration for Grafana
+    services.nginx = mkIf cfg.nginx.enable {
+      enable = true;
+      virtualHosts."${cfg.nginx.serverName}" = {
+        serverAliases = [
+          "${cfg.grafana.domain}"
+          "grafana.localhost"
+        ];
+        listen = [
+          {
+            addr = "0.0.0.0";
+            port = 80;
+          }
+        ]
+        ++ (optionals cfg.nginx.ssl.enable [
+          {
+            addr = "0.0.0.0";
+            port = 443;
+            ssl = true;
+          }
+        ]);
+
+        forceSSL = cfg.nginx.ssl.enable;
+        sslCertificate = mkIf cfg.nginx.ssl.enable cfg.nginx.ssl.certificatePath;
+        sslCertificateKey = mkIf cfg.nginx.ssl.enable cfg.nginx.ssl.keyPath;
+
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:${toString cfg.grafana.port}";
+          proxyWebsockets = true;
+          extraConfig = ''
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+          '';
+        };
+      };
+
+      virtualHosts."${cfg.prometheus.domain}" = {
+        serverAliases = [
+          "prometheus.localhost"
+        ];
+        listen = [
+          {
+            addr = "0.0.0.0";
+            port = 80;
+          }
+        ]
+        ++ (optionals cfg.nginx.ssl.enable [
+          {
+            addr = "0.0.0.0";
+            port = 443;
+            ssl = true;
+          }
+        ]);
+
+        forceSSL = cfg.nginx.ssl.enable;
+        sslCertificate = mkIf cfg.nginx.ssl.enable cfg.nginx.ssl.certificatePath;
+        sslCertificateKey = mkIf cfg.nginx.ssl.enable cfg.nginx.ssl.keyPath;
+
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:${toString cfg.prometheus.port}";
+          extraConfig = ''
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+          '';
+        };
+      };
+    };
+
     # System dashboards
 
     environment.etc = mkIf cfg.grafana.enable {
       "grafana/dashboards/node-exporter.json".source =
         "${grafanaDashboardSource}/prometheus/node-exporter-full.json";
+
+      "grafana/dashboards/nvidia-exporter.json".source =
+        "${nvidiaDashboardSource}/grafana/dashboard.json";
     };
 
     # Firewall configuration
@@ -372,24 +657,24 @@ in
     # ];
 
     # Systemd services for monitoring health
-    systemd.services.monitoring-health = mkIf cfg.enable {
-      description = "Monitoring Stack Health Check";
-      after = [ "network.target" ];
-      wantedBy = [ "multi-user.target" ];
-      serviceConfig = {
-        Type = "oneshot";
-        ExecStart = pkgs.writeShellScript "monitoring-health" ''
-          echo "Checking monitoring stack health..."
-          ${optionalString cfg.prometheus.enable ''
-            ${pkgs.curl}/bin/curl -f http://localhost:${toString cfg.prometheus.port}/-/healthy || exit 1
-          ''}
-          ${optionalString cfg.grafana.enable ''
-            ${pkgs.curl}/bin/curl -f http://localhost:${toString cfg.grafana.port}/api/health || exit 1
-          ''}
-          echo "All monitoring services are healthy"
-        '';
-      };
-    };
+    # systemd.services.monitoring-health = mkIf cfg.enable {
+    #   description = "Monitoring Stack Health Check";
+    #   after = [ "network.target" ];
+    #   wantedBy = [ "multi-user.target" ];
+    #   serviceConfig = {
+    #     Type = "oneshot";
+    #     ExecStart = pkgs.writeShellScript "monitoring-health" ''
+    #       echo "Checking monitoring stack health..."
+    #       ${optionalString cfg.prometheus.enable ''
+    #         ${pkgs.curl}/bin/curl -f http://localhost:${toString cfg.prometheus.port}/-/healthy || exit 1
+    #       ''}
+    #       ${optionalString cfg.grafana.enable ''
+    #         ${pkgs.curl}/bin/curl -f http://localhost:${toString cfg.grafana.port}/api/health || exit 1
+    #       ''}
+    #       echo "All monitoring services are healthy"
+    #     '';
+    #   };
+    # };
 
     systemd.timers.monitoring-health = mkIf cfg.enable {
       description = "Run monitoring health check";
@@ -401,4 +686,3 @@ in
     };
   };
 }
-

@@ -1,0 +1,20 @@
+# Configuration file for ipmi_exporter
+
+# This is an example config for scraping the local host, using `sudo` to
+# elevate privileges for access to the IPMI interface.
+modules:
+  default:
+    # Available collectors are bmc, bmc-watchdog, ipmi, chassis, dcmi, sel, sel-events and sm-lan-mode
+    collectors:
+      - ipmi
+      - sel
+      - sel-events
+      - sm-lan-mode
+      - bmc
+      - bmc-watchdog
+      - chassis
+      - dcmi
+
+    collector_cmd:
+      ipmi: sudo
+      sel: sudo

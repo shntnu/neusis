@@ -46,4 +46,12 @@
   programs.zsh.enable = true;
   programs.fish.enable = true;
 
+  # Add udev rules and user for IPMI device
+  users.groups.ipmiusers = {
+    name = "ipmiusers";
+  };
+  services.udev.extraRules = ''
+    KERNEL=="ipmi*", MODE="0660", GROUP="ipmiusers"
+  '';
+
 }
