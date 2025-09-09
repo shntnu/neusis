@@ -157,7 +157,7 @@
         postCreateHook = "zfs list -t snapshot -H -o name | grep -E '^zstore@blank$' || zfs snapshot zstore@blank";
         rootFsOptions = {
           # Make sure these options are correct
-          mountponit = "none";
+          mountpoint = "none";
           acltype = "posixacl";
           dnodesize = "auto";
           normalization = "formD";

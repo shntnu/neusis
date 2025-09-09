@@ -57,11 +57,4 @@
   environment.shells = [ pkgs.zsh ];
   programs.zsh.enable = true;
 
-  # Networking
-  networking.hostName = "GPFDA-11A";
-
-  networking.hostId = "df6b910c"; # The primary use case is to ensure when using ZFS that a pool isn’t imported accidentally on a wrong machine.
-  # networking.bridges.br0.interfaces = [ "enp2s0" "wlp131s0" ];
-  services.tailscale.enable = true;
-
 }

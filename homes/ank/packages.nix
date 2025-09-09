@@ -27,6 +27,7 @@ with pkgs;
   bandwhich
   outputs.packages.${pkgs.system}.claude-code
   opencode
+  bitwarden-desktop
 ]
 ++ pkgs.lib.optionals pkgs.stdenv.isLinux [
   extra-container

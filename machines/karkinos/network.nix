@@ -9,4 +9,9 @@
   # networking.interfaces.enp2s0.useDHCP = lib.mkDefault true;
   # networking.interfaces.enp3s0f0.useDHCP = lib.mkDefault true;
   # networking.interfaces.wlp131s0.useDHCP = lib.mkDefault true;
+
+  networking.hostName = "GPFDA-11A";
+  networking.hostId = "df6b910c"; # The primary use case is to ensure when using ZFS that a pool isn’t imported accidentally on a wrong machine.
+
+  # networking.bridges.br0.interfaces = [ "enp2s0" "wlp131s0" ];
 }
