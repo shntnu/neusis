@@ -14,21 +14,21 @@ in
       enable = mkEnableOption "Enable Neusis tailscale config";
 
       authkey_file = mkOption {
-        type = types.str;
+        type = types.nullOr types.str;
         default = null;
-        description = "Path to the tsauthkey file.";
+        description = "Path to the age tsauthkey file.";
       };
 
       persistent_authkey_file = mkOption {
         type = types.path;
         default = ../../secrets/common/persistent_tsauthkey.age;
-        description = "Path to the persistent tsauthkey file.";
+        description = "Path to the persistent age tsauthkey file.";
       };
 
       ephemeral_authkey_file = mkOption {
         type = types.path;
         default = ../../secrets/common/ephemeral_tsauthkey.age;
-        description = "Path to the ephemeral tsauthkey file.";
+        description = "Path to the ephemeral age tsauthkey file.";
       };
 
       isPersistent = mkOption {
