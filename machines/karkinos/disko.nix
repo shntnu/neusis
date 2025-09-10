@@ -140,13 +140,21 @@
         options.autotrim = "on";
 
         datasets = {
-          "root" = {
+          "local/root" = {
             type = "zfs_fs";
             mountpoint = "/";
           };
-          "nix" = {
+
+          "loca/nix" = {
             type = "zfs_fs";
+            options.mountpoint = "/nix";
             mountpoint = "/nix";
+          };
+
+          "local/home" = {
+            type = "zfs_fs";
+            options.mountpoint = "/home";
+            mountpoint = "/home";
           };
         };
       };
