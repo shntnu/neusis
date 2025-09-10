@@ -8,6 +8,7 @@
   ...
 }@args:
 rec {
+
   # Expose the top-level arguments for debugging purposes
   showTopArgs = args;
 
@@ -40,59 +41,77 @@ rec {
   };
 
   # Create an admin user with elevated privileges
-  mkAdmin = adminConfig: {
-    users.users.${adminConfig.username} = {
-      isNormalUser = true;
-      shell = adminConfig.shell;
-      initialPassword = "changeme";
-      description = adminConfig.fullName;
-      extraGroups = [
-        "networkmanager"
-        "wheel"
-        "libvirtd"
-        "qemu-libvirtd"
-        "input"
-        "podman"
-        "docker"
-        "ipmiusers"
-      ];
-      openssh.authorizedKeys.keyFiles = adminConfig.sshKeys;
-    };
-  };
+  mkAdmin =
+    adminConfig:
+    (
+      { config, ... }:
+      {
+        users.users.${adminConfig.username} = {
+          isNormalUser = true;
+          shell = adminConfig.shell;
+          hashedPasswordFile = config.age.secrets.commonInitialHashedPassword.path;
+          description = adminConfig.fullName;
+          extraGroups = [
+            "networkmanager"
+            "wheel"
+            "libvirtd"
+            "qemu-libvirtd"
+            "input"
+            "podman"
+            "docker"
+            "ipmiusers"
+          ];
+          openssh.authorizedKeys.keyFiles = adminConfig.sshKeys;
+        };
+
+      }
+    );
 
   # Create a regular user with standard privileges
-  mkRegular = regularConfig: {
-    users.users.${regularConfig.username} = {
-      isNormalUser = true;
-      shell = regularConfig.shell;
-      initialPassword = "changeme";
-      description = regularConfig.fullName;
-      extraGroups = [
-        "libvirtd"
-        "qemu-libvirtd"
-        "input"
-        "podman"
-        "docker"
-      ];
-      openssh.authorizedKeys.keyFiles = regularConfig.sshKeys;
-    };
-  };
+  mkRegular =
+    regularConfig:
+    (
+      { config, ... }:
+      {
+        users.users.${regularConfig.username} = {
+          isNormalUser = true;
+          shell = regularConfig.shell;
+          hashedPasswordFile = config.age.secrets.commonInitialHashedPassword.path;
+          description = regularConfig.fullName;
+          extraGroups = [
+            "libvirtd"
+            "qemu-libvirtd"
+            "input"
+            "podman"
+            "docker"
+          ];
+          openssh.authorizedKeys.keyFiles = regularConfig.sshKeys;
+        };
+
+      }
+    );
 
   # Create a guest user with minimal privileges
-  mkGuest = guestConfig: {
-    users.users.${guestConfig.username} = {
-      isNormalUser = true;
-      shell = guestConfig.shell;
-      initialPassword = "changeme";
-      description = guestConfig.fullName;
-      extraGroups = [
-        "input"
-        "podman"
-        "docker"
-      ];
-      openssh.authorizedKeys.keyFiles = guestConfig.sshKeys;
-    };
-  };
+  mkGuest =
+    guestConfig:
+    (
+      { config, ... }:
+      {
+        users.users.${guestConfig.username} = {
+          isNormalUser = true;
+          shell = guestConfig.shell;
+          hashedPasswordFile = config.age.secrets.commonInitialHashedPassword.path;
+          description = guestConfig.fullName;
+          extraGroups = [
+            "input"
+            "podman"
+            "docker"
+          ];
+          openssh.authorizedKeys.keyFiles = guestConfig.sshKeys;
+        };
+
+      }
+    );
 
   # Dynamically create all user types based on configuration
   mkDynamicUsers =
@@ -124,10 +143,18 @@ rec {
       specialArgs ? { },
       userConfig ? null,
       homeManager ? false,
+      initialHashedPassword ? ../secrets/common/hashedInitialPassword.age,
     }:
     let
+      ageConfig = {
+        age.secrets.commonInitialHashedPassword.file = initialHashedPassword;
+      };
       userConfigModules = lib.optionals (userConfig != null) (mkDynamicUsers {
-        inherit machineName userConfig homeManager;
+        inherit
+          machineName
+          userConfig
+          homeManager
+          ;
       });
       homeManagerModules = lib.optionals homeManager [
         {
@@ -139,7 +166,12 @@ rec {
       ];
     in
     lib.nixosSystem {
-      modules = [ userModule ] ++ userConfigModules ++ homeManagerModules;
+      modules = [
+        userModule
+        ageConfig
+      ]
+      ++ userConfigModules
+      ++ homeManagerModules;
       inherit specialArgs;
     };
 
