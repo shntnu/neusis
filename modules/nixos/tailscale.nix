@@ -44,7 +44,7 @@ in
       };
 
       hostName = mkOption {
-        type = types.str;
+        type = types.nullOr types.str;
         default = null;
         description = "Custom hostname to use.";
       };
