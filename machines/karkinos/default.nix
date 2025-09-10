@@ -33,7 +33,6 @@
     ./vm.nix
 
     # common config
-    #../common/grub_bootloader.nix
     ../common/networking.nix
     ../common/gpu/nvidia_dc.nix
     ../common/substituters.nix
@@ -51,6 +50,7 @@
 
   neusis.tailscale = {
     enable = true;
+    isPersistent = true;
     hostName = "karkinos";
   };
 
