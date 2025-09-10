@@ -56,7 +56,9 @@ def fix_ssh_key_permissions(temp_folder: Path):
         for key_file in temp_folder.glob(pattern):
             if key_file.suffix == ".pub":
                 # Public keys: 644 (readable by all, writable by owner)
-                key_file.chmod(stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
+                key_file.chmod(
+                    stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH
+                )
                 print(f"Set permissions 644 for public key: {key_file}")
             else:
                 # Private keys: 600 (readable/writable by owner only)
@@ -126,12 +128,19 @@ def run_nixos_anywhere(
     # Add extra files
     cmd.extend(["--extra-files", str(temp_folder)])
 
+    # Add ssh -t flag
+    # https://github.com/nix-community/nixos-anywhere/issues/178
+    # cmd.append("-t")
+
     # Add other nixos-anywhere arguments
     for key, value in nixos_anywhere_args.items():
         if value is True:
             cmd.append(f"--{key.replace('_', '-')}")
         elif value is not None:
-            cmd.extend([f"--{key.replace('_', '-')}", str(value)])
+            if key == "identity_file" or key == "i":
+                cmd.extend(["-i", str(value)])
+            else:
+                cmd.extend([f"--{key.replace('_', '-')}", str(value)])
 
     # Add target host
     cmd.append(target_host)
