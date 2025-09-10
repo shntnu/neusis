@@ -118,13 +118,14 @@
           ) moduleFileAttrs;
 
         # Flake modules for external and internal use
-        publicFlakeModules = rec {
-          default = ./flakeModules/lib.nix;
-          neusis = default;
+        publicFlakeModules =
+          rec {
+            default = ./flakeModules/lib.nix;
+            neusis = default;
 
-        }
-        // mkImportApply rec {
-        };
+          }
+          // mkImportApply rec {
+          };
       in
       {
         debug = true;

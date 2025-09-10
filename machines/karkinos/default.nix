@@ -49,7 +49,10 @@
     ../common/comin.nix
   ];
 
-  neusis.tailscale.enable = true;
+  neusis.tailscale = {
+    enable = true;
+    hostName = "karkinos";
+  };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "25.05";
