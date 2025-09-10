@@ -47,7 +47,6 @@
   neusis.tailscale = {
     enable = true;
     isPersistent = true;
-    hostName = "karkinos";
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
