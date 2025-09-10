@@ -1,5 +1,6 @@
 {
   inputs,
+  outputs,
   ...
 }:
 {
@@ -7,6 +8,7 @@
     inputs.hardware.nixosModules.common-pc-ssd
     inputs.home-manager.nixosModules.home-manager
     inputs.agenix.nixosModules.default
+    outputs.nixosModules.tailscale
 
     # Import your generated (nixos-generate-config) hardware configuration
     ./hardware-configuration.nix
@@ -44,9 +46,10 @@
     ../common/nix.nix
     ../common/printing.nix
     ../common/zfs.nix
-    ../common/tailscale.nix
     ../common/comin.nix
   ];
+
+  neusis.tailscale.enable = true;
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "25.05";
