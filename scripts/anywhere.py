@@ -8,7 +8,6 @@ import argparse
 import os
 import stat
 import sys
-import tempfile
 from pathlib import Path
 from subprocess import CalledProcessError, run
 
@@ -27,14 +26,19 @@ def decrypt_age_file(
 
 
 def write_to_temp(
-    data: str, age_file_path: Path, temp_folder: Path, extra_files_folder: Path
+    data: str,
+    file_path: Path,
+    temp_folder: Path,
+    extra_files_folder: Path,
+    remove_suffix: bool = False,
 ):
     """Write decrypted data to a temporary file maintaining directory structure."""
     # Calculate relative path from the extra_files_folder root
-    relative_path = age_file_path.relative_to(extra_files_folder)
+    relative_path = file_path.relative_to(extra_files_folder)
 
     # Remove .age extension to get the original file path
-    target_path = temp_folder / relative_path.with_suffix("")
+    suffix = "" if remove_suffix else file_path.suffix
+    target_path = temp_folder / relative_path.with_suffix(suffix)
 
     # Create parent directories if they don't exist
     target_path.parent.mkdir(parents=True, exist_ok=True)
@@ -52,9 +56,7 @@ def fix_ssh_key_permissions(temp_folder: Path):
         for key_file in temp_folder.glob(pattern):
             if key_file.suffix == ".pub":
                 # Public keys: 644 (readable by all, writable by owner)
-                key_file.chmod(
-                    stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH
-                )
+                key_file.chmod(stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
                 print(f"Set permissions 644 for public key: {key_file}")
             else:
                 # Private keys: 600 (readable/writable by owner only)
@@ -72,7 +74,9 @@ def create_root_structure(
     temp_folder.mkdir(parents=True, exist_ok=True)
 
     # Find all .age files recursively
-    age_files_list = [file for file in extra_files_folder.rglob("*.age")]
+    files_list = [file for file in extra_files_folder.rglob("*") if not file.is_dir()]
+    age_files_list = [file for file in files_list if file.suffix == ".age"]
+    filtered_files_list = [file for file in files_list if not file.suffix == ".age"]
 
     if not age_files_list:
         print(f"No .age files found in {extra_files_folder}")
@@ -84,86 +88,21 @@ def create_root_structure(
         try:
             print(f"Decrypting: {age_file}")
             decrypted_str = decrypt_age_file(age_file, decryption_key_path)
-            write_to_temp(decrypted_str, age_file, temp_folder, extra_files_folder)
+            write_to_temp(
+                decrypted_str, age_file, temp_folder, extra_files_folder, True
+            )
         except Exception as e:
             print(f"Failed to process {age_file}: {e}", file=sys.stderr)
             continue
+
+    for file in filtered_files_list:
+        # TODO: Hack for now, improve later
+        write_to_temp(file.read_text(), file, temp_folder, extra_files_folder)
 
     # Fix SSH key permissions
     fix_ssh_key_permissions(temp_folder)
 
     print(f"Root structure created in: {temp_folder}")
-
-
-def create_qemu_disk_image(temp_folder: Path, output_path: Path, size_mb: int = 1024):
-    """Create a qcow2 disk image with the contents of temp_folder."""
-
-    # Step 1: Create initial qcow2 image
-    qcow2_path = output_path.with_suffix(".initial.qcow2")
-    print(f"Creating qcow2 image: {qcow2_path}")
-    cmd = ["qemu-img", "create", "-f", "qcow2", str(qcow2_path), f"{size_mb}M"]
-    run(cmd, check=True)
-
-    # Step 2: Convert qcow2 to raw for filesystem operations
-    raw_path = output_path.with_suffix(".img")
-    print(f"Converting to raw image: {raw_path}")
-    cmd = [
-        "qemu-img",
-        "convert",
-        "-f",
-        "qcow2",
-        "-O",
-        "raw",
-        str(qcow2_path),
-        str(raw_path),
-    ]
-    run(cmd, check=True)
-
-    # Step 3: Create ext4 filesystem
-    print(f"Creating ext4 filesystem on {raw_path}")
-    cmd = ["mkfs.ext4", "-F", str(raw_path)]
-    run(cmd, check=True)
-
-    # Step 4: Mount, copy files, and unmount
-    with tempfile.TemporaryDirectory() as mount_dir:
-        mount_path = Path(mount_dir)
-
-        print(f"Mounting {raw_path} at {mount_path}")
-        cmd = ["sudo", "mount", "-o", "loop", str(raw_path), str(mount_path)]
-        run(cmd, check=True)
-
-        try:
-            # Copy all files from temp_folder to mounted image
-            print(f"Copying files from {temp_folder} to {mount_path}")
-            cmd = ["sudo", "cp", "-a", f"{temp_folder}/.", str(mount_path)]
-            run(cmd, check=True)
-        finally:
-            # Always unmount
-            print(f"Unmounting {mount_path}")
-            cmd = ["sudo", "umount", str(mount_path)]
-            run(cmd, check=True)
-
-    # Step 5: Convert raw back to qcow2
-    final_qcow2 = output_path.with_suffix(".final.qcow2")
-    print(f"Converting back to qcow2: {final_qcow2}")
-    cmd = [
-        "qemu-img",
-        "convert",
-        "-f",
-        "raw",
-        "-O",
-        "qcow2",
-        str(raw_path),
-        str(final_qcow2),
-    ]
-    run(cmd, check=True)
-
-    # Clean up intermediate files
-    qcow2_path.unlink(missing_ok=True)  # Remove initial qcow2
-    raw_path.unlink()  # Remove raw image
-
-    print(f"Disk image created successfully: {final_qcow2}")
-    return final_qcow2
 
 
 def run_nixos_anywhere(
@@ -287,23 +226,6 @@ def main():
         help="Disable substitute on destination",
     )
 
-    # mkdisk command
-    mkdisk_parser = subparsers.add_parser(
-        "mkdisk", help="Create a qcow2 disk image from root structure"
-    )
-    mkdisk_parser.add_argument(
-        "temp_folder", type=Path, help="Path to temp folder containing root structure"
-    )
-    mkdisk_parser.add_argument(
-        "output_path", type=Path, help="Output path for the disk image (.qcow2)"
-    )
-    mkdisk_parser.add_argument(
-        "--size",
-        type=int,
-        default=1024,
-        help="Disk image size in MB (default: 1024)",
-    )
-
     args = parser.parse_args()
 
     # Handle case where no subcommand is provided (backward compatibility)
@@ -345,16 +267,6 @@ def main():
             print(f"Error: Key {args.key} does not exist", file=sys.stderr)
             sys.exit(1)
 
-    # Validate temp folder for mkdisk command
-    if args.command == "mkdisk":
-        if not args.temp_folder.exists():
-            print(f"Error: {args.temp_folder} does not exist", file=sys.stderr)
-            sys.exit(1)
-
-        if not args.temp_folder.is_dir():
-            print(f"Error: {args.temp_folder} is not a directory", file=sys.stderr)
-            sys.exit(1)
-
     try:
         if args.command == "decrypt":
             create_root_structure(
@@ -392,12 +304,6 @@ def main():
                 temp_folder=args.temp_folder.resolve(),
                 decryption_key_path=args.key.resolve(),
                 **nixos_anywhere_args,
-            )
-        elif args.command == "mkdisk":
-            create_qemu_disk_image(
-                temp_folder=args.temp_folder.resolve(),
-                output_path=args.output_path.resolve(),
-                size_mb=args.size,
             )
     except Exception as e:
         print(f"Error: {e}", file=sys.stderr)
