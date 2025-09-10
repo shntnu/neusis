@@ -9,7 +9,7 @@ let
   ];
 
   # Machine keys
-  karkinos = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINp8DUNWx6rrzqYU8ejdQxxbXpS/rmp+G/3HXDozwNu6 ank@leoank.me";
+  karkinos = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINidmZsZlAone6QTsgkeRHzk3GsIMxCXI0RL53aRDMce";
   oppy = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINCW3CZ4r7VhI7+4rC+oOE4n3AMXEy3F2vm8jjHeTClR";
 
   machines = [
