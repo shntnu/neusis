@@ -145,7 +145,7 @@
             mountpoint = "/";
           };
 
-          "loca/nix" = {
+          "local/nix" = {
             type = "zfs_fs";
             options.mountpoint = "/nix";
             mountpoint = "/nix";
