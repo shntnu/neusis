@@ -40,7 +40,6 @@
     ../common/nix.nix
     ../common/printing.nix
     ../common/zfs.nix
-    ../common/tailscale.nix
     ../common/comin.nix
 
   ];
