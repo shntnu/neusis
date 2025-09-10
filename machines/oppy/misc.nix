@@ -9,6 +9,7 @@
 {
   imports = [
     outputs.nixosModules.monitoring
+    outputs.nixosModules.tailscale
     outputs.nixosModules.sunshine
   ];
 
