@@ -18,6 +18,10 @@ let
   ];
 in
 {
+  # Common
+  "common/persistent_tsauthkey.age".publicKeys = users ++ machines;
+  "common/ephemeral_tsauthkey.age".publicKeys = users ++ machines;
+
   # Oppy
   "oppy/anywhere/etc/ssh/ssh_host_ed25519_key.age".publicKeys = [
     ank
@@ -30,4 +34,7 @@ in
     shantanu
     oppy
   ];
+
+  # ank
+  "ank/ghauth.age".publicKeys = [ ank ];
 }
