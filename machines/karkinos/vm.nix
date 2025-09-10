@@ -1,13 +1,13 @@
 {
-  pkgs,
   config,
+  lib,
   ...
 }:
 {
 
   virtualisation.vmVariantWithDisko = {
     # Create ephemeral tailscale connections with custom vm hostName
-    neusis.tailscale = {
+    neusis.tailscale = lib.mkForce {
       isPersistent = false;
       hostName = "diskoTest${config.networking.hostName}";
     };

@@ -151,11 +151,14 @@
             mountpoint = "/nix";
           };
 
-          "local/home" = {
-            type = "zfs_fs";
-            options.mountpoint = "/home";
-            mountpoint = "/home";
-          };
+          # This create issues in a vm and possible on real machine too
+          # But the real machine is using old config and we don't to destroy the current disks layout
+          # So, I am keeping this here as a reference.
+          # "local/home" = {
+          #   type = "zfs_fs";
+          #   options.mountpoint = "/home";
+          #   mountpoint = "/home";
+          # };
         };
       };
 
