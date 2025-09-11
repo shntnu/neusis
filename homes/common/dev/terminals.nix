@@ -10,7 +10,7 @@
   ];
   programs = {
     atuin = {
-      enable = true;
+      enable = false;
       enableZshIntegration = true;
       daemon.enable = true;
       settings = {
