@@ -57,7 +57,10 @@
     disableKeyExpiry = true;
   };
 
-  neusis.services.monitoring.enable = true;
+  neusis.services.monitoring = {
+    enable = true;
+    alloy.enable = false;
+  };
   services.comin.hostname = "karkinos";
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
