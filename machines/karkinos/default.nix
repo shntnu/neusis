@@ -9,6 +9,7 @@
     inputs.home-manager.nixosModules.home-manager
     inputs.agenix.nixosModules.default
     outputs.nixosModules.tailscale
+    outputs.nixosModules.monitoring
 
     # Import your generated (nixos-generate-config) hardware configuration
     ./hardware-configuration.nix
@@ -56,6 +57,7 @@
     disableKeyExpiry = true;
   };
 
+  neusis.services.monitoring.enable = true;
   services.comin.hostname = "karkinos";
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
