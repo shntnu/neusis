@@ -52,6 +52,8 @@
     enable = true;
     isPersistent = true;
     hostName = "karkinos";
+    forceHostName = true;
+    disableKeyExpiry = true;
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion

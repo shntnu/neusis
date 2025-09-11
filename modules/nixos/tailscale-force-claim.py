@@ -2,6 +2,7 @@
 
 import json
 import os
+import subprocess
 import sys
 import time
 import urllib.error
@@ -67,9 +68,26 @@ def get_oauth_token(client_id, client_secret):
         return None
 
 
-def get_devices_with_hostname(token, tailnet_org, hostname):
-    """Get device IDs that match the hostname"""
-    log(f"Checking for existing devices with hostname: {hostname}")
+def get_current_device_ips():
+    """Get current device IPs using tailscale ip command"""
+    try:
+        result = subprocess.run(
+            ["tailscale", "ip"], capture_output=True, text=True, check=True
+        )
+        ips = [ip.strip() for ip in result.stdout.strip().split("\n") if ip.strip()]
+        log(f"Current device IPs: {ips}")
+        return ips
+    except subprocess.CalledProcessError as e:
+        log(f"ERROR: Failed to get current device IPs: {e}")
+        return []
+    except FileNotFoundError:
+        log(f"ERROR: tailscale command not found")
+        return []
+
+
+def get_tailscale_devices(token, tailnet_org):
+    """Get all devices from Tailscale API"""
+    log("Fetching all devices from Tailscale API...")
 
     req = urllib.request.Request(
         f"https://api.tailscale.com/api/v2/tailnet/{tailnet_org}/devices",
@@ -83,12 +101,8 @@ def get_devices_with_hostname(token, tailnet_org, hostname):
         devices_response = json.loads(response_data)
         devices = devices_response.get("devices", [])
 
-        matching_devices = []
-        for device in devices:
-            if device.get("hostname") and hostname in device["hostname"]:
-                matching_devices.append(device["nodeId"])
-
-        return matching_devices
+        log(f"Found {len(devices)} devices in tailnet")
+        return devices
 
     except urllib.error.URLError as e:
         log(f"ERROR: Failed to fetch devices: {e}")
@@ -96,6 +110,44 @@ def get_devices_with_hostname(token, tailnet_org, hostname):
     except json.JSONDecodeError as e:
         log(f"ERROR: Invalid JSON response from devices API: {e}")
         return []
+
+
+def find_current_and_conflicting_devices(devices, hostname, current_ips):
+    """Find current device and any conflicting devices"""
+    current_device = None
+    conflicting_devices = []
+
+    for device in devices:
+        device_hostname = device.get("hostname", "")
+        device_name = device.get("name", "")
+        device_addresses = device.get("addresses", [])
+
+        # Check if this is the current device by comparing IPs
+        is_current_device = any(ip in device_addresses for ip in current_ips)
+
+        if is_current_device:
+            current_device = device
+            log(
+                f"Found current device: {device.get('nodeId')} with hostname={device_hostname}, name={device_name}"
+            )
+
+            # Check if hostname matches name for current device
+            if device_hostname == device_name:
+                log("Current device hostname matches name - no action needed")
+                return current_device, []
+            else:
+                log(
+                    f"Current device hostname ({device_hostname}) differs from name ({device_name})"
+                )
+
+        # Check for conflicting devices (name matches our hostname but different device)
+        elif device_name == hostname:
+            conflicting_devices.append(device)
+            log(
+                f"Found conflicting device: {device.get('nodeId')} with hostname={device_hostname}, name={device_name}"
+            )
+
+    return current_device, conflicting_devices
 
 
 def delete_device(token, device_id, hostname):
@@ -115,6 +167,32 @@ def delete_device(token, device_id, hostname):
         return True
     except urllib.error.URLError as e:
         log(f"ERROR: Failed to delete device {device_id}: {e}")
+        return False
+
+
+def set_device_name(token, device_id, name):
+    """Set device name using Tailscale API"""
+    log(f"Setting device {device_id} name to: {name}")
+
+    data = json.dumps({"name": name}).encode("utf-8")
+
+    req = urllib.request.Request(
+        f"https://api.tailscale.com/api/v2/device/{device_id}/name",
+        data=data,
+        headers={
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+
+    try:
+        with urllib.request.urlopen(req) as response:
+            response.read()  # Consume response
+        log(f"Successfully set device {device_id} name to {name}")
+        return True
+    except urllib.error.URLError as e:
+        log(f"ERROR: Failed to set device {device_id} name: {e}")
         return False
 
 
@@ -152,15 +230,53 @@ def main():
         if not token:
             sys.exit(1)
 
-        # Find devices with matching hostname
-        device_ids = get_devices_with_hostname(token, tailnet_org, hostname)
+        # Get current device IPs
+        current_ips = get_current_device_ips()
+        if not current_ips:
+            log("ERROR: Could not determine current device IPs")
+            sys.exit(1)
 
-        if device_ids:
-            # Delete each matching device
-            for device_id in device_ids:
-                delete_device(token, device_id, hostname)
+        # Get all devices from Tailscale
+        devices = get_tailscale_devices(token, tailnet_org)
+        if not devices:
+            log("ERROR: Could not fetch devices from Tailscale API")
+            sys.exit(1)
+
+        # Find current device and any conflicting devices
+        current_device, conflicting_devices = find_current_and_conflicting_devices(
+            devices, hostname, current_ips
+        )
+
+        if not current_device:
+            log("ERROR: Could not identify current device")
+            sys.exit(1)
+
+        # Delete conflicting devices if any exist
+        if conflicting_devices:
+            log(f"Found {len(conflicting_devices)} conflicting devices to delete")
+            for device in conflicting_devices:
+                device_id = device.get("nodeId")
+                device_hostname = device.get("hostname", "unknown")
+                if device_id:
+                    delete_device(token, device_id, device_hostname)
         else:
-            log(f"No existing devices found with hostname: {hostname}")
+            log("No conflicting devices found")
+
+        # Set current device name to hostname if they don't match
+        current_device_hostname = current_device.get("hostname", "")
+        current_device_name = current_device.get("name", "").split(".")[0]
+        current_device_id = current_device.get("nodeId")
+
+        if current_device_hostname != current_device_name:
+            log(
+                f"Setting current device name from '{current_device_name}' to '{hostname}'"
+            )
+            if current_device_id:
+                set_device_name(token, current_device_id, hostname)
+            else:
+                log("ERROR: Could not get current device ID")
+        else:
+            log("Current device hostname already matches name")
 
         log("Force claim hostname completed successfully")
 
@@ -171,4 +287,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

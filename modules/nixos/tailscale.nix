@@ -143,7 +143,7 @@ in
     };
 
     # Add systemd service for force hostname functionality
-    systemd.services.tailscale-force-claim-hostname =
+    systemd.services.tailscale-force-claim =
       mkIf
         (
           cfg.forceHostName
@@ -154,14 +154,12 @@ in
         )
         {
           description = "Force claim Tailscale hostname";
-          before = [ "tailscaled.service" ];
-          wants = [ "network-online.target" ];
-          after = [
-            "network-online.target"
-          ];
+          after = [ "tailscaled-autoconnect.service" ];
+          wants = [ "tailscaled-autoconnect.service" ];
           wantedBy = [ "multi-user.target" ];
           path = [
             pkgs.python3
+            pkgs.tailscale
           ];
           script = forceClaimHostName;
           serviceConfig = {
@@ -192,6 +190,7 @@ in
           wantedBy = [ "multi-user.target" ];
           path = [
             pkgs.python3
+            pkgs.tailscale
           ];
           script = disableKeyExpiryScript;
 

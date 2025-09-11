@@ -47,6 +47,9 @@
   neusis.tailscale = {
     enable = true;
     isPersistent = true;
+    hostName = "oppy";
+    forceClaim = true;
+    disableKeyExpiry = true;
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion

@@ -2,6 +2,7 @@
 
 import json
 import os
+import subprocess
 import sys
 import time
 import urllib.error
@@ -67,8 +68,27 @@ def get_oauth_token(client_id, client_secret):
         return None
 
 
-def find_device_by_hostname(token, tailnet_org, hostname):
-    """Find device by exact hostname match"""
+def get_current_device_ips():
+    """Get current device IPs using tailscale ip command"""
+    try:
+        result = subprocess.run(
+            ["tailscale", "ip"], capture_output=True, text=True, check=True
+        )
+        ips = [ip.strip() for ip in result.stdout.strip().split("\n") if ip.strip()]
+        log(f"Current device IPs: {ips}")
+        return ips
+    except subprocess.CalledProcessError as e:
+        log(f"ERROR: Failed to get current device IPs: {e}")
+        return []
+    except FileNotFoundError:
+        log(f"ERROR: tailscale command not found")
+        return []
+
+
+def get_tailscale_devices(token, tailnet_org):
+    """Get all devices from Tailscale API"""
+    log("Fetching all devices from Tailscale API...")
+
     req = urllib.request.Request(
         f"https://api.tailscale.com/api/v2/tailnet/{tailnet_org}/devices",
         headers={"Authorization": f"Bearer {token}"},
@@ -81,18 +101,30 @@ def find_device_by_hostname(token, tailnet_org, hostname):
         devices_response = json.loads(response_data)
         devices = devices_response.get("devices", [])
 
-        for device in devices:
-            if device.get("hostname") == hostname:
-                return device["nodeId"]
-
-        return None
+        log(f"Found {len(devices)} devices in tailnet")
+        return devices
 
     except urllib.error.URLError as e:
         log(f"ERROR: Failed to fetch devices: {e}")
-        return None
+        return []
     except json.JSONDecodeError as e:
         log(f"ERROR: Invalid JSON response from devices API: {e}")
-        return None
+        return []
+
+
+def find_current_device(devices, current_ips):
+    """Find current device by matching IPs"""
+    for device in devices:
+        device_addresses = device.get("addresses", [])
+
+        # Check if this is the current device by comparing IPs
+        if any(ip in device_addresses for ip in current_ips):
+            log(
+                f"Found current device: {device.get('nodeId')} with keyExpiryDisabled={device.get('keyExpiryDisabled', False)}"
+            )
+            return device
+
+    return None
 
 
 def disable_key_expiry(token, device_id):
@@ -123,19 +155,19 @@ def disable_key_expiry(token, device_id):
         return False
 
 
-def wait_for_device(token, tailnet_org, hostname, max_attempts=12, delay=5):
-    """Wait for device to appear in the tailnet with retries"""
-    log(f"Waiting for device with hostname {hostname} to appear in tailnet...")
+def wait_for_current_device(token, tailnet_org, current_ips, max_attempts=12, delay=5):
+    """Wait for current device to appear in the tailnet with retries"""
+    log("Waiting for current device to appear in tailnet...")
 
     for attempt in range(1, max_attempts + 1):
-        device_id = find_device_by_hostname(token, tailnet_org, hostname)
-
-        if device_id:
-            log(f"Found device {device_id} with hostname {hostname}")
-            return device_id
+        devices = get_tailscale_devices(token, tailnet_org)
+        if devices:
+            current_device = find_current_device(devices, current_ips)
+            if current_device:
+                return current_device
 
         log(
-            f"Device not found yet, waiting {delay} seconds... (attempt {attempt}/{max_attempts})"
+            f"Current device not found yet, waiting {delay} seconds... (attempt {attempt}/{max_attempts})"
         )
         if attempt < max_attempts:
             time.sleep(delay)
@@ -177,19 +209,30 @@ def main():
         if not token:
             sys.exit(1)
 
-        # Wait for device to appear and get its ID
-        device_id = wait_for_device(token, tailnet_org, hostname)
-
-        if not device_id:
-            log(
-                f"Warning: Could not find device with hostname {hostname} to disable key expiry"
-            )
+        # Get current device IPs
+        current_ips = get_current_device_ips()
+        if not current_ips:
+            log("ERROR: Could not determine current device IPs")
             sys.exit(1)
 
+        # Wait for current device to appear and get its details
+        current_device = wait_for_current_device(token, tailnet_org, current_ips)
+
+        if not current_device:
+            log("Warning: Could not find current device to disable key expiry")
+            sys.exit(1)
+
+        # Check if key expiry is already disabled
+        if current_device.get("keyExpiryDisabled", False):
+            log("Key expiry is already disabled for current device")
+            return
+
         # Disable key expiry
-        if disable_key_expiry(token, device_id):
+        device_id = current_device.get("nodeId")
+        if device_id and disable_key_expiry(token, device_id):
             log("Disable key expiry completed successfully")
         else:
+            log("ERROR: Failed to disable key expiry")
             sys.exit(1)
 
     except Exception as e:
