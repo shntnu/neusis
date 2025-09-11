@@ -48,7 +48,7 @@
     enable = true;
     isPersistent = true;
     hostName = "oppy";
-    forceClaim = true;
+    forceHostName = true;
     disableKeyExpiry = true;
   };
 
