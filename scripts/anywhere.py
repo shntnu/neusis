@@ -130,7 +130,7 @@ def run_nixos_anywhere(
 
     # Add ssh -t flag
     # https://github.com/nix-community/nixos-anywhere/issues/178
-    # cmd.append("-t")
+    cmd.append("-t")
 
     # Add other nixos-anywhere arguments
     for key, value in nixos_anywhere_args.items():
@@ -234,6 +234,9 @@ def main():
         action="store_true",
         help="Disable substitute on destination",
     )
+    deploy_parser.add_argument(
+        "--kexec", type=Path, help="Use another kexec tarball to bootstrap NixOS"
+    )
 
     args = parser.parse_args()
 
@@ -305,6 +308,8 @@ def main():
                 and args.no_substitute_on_destination
             ):
                 nixos_anywhere_args["no_substitute_on_destination"] = True
+            if hasattr(args, "kexec") and args.kexec:
+                nixos_anywhere_args["kexec"] = args.kexec
 
             run_nixos_anywhere(
                 target_host=args.target_host,

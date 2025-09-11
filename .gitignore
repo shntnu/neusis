@@ -4,3 +4,4 @@ fhsexp
 neusis.code-workspace
 *-efi-vars.fd
 scratch
+.direnv
