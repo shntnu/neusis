@@ -257,12 +257,7 @@ in
       enable = true;
       port = cfg.prometheus.port;
       retentionTime = cfg.prometheus.retention;
-      remoteWrite = [
-        # {
-        #   url = "http://127.0.0.1:${toString cfg.alloy.port}/agent/api/v1/metrics/instance/hosted-prometheus/write";
-        # }
-      ]
-      ++ mkIf cfg.alloy.enable [
+      remoteWrite = mkIf cfg.alloy.enable [
         {
           url = "https://prometheus-prod-56-prod-us-east-2.grafana.net/api/prom/push";
           basic_auth = {
