@@ -10,6 +10,7 @@
   imports = [
     outputs.nixosModules.monitoring
     outputs.nixosModules.sunshine
+    inputs.nixos-generators.nixosModules.all-formats
   ];
 
   # FHS
@@ -53,5 +54,16 @@
   services.udev.extraRules = ''
     KERNEL=="ipmi*", MODE="0660", GROUP="ipmiusers"
   '';
+
+  # nixos generator settings
+  formatConfigs.install-iso =
+    { lib, ... }:
+    {
+      # We can enable it if we make some interface unmanaged
+      # networking.networkmanager.unmanaged = [];
+      networking.wireless.enable = false;
+      neusis.tailscale.hostName = lib.mkForce "install-oppy";
+
+    };
 
 }

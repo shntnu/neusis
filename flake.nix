@@ -13,6 +13,12 @@
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
 
+    # For generating disk images of machines for deployment
+    nixos-generators = {
+      url = "github:nix-community/nixos-generators";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Nixos images for building custom kexec images
     nixos-images.url = "github:nix-community/nixos-images";
 
