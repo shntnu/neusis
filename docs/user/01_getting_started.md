@@ -20,6 +20,7 @@ This will create your SSH key pair that will be used for secure authentication a
 
 1. Fork and check out this repository. FIXME: neusis
 2. Create your user config directory: `homes/<your-username>`. Copy the example user directory structure from `homes/shsingh` to your new user config directory to get started:
+
    ```
    <your-username>/
    ├── home.nix         # Core configuration for username, home dir, and packages
@@ -28,8 +29,10 @@ This will create your SSH key pair that will be used for secure authentication a
        ├── oppy.nix     # Machine-specific config that imports modules and sets Git info
        └── spirit.nix   # Same as above but for a different machine
    ```
+
 3. Replace the SSH public key in `id_ed25519.pub` with your own public key (which is in your `~/.ssh/id_ed25519.pub`)
 4. Configure `home.nix`:
+
    ```nix
    home = {
      username = "<your-username>";
@@ -37,7 +40,9 @@ This will create your SSH key pair that will be used for secure authentication a
      # ... existing code ...
    };
    ```
+
 5. Set your Git information in `machines/*.nix`:
+
    ```nix
    (import ../../common/dev/git.nix {
      username = "Your Full Name";
@@ -46,23 +51,26 @@ This will create your SSH key pair that will be used for secure authentication a
    })
    ```
 
-### Enable Home Manager Functionality 
+### Enable Home Manager Functionality
 
 Home Manager is a tool that allows you to customize your environment without administrator intervention. Its main advantage is that it lets you test changes immediately without waiting for admin approval.
 
 You will want to customize your home environment in various ways, such as:
+
 - Installing programs, that you want to always have around, and are specific to your user account
 - Customizing your shell prompt
 - Modifying your `.bashrc` or `.zshrc`
 - Setting up development tools and environments
 
 Without Home Manager, the process to make these changes is slow and cumbersome:
+
 1. Make changes to your configuration files
 2. Send a PR to the `neusis` repo
 3. Wait for admin to merge changes and rebuild (`nixos-rebuild`)
 4. Only then can you see if your changes work as expected
 
 With Home Manager, you get an immediate feedback loop:
+
 1. Set up Home Manager access once (requiring an initial PR)
 2. Then iteratively modify your `home.nix` and test immediately with `home-manager switch`
 3. Submit final changes as PR when you're satisfied
@@ -72,6 +80,7 @@ This immediate testing capability is crucial, as going through the admin approva
 To enable Home Manager:
 
 1. Add an entry for yourself in `neusis/flake.nix` under the `homeConfigurations` section:
+
    ```nix
    "<your-username>@<machine>" = lib.homeManagerConfiguration {
      pkgs = pkgsFor.x86_64-linux;
@@ -83,6 +92,7 @@ To enable Home Manager:
      ];
    }
    ```
+
    Replace `<your-username>` with your user name, and `<machine>` with the relevant server (e.g., `oppy` or `spirit`).
 
 2. Submit your changes as a PR with all the configuration created so far.
@@ -131,4 +141,4 @@ git push
 
 Then create a pull request so the admin can review and merge your changes into the main branch. This ensures your customizations become part of the system's permanent configuration.
 
-Even though your changes are already active due to running `home-manager switch` locally, completing this PR process is essential for maintaining your preferred configuration long-term. 
+Even though your changes are already active due to running `home-manager switch` locally, completing this PR process is essential for maintaining your preferred configuration long-term.

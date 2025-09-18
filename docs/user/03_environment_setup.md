@@ -61,7 +61,7 @@ We normally want to create a separate virtual environment for each project (repo
 nix flake new -t github:leoank/neusis#pythonml axiom-env
 ```
 
-This folder now looks like a normal Python project, with a pyproject.toml file, etc. The difference from a normal Python project is that it won't work without the flake.nix file. With Nix, we build a new shell from scratch, based on exactly we need inside of that shell. Since Nix is declarative, it has an internal map of where different software and packages are installed and what depends on what. When you run 'nix develop .', it builds a whole virtual environment with the specified software down to the base OS so that everything is where it's supposed to be and there are no dependency conflicts. Each software/package is only installed on Nix in one location, so you are really just linking to it and that's why this is so fast - we aren't re-downloading or installing anything. In contrast, with conda or mamba, each user must download and install each Python package separately, and sometimes separately for each virtual environment that they create. 
+This folder now looks like a normal Python project, with a pyproject.toml file, etc. The difference from a normal Python project is that it won't work without the flake.nix file. With Nix, we build a new shell from scratch, based on exactly we need inside of that shell. Since Nix is declarative, it has an internal map of where different software and packages are installed and what depends on what. When you run 'nix develop .', it builds a whole virtual environment with the specified software down to the base OS so that everything is where it's supposed to be and there are no dependency conflicts. Each software/package is only installed on Nix in one location, so you are really just linking to it and that's why this is so fast - we aren't re-downloading or installing anything. In contrast, with conda or mamba, each user must download and install each Python package separately, and sometimes separately for each virtual environment that they create.
 
 ### First-Time Setup
 
@@ -74,7 +74,7 @@ git add .
 nix develop .
 ```
 
-If you are using bash, you should see (.venv) after your shell. If you are using something else like zsh, your shell should look different now. 
+If you are using bash, you should see (.venv) after your shell. If you are using something else like zsh, your shell should look different now.
 
 While inside of axiom-env (or whatever your environment folder is called), run:
 
@@ -82,7 +82,7 @@ While inside of axiom-env (or whatever your environment folder is called), run:
 uv sync
 ```
 
-This is now adding each of the software specified in the flake.nix file into the virtual environment. 
+This is now adding each of the software specified in the flake.nix file into the virtual environment.
 
 ### Managing Python Dependencies
 
@@ -100,6 +100,7 @@ If we want to add a new Python package, we want to add it to the "dependencies" 
 ```
 
 Go to pypi.org and search the package to make sure you are using the right name. After adding to the pyproject.toml, we have to run:
+
 ```bash
 uv sync
 ```
@@ -131,22 +132,25 @@ If the software is not a Python dependency (ie. awscli), we need to add it to th
 ```
 
 After adding to flake.nix, we have to run:
+
 ```bash
 exit
 
 nix develop .
 ```
 
-To know exactly what name to use, search on https://search.nixos.org/packages.
+To know exactly what name to use, search on <https://search.nixos.org/packages>.
 
 ### Environment Management Commands
 
 To get out of the virtual environment:
+
 ```bash
 exit
 ```
 
 To activate a pre-existing environment:
+
 ```bash
 nix develop .
-``` 
+```

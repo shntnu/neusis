@@ -27,6 +27,7 @@ The system follows Nix's pure functional composition principles where configurat
 ### Visualizing the Dependency Graph
 
 For a comprehensive view of dependency structure, you can use specialized tools:
+
 - [nix-visualize](https://github.com/craigmbooth/nix-visualize)
 - [nix-du](https://github.com/symphorien/nix-du)
 - [nix-tree](https://github.com/utdemir/nix-tree)
@@ -147,6 +148,7 @@ Configurations leverage Nix's module system for composition:
 ```
 
 Nix's module system handles:
+
 - Dependency resolution
 - Option merging
 - Type checking
@@ -163,6 +165,7 @@ Nix's module system handles:
 6. **Common modules**: Reuse components from `homes/common/` and `machines/common/`
 
 For first-time Nix installations:
+
 ```bash
 # Install Nix
 sh <(curl -L https://nixos.org/nix/install)
@@ -208,6 +211,7 @@ homes/common/dev/
 ```
 
 Key Nix advantages for development:
+
 - **Reproducible environments**: Same dev tools on all machines
 - **Declarative configuration**: Editor/IDE setup in code
 - **Version pinning**: Tools pinned to exact versions
@@ -217,56 +221,56 @@ Key Nix advantages for development:
 
 Each machine type has a specialized Nix configuration:
 
-- **Developer Workstations**: 
-  - karkinos (NixOS Linux)
-  - darwin001 (nix-darwin macOS)
-  - Custom module sets for GUI, development tools, local services
+- **Developer Workstations**:
+    - karkinos (NixOS Linux)
+    - darwin001 (nix-darwin macOS)
+    - Custom module sets for GUI, development tools, local services
   
-- **Compute Servers**: 
-  - oppy, spirit (NixOS Linux)
-  - Optimized for computation with GPU support
-  - Minimal GUI, focus on service configuration
+- **Compute Servers**:
+    - oppy, spirit (NixOS Linux)
+    - Optimized for computation with GPU support
+    - Minimal GUI, focus on service configuration
   
-- **Specialized Systems**: 
-  - chiral (NixOS Linux)
-  - Example of Nix's ability to configure special-purpose machines
+- **Specialized Systems**:
+    - chiral (NixOS Linux)
+    - Example of Nix's ability to configure special-purpose machines
 
 ### Nix-managed AI Infrastructure
 
 The system leverages Nix to integrate AI capabilities with reproducible configurations:
 
-- **Local LLM hosting**: 
-  - Ollama packaged and configured via Nix
-  - Declarative service configuration
-  - Consistent across all machines
+- **Local LLM hosting**:
+    - Ollama packaged and configured via Nix
+    - Declarative service configuration
+    - Consistent across all machines
 
 - **AI-assisted Development**:
-  - Neovim AI plugins (Avante, CodeCompanion) declaratively configured
-  - Consistent plugin versions across all developer environments
-  - Integration with local LLMs
+    - Neovim AI plugins (Avante, CodeCompanion) declaratively configured
+    - Consistent plugin versions across all developer environments
+    - Integration with local LLMs
 
 - **ML Acceleration**:
-  - NVIDIA drivers and CUDA managed by Nix
-  - vGPU support via custom Nix modules
-  - Reproducible ML environments via Nix templates
+    - NVIDIA drivers and CUDA managed by Nix
+    - vGPU support via custom Nix modules
+    - Reproducible ML environments via Nix templates
 
 ### Nix-based Cross-Machine Synchronization
 
 Nix enables user environments to follow users across machines with perfect consistency:
 
 - **Identity Management**:
-  - SSH keys synchronized via Git
-  - User accounts declaratively defined
-  - Permissions managed through NixOS/nix-darwin modules
+    - SSH keys synchronized via Git
+    - User accounts declaratively defined
+    - Permissions managed through NixOS/nix-darwin modules
 
 - **Network Fabric**:
-  - Tailscale configured identically via Nix modules
-  - Secure networking with consistent configuration
-  - Authentication keys managed via agenix/age
+    - Tailscale configured identically via Nix modules
+    - Secure networking with consistent configuration
+    - Authentication keys managed via agenix/age
 
 - **Environment Consistency**:
-  - Identical editor/terminal experience on all systems
-  - Same package versions guaranteed by flake.lock
-  - User preferences follow users between NixOS and macOS machines
+    - Identical editor/terminal experience on all systems
+    - Same package versions guaranteed by flake.lock
+    - User preferences follow users between NixOS and macOS machines
 
 This approach demonstrates Nix's core strength: the ability to create a cohesive, reproducible computing environment that spans multiple machines and operating systems, defined entirely in code.
