@@ -20,7 +20,7 @@ The easiest way is to copy an existing user, and paste it, changing the name as 
 
 Here is an example:
 
-```
+```json
 users.users = {
 
     # ... existing users ...
@@ -53,7 +53,7 @@ The key, `<some_user>`, must match the name of the directory in `homes/` created
 
 In the same file, locate the `home-manager.users` section and add an entry for the user that imports their machine-specific configuration:
 
-```
+```text
 home-manager = {
     users = {
 

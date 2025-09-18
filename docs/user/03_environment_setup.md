@@ -43,7 +43,7 @@ echo $VIRTUAL_ENV
 
 Which will show something like:
 
-```
+```text
 > /home/<username>/<project_name>/.venv
 ```
 

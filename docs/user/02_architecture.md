@@ -201,7 +201,7 @@ nixos-rebuild switch --flake .#<machine>
 
 The repository provides a sophisticated terminal-centric development environment using Nix to ensure consistent tooling across all machines:
 
-```
+```text
 homes/common/dev/
 ├── editors.nix        # Neovim configurations packaged with Nix
 ├── git.nix            # Version control with Nix-managed plugins

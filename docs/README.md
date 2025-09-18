@@ -12,10 +12,10 @@ NixOS/nix-darwin configuration management for compute servers and workstations.
 
 ### For Operators
 
-- [Deployment](operations/deployment.md) - Deploy and rebuild procedures
-- [Monitoring](operations/monitoring.md) - Access Grafana and metrics
-- [Secrets](operations/secrets.md) - Manage secrets with Agenix
-- [Troubleshooting](operations/troubleshooting.md) - Fix common issues
+- [Deployment](operations/01_deployment.md) - Deploy and rebuild procedures
+- [Secrets](operations/02_secrets.md) - Manage secrets with Agenix
+- [Monitoring](operations/03_monitoring.md) - Access Grafana and metrics
+- [Troubleshooting](operations/99_troubleshooting.md) - Fix common issues
 
 ## Server Status
 
@@ -26,7 +26,7 @@ NixOS/nix-darwin configuration management for compute servers and workstations.
 
 ## Repository Map
 
-```
+```text
 neusis/
 ├── docs/              # This documentation
 │   ├── operations/    # Server operations

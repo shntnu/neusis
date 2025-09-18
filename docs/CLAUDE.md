@@ -52,7 +52,7 @@ This file guides Claude Code when creating or modifying documentation in the `do
 
 ## File Organization
 
-```
+```text
 docs/
 ├── operations/        # Day-to-day procedures
 ├── user/             # End-user documentation

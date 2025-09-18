@@ -4,10 +4,10 @@ Quick reference for operating Oppy via NixOS.
 
 ## Essential Tasks
 
-- [Deployment](deployment.md) - Deploy, rebuild, recover
-- [Secrets](secrets.md) - Manage secrets with Agenix
-- [Monitoring](monitoring.md) - Access Grafana, view metrics
-- [Troubleshooting](troubleshooting.md) - Common issues and fixes
+- [Deployment](01_deployment.md) - Fresh deployment and rebuilds
+- [Secrets](02_secrets.md) - Manage secrets with Agenix
+- [Monitoring](03_monitoring.md) - Access Grafana, view metrics
+- [Troubleshooting](99_troubleshooting.md) - NixOS-specific issues and fixes
 
 ## Current Status
 
@@ -30,8 +30,8 @@ ssh oppy systemctl status
 ssh oppy journalctl -f -u <service>
 ```
 
-## Key Locations
+## External References
 
-- Hardware specs: [Local](../../../../misc/imaging-server-maintenance/INVENTORY.md) | [GitHub](https://github.com/broadinstitute/imaging-server-maintenance/blob/main/INVENTORY.md)
-- Network topology: [Local](../../../../misc/imaging-server-maintenance/INVENTORY.md#network-architecture) | [GitHub](https://github.com/broadinstitute/imaging-server-maintenance/blob/main/INVENTORY.md#network-architecture)
-- Physical access: Markley Group, Rack C17, U17-20
+For hardware specifications, network topology, and physical access details, see:
+
+- [imaging-server-maintenance repository](https://github.com/broadinstitute/imaging-server-maintenance)

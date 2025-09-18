@@ -21,7 +21,7 @@ This will create your SSH key pair that will be used for secure authentication a
 1. Fork and check out this repository. FIXME: neusis
 2. Create your user config directory: `homes/<your-username>`. Copy the example user directory structure from `homes/shsingh` to your new user config directory to get started:
 
-   ```
+   ```text
    <your-username>/
    ├── home.nix         # Core configuration for username, home dir, and packages
    ├── id_ed25519.pub   # Your SSH public key for authentication

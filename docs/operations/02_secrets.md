@@ -82,9 +82,15 @@ let
 
 | Secret | Purpose | Users |
 |--------|---------|-------|
-| `oppy/tsauthkey.age` | Tailscale auth | All users + oppy |
-| `oppy/alloy_key.age` | Grafana metrics | ank, shantanu, oppy |
-| `oppy/anywhere/etc/ssh/ssh_host_ed25519_key.age` | SSH host key | ank, shantanu, oppy |
+| `common/persistent_tsauthkey.age` | Persistent Tailscale auth | All users + machines |
+| `common/ephemeral_tsauthkey.age` | Ephemeral Tailscale auth | All users + machines |
+| `common/hashedInitialPassword.age` | User initial passwords | All users + machines |
+| `common/tsclient.age` | Tailscale client config | All users + machines |
+| `common/tssecret.age` | Tailscale secret | All users + machines |
+| `oppy/tsauthkey.age` | Oppy Tailscale auth | All users + machines |
+| `oppy/alloy_key.age` | Grafana Cloud metrics push | ank, shantanu, oppy |
+| `oppy/anywhere/etc/ssh/ssh_host_ed25519_key.age` | SSH host key for deployment | ank, shantanu, oppy |
+| `ank/ghauth.age` | GitHub auth token | ank only |
 
 ## Troubleshooting
 
