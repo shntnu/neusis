@@ -107,3 +107,9 @@ ssh-add ~/.ssh/id_ed25519
 ### Decryption Failed
 
 Verify your public key matches in `secrets/secrets.nix`
+
+## Scratch
+
+```bash
+TESTVM_SECRETS=/Users/shsingh/Documents/GitHub/nix/neusis/scratch/ QEMU_KERNEL_PARAMS=console=ttyS0 nix run .\#nixosConfigurations.oppy.config.system.build.vmWithDisko
+```
