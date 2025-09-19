@@ -12,6 +12,9 @@
       isPersistent = true;
       hostName = "diskoTest${config.networking.hostName}";
       persistent_authkey_file = ../../secrets/common/persistent_cslab_mesh.age;
+      clientIdFile = ../../secrets/common/persistent_tsapiid.age;
+      clientSecretFile = ../../secrets/common/persistent_tsapikey.age;
+      disableKeyExpiry = true;
     };
 
     #virtualisation.qemu.consoles = [ "console=ttyS0" ];
