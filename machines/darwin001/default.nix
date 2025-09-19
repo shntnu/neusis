@@ -30,6 +30,8 @@
   };
 
   nix.settings = {
+    linux-builder.enable = true;
+
     trusted-users = [
       "@admin"
       "kumarank"
