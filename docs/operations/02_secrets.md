@@ -111,5 +111,11 @@ Verify your public key matches in `secrets/secrets.nix`
 ## Scratch
 
 ```bash
-TESTVM_SECRETS=/Users/shsingh/Documents/GitHub/nix/neusis/scratch/ QEMU_KERNEL_PARAMS=console=ttyS0 nix run .\#nixosConfigurations.oppy.config.system.build.vmWithDisko
+
+sudo python scripts/anywhere.py \
+  decrypt secrets/oppy/anywhere \
+  --temp-folder scratch \
+  --key /etc/ssh/ssh_host_ed25519_key
+
+TESTVM_SECRETS=/home/shsingh/work/GitHub/nix/neusis/scratch/ QEMU_KERNEL_PARAMS=console=ttyS0 nix run .\#nixosConfigurations.oppy.config.system.build.vmWithDisko
 ```
