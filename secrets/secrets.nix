@@ -1,7 +1,7 @@
 let
   # User keys
   ank = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFH40XzfXPtcTwJ8FHxHXCaEteylFOwtuw5TaY5CZ5NS ank@leoank.me";
-  shantanu = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBorbmM9bTSe8qoofrBucyyF+2ALLRKQGrUJrv85g/xF shsingh@wm89a-c9c";
+  shantanu = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB/6FQiQUwpJ6TJyPolx+B4oB/b8wBvLQ08Bgm4VUAKs shsingh@broadinstitute.org";
 
   users = [
     ank
