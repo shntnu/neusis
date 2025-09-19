@@ -119,7 +119,7 @@ def find_current_and_conflicting_devices(devices, hostname, current_ips):
 
     for device in devices:
         device_hostname = device.get("hostname", "")
-        device_name = device.get("name", "")
+        device_name = device.get("name", "").lower().split(".")[0]
         device_addresses = device.get("addresses", [])
 
         # Check if this is the current device by comparing IPs
@@ -264,7 +264,8 @@ def main():
 
         # Set current device name to hostname if they don't match
         current_device_hostname = current_device.get("hostname", "")
-        current_device_name = current_device.get("name", "").split(".")[0]
+        # Make sure to lower the string before comparison
+        current_device_name = current_device.get("name", "").lower().split(".")[0]
         current_device_id = current_device.get("nodeId")
 
         if current_device_hostname != current_device_name:

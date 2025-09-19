@@ -674,13 +674,13 @@ in
     #   };
     # };
 
-    systemd.timers.monitoring-health = mkIf cfg.enable {
-      description = "Run monitoring health check";
-      wantedBy = [ "timers.target" ];
-      timerConfig = {
-        OnCalendar = "hourly";
-        Persistent = true;
-      };
-    };
+    # systemd.timers.monitoring-health = mkIf cfg.enable {
+    #   description = "Run monitoring health check";
+    #   wantedBy = [ "timers.target" ];
+    #   timerConfig = {
+    #     OnCalendar = "hourly";
+    #     Persistent = true;
+    #   };
+    # };
   };
 }

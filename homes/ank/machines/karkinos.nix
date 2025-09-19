@@ -28,4 +28,8 @@
     ../../common/misc
     ../../common/gpu_tools.nix
   ];
+
+  # programs.gh.package = pkgs.writeBin "gh" ''
+  #   GITHUB_TOKEN=''$(cat ${config.age.secrets.ank_github_token.path}) gh
+  # '';
 }
