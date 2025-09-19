@@ -22,7 +22,6 @@ in
   "common/persistent_tsauthkey.age".publicKeys = users ++ machines;
   "common/persistent_tsapikey.age".publicKeys = users ++ machines;
   "common/persistent_tsapiid.age".publicKeys = users ++ machines;
-  "common/persistent_cslab_mesh.age".publicKeys = machines;
   "common/ephemeral_tsauthkey.age".publicKeys = users ++ machines;
   "common/hashedInitialPassword.age".publicKeys = users ++ machines;
   "common/tsclient.age".publicKeys = users ++ machines;
@@ -43,4 +42,6 @@ in
 
   # ank
   "ank/ghauth.age".publicKeys = [ ank ];
+
+  "common/persistent_cslab_mesh.age".publicKeys = machines;
 }
