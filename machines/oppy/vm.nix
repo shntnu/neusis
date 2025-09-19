@@ -15,6 +15,7 @@
       clientIdFile = ../../secrets/common/persistent_tsapiid.age;
       clientSecretFile = ../../secrets/common/persistent_tsapikey.age;
       disableKeyExpiry = true;
+      tailnetOrg = "shntnu.github";
     };
 
     #virtualisation.qemu.consoles = [ "console=ttyS0" ];
