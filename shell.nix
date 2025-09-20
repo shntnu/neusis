@@ -16,23 +16,26 @@
 {
   default = pkgs.mkShell {
     NIX_CONFIG = "extra-experimental-features = nix-command flakes";
-    nativeBuildInputs = with pkgs; [
-      nix
-      home-manager
-      git
-      uv
+    nativeBuildInputs =
+      with pkgs;
+      [
+        nix
+        home-manager
+        git
+        uv
+        nixos-anywhere
 
-      inputs.agenix.packages.${system}.default
-      ssh-to-age
-      gnupg
-      age
+        inputs.agenix.packages.${system}.default
+        ssh-to-age
+        gnupg
+        age
 
-      # Documentation tools
-      markdownlint-cli
-    ] ++ pkgs.lib.optionals pkgs.stdenv.isLinux [
-      # Linux-only tools for NixOS deployment
-      disko
-      nixos-anywhere
-    ];
+        # Documentation tools
+        markdownlint-cli
+      ]
+      ++ pkgs.lib.optionals pkgs.stdenv.isLinux [
+        # Linux-only tools for NixOS deployment
+        disko
+      ];
   };
 }

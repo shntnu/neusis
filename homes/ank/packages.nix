@@ -35,3 +35,7 @@ with pkgs;
   quickemu
   nixos-generators
 ]
+++ pkgs.lib.optionals pkgs.stdenv.isDarwin [
+  pkgs.master.signal-desktop-bin
+  pkgs.master.whatsapp-for-mac
+]

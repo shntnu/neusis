@@ -11,6 +11,7 @@
     ../../common/dev
     ../../common/dev/kalam.nix
     ../../common/themes
+    ../../common/browsers/brave.nix
     (import ../../common/dev/editors.nix {
       inherit pkgs config inputs;
       enableNvim = false;

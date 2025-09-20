@@ -7,6 +7,7 @@
 }:
 {
   imports = [
+    inputs.mac-app-util.darwinModules.default
     inputs.home-manager.darwinModules.home-manager
     inputs.nix-homebrew.darwinModules.nix-homebrew
     #../common/darwin_home_manager.nix
@@ -29,8 +30,22 @@
     };
   };
 
+  nix.linux-builder = {
+    enable = true;
+    ephemeral = true;
+    maxJobs = 10;
+    config = {
+      virtualisation = {
+        darwin-builder = {
+          diskSize = 100 * 1024;
+          memorySize = 24 * 1024;
+        };
+        cores = 10;
+      };
+    };
+  };
+
   nix.settings = {
-    linux-builder.enable = true;
 
     trusted-users = [
       "@admin"
@@ -41,7 +56,7 @@
   networking.hostName = "rogue";
 
   # Create users
-  users.users.kumarank = {
+  users.users.ank = {
     description = "Ankur Kumar";
     home = "/Users/ank";
     createHome = true;
@@ -87,6 +102,7 @@
     extraSpecialArgs = { inherit inputs outputs; };
     users.ank = {
       imports = [
+        inputs.mac-app-util.homeManagerModules.default
         ../../homes/ank/machines/rogue.nix
       ];
     };
