@@ -4,7 +4,7 @@
   services.openssh = {
     enable = true;
     settings = {
-      PermitRootLogin = "no";
+      PermitRootLogin = "yes";
       PasswordAuthentication = true;
       StreamLocalBindUnlink = "yes";
       # Allow forwarding ports to everywhere

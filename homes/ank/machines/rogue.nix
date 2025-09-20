@@ -1,12 +1,12 @@
 {
-  pkgs,
   config,
+  pkgs,
   inputs,
+  outputs,
   ...
 }:
 {
   imports = [
-    ../home.nix
     ../../common/home_manager.nix
     ../../common/dev
     ../../common/dev/kalam.nix
@@ -21,15 +21,7 @@
       userEmail = "ank@leoank.me";
       id_ed25519_pub = builtins.readFile ../id_ed25519.pub;
     })
-    ../../common/secrets
-    ../../common/browsers
-    ../../common/browsers/brave.nix
-    ../../common/network
-    ../../common/misc
-    ../../common/gpu_tools.nix
   ];
 
-  # programs.gh.package = pkgs.writeBin "gh" ''
-  #   GITHUB_TOKEN=''$(cat ${config.age.secrets.ank_github_token.path}) gh
-  # '';
+  home.packages = import ../packages.nix { inherit pkgs outputs; };
 }

@@ -21,5 +21,13 @@
       specialArgs = { inherit (self) inputs outputs; };
       homeManager = true;
     };
+
+    rogue = self.lib.neusisOS.mkNeusisDarwinOS {
+      machineName = "rogue";
+      # Not using the userConfig and directly creating user in the config
+      userModule = ../../machines/rogue;
+      specialArgs = { inherit (self) inputs outputs; };
+      homeManager = true;
+    };
   };
 }
