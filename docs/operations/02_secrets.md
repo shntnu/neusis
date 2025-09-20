@@ -112,10 +112,27 @@ Verify your public key matches in `secrets/secrets.nix`
 
 ```bash
 
-sudo python scripts/anywhere.py \
+uv run scripts/anywhere.py \
+  decrypt secrets/oppy/anywhere \
+  --temp-folder scratch \
+  --key ~/.ssh/id_ed25519
+
+sudo uv run scripts/anywhere.py \
   decrypt secrets/oppy/anywhere \
   --temp-folder scratch \
   --key /etc/ssh/ssh_host_ed25519_key
 
 TESTVM_SECRETS=/home/shsingh/work/GitHub/nix/neusis/scratch/ QEMU_KERNEL_PARAMS=console=ttyS0 nix run .\#nixosConfigurations.oppy.config.system.build.vmWithDisko
+```
+
+```sh
+nix build .\#kexec_tailscale  
+
+python scripts/anywhere.py \
+  deploy root@oppy secrets/oppy/anywhere \
+  --flake .#oppy \
+  --temp-folder scratch \
+  --key /home/shsingh/.ssh/id_ed25519 \
+  --identity-file /home/shsingh/.ssh/id_ed25519 \
+  --kexec  /nix/store/y1hvwmdz4084lvm4wryv7ay31xyah338-kexec-tarball/nixos-kexec-installer-noninteractive-x86_64-linux.tar.gz
 ```
