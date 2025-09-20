@@ -13,6 +13,10 @@ let
     ../machines/oppy/network.nix
     {
       system.kexec-installer.name = "nixos-kexec-installer-noninteractive";
+      
+      # SSH configuration for kexec installer
+      services.openssh.settings.PermitRootLogin = "yes";
+      
       neusis.tailscale = {
         enable = true;
         isPersistent = true;
