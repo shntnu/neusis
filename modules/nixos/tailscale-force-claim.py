@@ -68,6 +68,35 @@ def get_oauth_token(client_id, client_secret):
         return None
 
 
+def wait_for_tailscale_connection(max_attempts=30, delay=5):
+    """Wait for Tailscale to be connected before proceeding"""
+    log("Waiting for Tailscale connection...")
+
+    for attempt in range(1, max_attempts + 1):
+        try:
+            # Check if tailscale is up and has an IP
+            result = subprocess.run(
+                ["tailscale", "status", "--json"],
+                capture_output=True, text=True, check=True
+            )
+            status = json.loads(result.stdout)
+
+            # Check if we have BackendState == "Running" and have an IP
+            if status.get("BackendState") == "Running" and status.get("Self", {}).get("TailscaleIPs"):
+                log("Tailscale is connected")
+                return True
+
+        except (subprocess.CalledProcessError, json.JSONDecodeError, KeyError):
+            pass
+
+        if attempt < max_attempts:
+            log(f"Tailscale not ready, waiting {delay}s... (attempt {attempt}/{max_attempts})")
+            time.sleep(delay)
+
+    log("ERROR: Tailscale did not connect after maximum attempts")
+    return False
+
+
 def get_current_device_ips():
     """Get current device IPs using tailscale ip command"""
     try:
@@ -228,6 +257,11 @@ def main():
         # Get OAuth token
         token = get_oauth_token(client_id, client_secret)
         if not token:
+            sys.exit(1)
+
+        # Wait for Tailscale to be connected
+        if not wait_for_tailscale_connection():
+            log("ERROR: Tailscale is not connected")
             sys.exit(1)
 
         # Get current device IPs
