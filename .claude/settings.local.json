@@ -12,8 +12,7 @@
       "Bash(git commit:*)",
       "Bash(find:*)",
       "Bash(gh repo view:*)",
-      "Bash(gh api:*)",
-      "Bash(git fetch:*)"
+      "Bash(gh api:*)"
     ],
     "deny": [],
     "ask": [],
