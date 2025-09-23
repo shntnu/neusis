@@ -19,7 +19,6 @@
     nativeBuildInputs =
       with pkgs;
       [
-        nix
         home-manager
         git
         uv
