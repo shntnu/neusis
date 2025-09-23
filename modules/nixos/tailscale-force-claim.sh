@@ -84,12 +84,12 @@ DEVICES_RESPONSE=$(curl -sf "https://api.tailscale.com/api/v2/tailnet/$TAILNET_O
     -H "Authorization: Bearer $TOKEN" 2>/dev/null) || error_exit "Failed to fetch device list"
 
 if [ -n "${DEVICES_RESPONSE:-}" ]; then
-    # Find devices where the hostname matches our desired hostname
+    # Find devices where the name (without domain) matches our desired hostname
     # but has a different node ID
     CONFLICTS=$(echo "$DEVICES_RESPONSE" | jq -r \
         --arg hostname "$NODE_NAME" \
         --arg device_id "$DEVICE_ID" \
-        '.devices[]? | select(.hostname == $hostname) | select(.nodeId != $device_id) | {id: .nodeId, name: .name, hostname: .hostname}' 2>/dev/null | jq -s '.')
+        '.devices[]? | select(.name | split(".")[0] | ascii_downcase == ($hostname | ascii_downcase)) | select(.nodeId != $device_id) | {id: .nodeId, name: .name, hostname: .hostname}' 2>/dev/null | jq -s '.')
 
     CONFLICT_COUNT=$(echo "$CONFLICTS" | jq 'length')
 
@@ -105,10 +105,10 @@ if [ -n "${DEVICES_RESPONSE:-}" ]; then
                 TEST_NAME="${NODE_NAME}-old${i}"
             fi
 
-            # Check if this name is available
+            # Check if this name is available (check the name field, not hostname)
             EXISTS=$(echo "$DEVICES_RESPONSE" | jq -r \
                 --arg test_name "$TEST_NAME" \
-                '.devices[]? | select(.hostname == $test_name) | .nodeId' | head -1)
+                '.devices[]? | select(.name | split(".")[0] | ascii_downcase == ($test_name | ascii_downcase)) | .nodeId' | head -1)
 
             if [ -z "$EXISTS" ]; then
                 OLD_SUFFIX=$i
