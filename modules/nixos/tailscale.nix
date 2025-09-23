@@ -17,7 +17,7 @@ let
         && cfg.hostName != null
       )
       ''
-        ${pkgs.python3}/bin/python3 ${./tailscale-force-claim.py}
+        ${pkgs.bash}/bin/bash ${./tailscale-force-claim.sh}
       '';
 
   disableKeyExpiryScript =
@@ -30,7 +30,7 @@ let
         && cfg.hostName != null
       )
       ''
-        ${pkgs.python3}/bin/python3 ${./tailscale-disable-key-expiry.py}
+        ${pkgs.bash}/bin/bash ${./tailscale-disable-key-expiry.sh}
       '';
 in
 {
@@ -79,7 +79,10 @@ in
         default = true;
         description = ''
           Force claim hostname on the tailnet.
-          This will remove the existing device with this hostname
+          This will ensure the current device gets the exact hostname by:
+          1. Renaming any conflicting devices to hostname-old, hostname-old2, etc.
+          2. Then setting the current device to the specified hostname.
+          All devices are preserved (nothing gets deleted).
         '';
       };
 
@@ -154,12 +157,17 @@ in
         )
         {
           description = "Force claim Tailscale hostname";
-          after = [ "tailscaled-autoconnect.service" ];
+          after = [
+            "tailscaled-autoconnect.service"
+            "tailscale-disable-key-expiry.service"
+          ];
           wants = [ "tailscaled-autoconnect.service" ];
           wantedBy = [ "multi-user.target" ];
           path = [
-            pkgs.python3
+            pkgs.bash
             pkgs.tailscale
+            pkgs.jq
+            pkgs.curl
           ];
           script = forceClaimHostName;
           serviceConfig = {
@@ -189,8 +197,10 @@ in
           wants = [ "tailscaled-autoconnect.service" ];
           wantedBy = [ "multi-user.target" ];
           path = [
-            pkgs.python3
+            pkgs.bash
             pkgs.tailscale
+            pkgs.jq
+            pkgs.curl
           ];
           script = disableKeyExpiryScript;
 
