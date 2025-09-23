@@ -89,6 +89,7 @@
     casks = [
       "fiji"
       "hammerspoon"
+      "deskflow"
     ];
     onActivation = {
       cleanup = "uninstall";
@@ -108,6 +109,12 @@
     };
   };
 
+  # age.secrets.tsauthkey.file = ../../secrets/common/persistent_tsauthkey.age;
+  # services.tailscale = {
+  #   enable = true;
+  #   authKeyFile = config.age.secrets.tsauthkey.path;
+  # };
+
   security.pam.services.sudo_local.touchIdAuth = true;
   # sudo with touch id
   system = {
@@ -117,49 +124,26 @@
     keyboard.enableKeyMapping = true;
     keyboard.remapCapsLockToEscape = true;
 
-    # Disable press and hold for diacritics.
-    # I want to be able to press and hold j and k
-    # in vim to move around.
-    defaults.NSGlobalDomain.ApplePressAndHoldEnabled = false;
-
     # Turn off NIX_PATH warnings now that we're using flakes
     checks.verifyNixPath = false;
 
     stateVersion = 5;
 
-    #   defaults = {
-    #     NSGlobalDomain = {
-    #       AppleShowAllExtensions = true;
-    #       ApplePressAndHoldEnabled = false;
-    #
-    #       # 120, 90, 60, 30, 12, 6, 2
-    #       KeyRepeat = 2;
-    #
-    #       # 120, 94, 68, 35, 25, 15
-    #       InitialKeyRepeat = 15;
-    #
-    #       "com.apple.mouse.tapBehavior" = 1;
-    #       "com.apple.sound.beep.volume" = 0.0;
-    #       "com.apple.sound.beep.feedback" = 0;
-    #     };
-    #
-    #     dock = {
-    #       autohide = true;
-    #       show-recents = false;
-    #       launchanim = true;
-    #       orientation = "left";
-    #       tilesize = 48;
-    #     };
-    #
-    #     finder = {
-    #       _FXShowPosixPathInTitle = false;
-    #     };
-    #
-    #     trackpad = {
-    #       Clicking = true;
-    #       TrackpadThreeFingerDrag = true;
-    #     };
-    #   };
-
+    defaults = {
+      NSGlobalDomain = {
+        AppleShowAllExtensions = true;
+        # Disable press and hold for diacritics.
+        # I want to be able to press and hold j and k
+        # in vim to move around.
+        ApplePressAndHoldEnabled = false;
+      };
+      dock = {
+        autohide = true;
+        show-recents = false;
+        launchanim = true;
+        orientation = "left";
+        tilesize = 48;
+      };
+    };
   };
 }

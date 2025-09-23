@@ -199,6 +199,22 @@
         "type": "github"
       }
     },
+    "deskflow-tap": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1758074201,
+        "narHash": "sha256-xS7+TsCZE28Qogn1KQXYJ0PfhI6nANWCUPvBZi0Tx/E=",
+        "owner": "deskflow",
+        "repo": "homebrew-tap",
+        "rev": "694b1e6f4ce13bd4e81afaeed069fce930251fd7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "deskflow",
+        "repo": "homebrew-tap",
+        "type": "github"
+      }
+    },
     "disko": {
       "inputs": {
         "nixpkgs": [
@@ -955,6 +971,7 @@
         "astroank": "astroank",
         "comin": "comin",
         "darwin": "darwin_2",
+        "deskflow-tap": "deskflow-tap",
         "disko": "disko",
         "flake-parts": "flake-parts",
         "fuse-t-cask": "fuse-t-cask",

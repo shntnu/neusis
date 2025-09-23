@@ -81,6 +81,10 @@
       url = "github:nikitabobko/homebrew-tap";
       flake = false;
     };
+    deskflow-tap = {
+      url = "github:deskflow/homebrew-tap";
+      flake = false;
+    };
 
     # disko
     disko.url = "github:nix-community/disko";
