@@ -188,7 +188,10 @@
               nixpkgs = self.inputs.nixpkgs;
               overlays = self.outputs.overlays;
             };
-            userConfig = import ./users/all.nix { inherit self; };
+            userConfig = import ./users/all.nix { 
+              inherit self;
+              pkgs = import self.inputs.nixpkgs { system = "x86_64-linux"; };
+            };
             specialArgs = { inherit (self) inputs outputs; };
           };
 
