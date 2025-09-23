@@ -2,10 +2,11 @@
 set -euo pipefail
 
 # Force claim hostname for the current Tailscale device
-# This script ensures the current device gets the desired hostname by:
-# 1. Renaming any conflicting devices to hostname-old, hostname-old2, etc.
-# 2. Then renaming the current device to the desired hostname
-# This preserves all devices (nothing gets deleted) while ensuring the current device gets its exact hostname.
+# This script ensures the current device gets the exact hostname without suffix by:
+# 1. Checking if the DNS name already matches exactly (exits if it does)
+# 2. Renaming any conflicting devices to hostname-old-<timestamp>
+# 3. Setting the current device to the exact desired hostname
+# This preserves all devices (nothing gets deleted) while ensuring the current device gets the exact name.
 # Required environment variables:
 # - TS_CLIENT_ID_FILE: Path to file containing OAuth client ID
 # - TS_CLIENT_SECRET_FILE: Path to file containing OAuth client secret
@@ -59,11 +60,16 @@ log "Current hostname: $CURRENT_HOSTNAME"
 log "Current DNS name: $CURRENT_DNSNAME"
 log "Desired hostname: $NODE_NAME"
 
-# Check if hostname already matches
-if [ "$CURRENT_HOSTNAME" = "$NODE_NAME" ]; then
-    log "Hostname already set correctly"
+# Check if DNS name matches exactly what we want (no -1, -2, etc suffix)
+CURRENT_DNS_SHORT=$(echo "$CURRENT_DNSNAME" | cut -d'.' -f1)
+DESIRED_DNS_SHORT=$(echo "$NODE_NAME" | tr '[:upper:]' '[:lower:]')
+
+if [ "$CURRENT_DNS_SHORT" = "$DESIRED_DNS_SHORT" ]; then
+    log "Device already has exact DNS name: $CURRENT_DNS_SHORT"
     exit 0
 fi
+
+log "Current DNS name '$CURRENT_DNS_SHORT' != desired '$DESIRED_DNS_SHORT' - will force claim"
 
 # Get OAuth token
 log "Obtaining OAuth token..."
@@ -94,36 +100,16 @@ if [ -n "${DEVICES_RESPONSE:-}" ]; then
     CONFLICT_COUNT=$(echo "$CONFLICTS" | jq 'length')
 
     if [ "$CONFLICT_COUNT" -gt 0 ]; then
-        log "Found $CONFLICT_COUNT device(s) with hostname '$NODE_NAME'. Renaming them to preserve them..."
+        log "Found $CONFLICT_COUNT device(s) with exact name '$DESIRED_DNS_SHORT'. Renaming them to preserve them..."
 
-        # Find a suitable -old suffix number
-        OLD_SUFFIX=1
-        for i in {1..99}; do
-            if [ $i -eq 1 ]; then
-                TEST_NAME="${NODE_NAME}-old"
-            else
-                TEST_NAME="${NODE_NAME}-old${i}"
-            fi
-
-            # Check if this name is available (check the name field, not hostname)
-            EXISTS=$(echo "$DEVICES_RESPONSE" | jq -r \
-                --arg test_name "$TEST_NAME" \
-                '.devices[]? | select(.name | split(".")[0] | ascii_downcase == ($test_name | ascii_downcase)) | .nodeId' | head -1)
-
-            if [ -z "$EXISTS" ]; then
-                OLD_SUFFIX=$i
-                break
-            fi
-        done
+        # Use Unix timestamp for unique suffix (no collisions)
+        TIMESTAMP=$(date +%s)
 
         # Rename each conflicting device
         echo "$CONFLICTS" | jq -r '.[]? | .id' | while read -r conflict_id; do
             if [ -n "$conflict_id" ]; then
-                if [ $OLD_SUFFIX -eq 1 ]; then
-                    NEW_NAME="${NODE_NAME}-old"
-                else
-                    NEW_NAME="${NODE_NAME}-old${OLD_SUFFIX}"
-                fi
+                # Create unique name with timestamp
+                NEW_NAME="${DESIRED_DNS_SHORT}-old-${TIMESTAMP}"
 
                 log "  Renaming device $conflict_id to '$NEW_NAME'..."
                 curl -sf -X POST "https://api.tailscale.com/api/v2/device/$conflict_id/name" \
@@ -131,7 +117,8 @@ if [ -n "${DEVICES_RESPONSE:-}" ]; then
                     -H "Content-Type: application/json" \
                     -d "{\"name\": \"$NEW_NAME\"}" >/dev/null 2>&1 || log "    Warning: Failed to rename device $conflict_id"
 
-                OLD_SUFFIX=$((OLD_SUFFIX + 1))
+                # Increment timestamp to ensure uniqueness if multiple conflicts
+                TIMESTAMP=$((TIMESTAMP + 1))
             fi
         done
 
@@ -142,11 +129,11 @@ if [ -n "${DEVICES_RESPONSE:-}" ]; then
     fi
 fi
 
-# Set device hostname
-log "Setting current device hostname to: $NODE_NAME"
+# Set device hostname (this sets the exact name without suffix)
+log "Setting current device (ID: $DEVICE_ID) to exact hostname: $NODE_NAME"
 RENAME_RESPONSE=$(curl -sf -X POST "https://api.tailscale.com/api/v2/device/$DEVICE_ID/name" \
     -H "Authorization: Bearer $TOKEN" \
     -H "Content-Type: application/json" \
     -d "{\"name\": \"$NODE_NAME\"}" 2>&1) || error_exit "Failed to set device hostname: $RENAME_RESPONSE"
 
-log "Successfully claimed hostname '$NODE_NAME' for device $DEVICE_ID"
+log "Successfully forced claim of hostname '$NODE_NAME' for device $DEVICE_ID"
