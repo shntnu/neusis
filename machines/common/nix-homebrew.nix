@@ -12,6 +12,7 @@
       "homebrew/homebrew-bundle" = homebrew-bundle;
       "deskflow/homebrew-tap" = deskflow-tap;
       "FelixKratz/homebrew-formulae" = felix-kratz-tap;
+      "Dimentium/homebrew-autoraise" = autoraise-tap;
     };
     mutableTaps = false;
     autoMigrate = true;

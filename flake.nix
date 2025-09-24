@@ -91,6 +91,11 @@
       flake = false;
     };
 
+    autoraise-tap = {
+      url = "github:Dimentium/homebrew-autoraise";
+      flake = false;
+    };
+
     # disko
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";

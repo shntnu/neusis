@@ -95,6 +95,7 @@
     };
     brews = [
       "felixkratz/formulae/svim"
+      "dimentium/autoraise/autoraise"
     ];
     taps = map (key: builtins.replaceStrings [ "homebrew-" ] [ "" ] key) (
       builtins.attrNames config.nix-homebrew.taps

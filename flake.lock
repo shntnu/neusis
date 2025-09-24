@@ -37,6 +37,22 @@
         "type": "github"
       }
     },
+    "autoraise-tap": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1758100555,
+        "narHash": "sha256-Q0wg4GKvUaFhRIjGimCnRW7L4w3gEse45IddLTudV+o=",
+        "owner": "Dimentium",
+        "repo": "homebrew-autoraise",
+        "rev": "472b4dea9eefc82ff24a786bc4497d15cf19bad2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Dimentium",
+        "repo": "homebrew-autoraise",
+        "type": "github"
+      }
+    },
     "base16": {
       "inputs": {
         "fromYaml": "fromYaml"
@@ -985,6 +1001,7 @@
       "inputs": {
         "agenix": "agenix",
         "astroank": "astroank",
+        "autoraise-tap": "autoraise-tap",
         "comin": "comin",
         "darwin": "darwin_2",
         "deskflow-tap": "deskflow-tap",
