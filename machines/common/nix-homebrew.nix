@@ -11,6 +11,7 @@
       "vancluever/homebrew-input-leap" = vancluever-tap;
       "homebrew/homebrew-bundle" = homebrew-bundle;
       "deskflow/homebrew-tap" = deskflow-tap;
+      "FelixKratz/homebrew-formulae" = felix-kratz-tap;
     };
     mutableTaps = false;
     autoMigrate = true;

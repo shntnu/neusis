@@ -235,6 +235,22 @@
         "type": "github"
       }
     },
+    "felix-kratz-tap": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1758189108,
+        "narHash": "sha256-dLWXqaZovJoZeF3Od9axSBGMzRMPrLDBFo05w4sshq8=",
+        "owner": "FelixKratz",
+        "repo": "homebrew-formulae",
+        "rev": "725f2440a09830db50d0cd8ac0740348cd8e4b97",
+        "type": "github"
+      },
+      "original": {
+        "owner": "FelixKratz",
+        "repo": "homebrew-formulae",
+        "type": "github"
+      }
+    },
     "firefox-gnome-theme": {
       "flake": false,
       "locked": {
@@ -973,6 +989,7 @@
         "darwin": "darwin_2",
         "deskflow-tap": "deskflow-tap",
         "disko": "disko",
+        "felix-kratz-tap": "felix-kratz-tap",
         "flake-parts": "flake-parts",
         "fuse-t-cask": "fuse-t-cask",
         "hardware": "hardware",

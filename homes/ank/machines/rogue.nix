@@ -25,4 +25,16 @@
   ];
 
   home.packages = import ../packages.nix { inherit pkgs outputs; };
+
+  # Add sketchybar config
+  # xdg.configFile."sketchybar" = {
+  #   source = ../configs/sketchybar;
+  #   recursive = true;
+  # };
+
+  # Add hammerspoon config
+  xdg.configFile."hammerspoon" = {
+    source = ../configs/hammerspoon;
+    recursive = true;
+  };
 }

@@ -30,6 +30,19 @@
     };
   };
 
+  # Enable apple ssh server
+  services.openssh.enable = true;
+  services.eternal-terminal.enable = true;
+
+  # Enable sketchy bar
+  # services.sketchybar = {
+  #   enable = true;
+  # };
+
+  fonts.packages = [
+    pkgs.nerd-fonts.iosevka
+  ];
+
   nix.linux-builder = {
     enable = true;
     ephemeral = true;
@@ -54,6 +67,7 @@
   };
 
   networking.hostName = "rogue";
+  networking.computerName = "rogue";
 
   # Create users
   users.users.ank = {
@@ -79,10 +93,9 @@
       Xcode = 497799835;
       "Microsoft Outlook" = 985367838;
     };
-    # brews = [
-    #   "pixi"
-    #   "gnu-sed"
-    # ]; # Example of brew
+    brews = [
+      "felixkratz/formulae/svim"
+    ];
     taps = map (key: builtins.replaceStrings [ "homebrew-" ] [ "" ] key) (
       builtins.attrNames config.nix-homebrew.taps
     );
@@ -130,6 +143,7 @@
     stateVersion = 5;
 
     defaults = {
+
       NSGlobalDomain = {
         AppleShowAllExtensions = true;
         # Disable press and hold for diacritics.
@@ -137,13 +151,71 @@
         # in vim to move around.
         ApplePressAndHoldEnabled = false;
       };
+
       dock = {
         autohide = true;
         show-recents = false;
         launchanim = true;
         orientation = "left";
         tilesize = 48;
+        mru-spaces = false;
       };
+
+      screencapture = {
+        location = "~/Pictures";
+        type = "png";
+      };
+
+      finder = {
+        AppleShowAllFiles = true;
+        ShowStatusBar = true;
+        ShowPathbar = true;
+        FXDefaultSearchScope = "SCcf";
+        # "icnv" = Icon view, "Nlsv" = List view, "clmv" = Column View, "Flwv" = Gallery View
+        FXPreferredViewStyle = "Nlsv";
+        AppleShowAllExtensions = true;
+        CreateDesktop = false;
+        ShowExternalHardDrivesOnDesktop = false;
+        ShowHardDrivesOnDesktop = false;
+        ShowMountedServersOnDesktop = false;
+        ShowRemovableMediaOnDesktop = false;
+        FXEnableExtensionChangeWarning = false;
+      };
+
+      # Required for paperWM
+      spaces.spans-displays = true;
+
+      CustomUserPreferences = {
+
+        NSGlobalDomain = {
+          WebKitDevelopersExtras = true;
+          AppleHighlightColor = "0.615686 0.823529 0.454902";
+        };
+
+        "com.apple.desktopservices" = {
+          # Avoid creating .DS_Store files on network or USB volumes
+          DSDontWriteNetworkStores = true;
+          DSDontWriteUSBStores = true;
+        };
+
+        "com.apple.AdLib" = {
+          allowApplePersonalizedAdvertising = false;
+        };
+
+        "com.apple.print.PrintingPrefs" = {
+          # Automatically quit printer app once the print jobs complete
+          "Quit When Finished" = true;
+        };
+
+        # Prevent Photos from opening automatically when devices are plugged in
+        "com.apple.ImageCapture".disableHotPlug = true;
+
+        "org.hammerspoon.Hammerspoon" = {
+          MJConfigFile = "~/.config/hammerspoon/init.lua";
+        };
+
+      };
+
     };
   };
 }

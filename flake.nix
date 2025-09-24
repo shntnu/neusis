@@ -86,6 +86,11 @@
       flake = false;
     };
 
+    felix-kratz-tap = {
+      url = "github:FelixKratz/homebrew-formulae";
+      flake = false;
+    };
+
     # disko
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
