@@ -15,7 +15,7 @@
   programs.bash.initExtra = ''
     # Add SSH key to agent if not already added
     if [ -f ~/.ssh/id_ed25519 ]; then
-      if ! ssh-add -l &>/dev/null || ! ssh-add -l | grep -q "id_ed25519"; then
+      if ! ssh-add -l &>/dev/null || ! ssh-add -l | grep -q "ED25519"; then
         ssh-add ~/.ssh/id_ed25519 2>/dev/null
       fi
     fi
@@ -24,7 +24,7 @@
   programs.zsh.initContent = ''
     # Add SSH key to agent if not already added
     if [ -f ~/.ssh/id_ed25519 ]; then
-      if ! ssh-add -l &>/dev/null || ! ssh-add -l | grep -q "id_ed25519"; then
+      if ! ssh-add -l &>/dev/null || ! ssh-add -l | grep -q "ED25519"; then
         ssh-add ~/.ssh/id_ed25519 2>/dev/null
       fi
     fi
