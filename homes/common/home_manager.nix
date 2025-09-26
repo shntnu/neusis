@@ -21,7 +21,7 @@
     fi
   '';
   
-  programs.zsh.initExtra = ''
+  programs.zsh.initContent = ''
     # Add SSH key to agent if not already added
     if [ -f ~/.ssh/id_ed25519 ]; then
       if ! ssh-add -l &>/dev/null || ! ssh-add -l | grep -q "id_ed25519"; then
