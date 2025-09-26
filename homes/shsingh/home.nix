@@ -67,7 +67,6 @@ in
       unzip
       zip
       p7zip
-      unrar
       
       # Python tools
       python3
