@@ -30,6 +30,19 @@
     };
   };
 
+  # Enable apple ssh server
+  services.openssh.enable = true;
+  services.eternal-terminal.enable = true;
+
+  # Enable sketchy bar
+  # services.sketchybar = {
+  #   enable = true;
+  # };
+
+  fonts.packages = [
+    pkgs.nerd-fonts.iosevka
+  ];
+
   nix.linux-builder = {
     enable = true;
     ephemeral = true;
@@ -54,6 +67,7 @@
   };
 
   networking.hostName = "rogue";
+  networking.computerName = "rogue";
 
   # Create users
   users.users.ank = {
@@ -79,16 +93,17 @@
       Xcode = 497799835;
       "Microsoft Outlook" = 985367838;
     };
-    # brews = [
-    #   "pixi"
-    #   "gnu-sed"
-    # ]; # Example of brew
+    brews = [
+      "felixkratz/formulae/svim"
+      "dimentium/autoraise/autoraise"
+    ];
     taps = map (key: builtins.replaceStrings [ "homebrew-" ] [ "" ] key) (
       builtins.attrNames config.nix-homebrew.taps
     );
     casks = [
       "fiji"
       "hammerspoon"
+      "deskflow"
     ];
     onActivation = {
       cleanup = "uninstall";
@@ -108,6 +123,12 @@
     };
   };
 
+  # age.secrets.tsauthkey.file = ../../secrets/common/persistent_tsauthkey.age;
+  # services.tailscale = {
+  #   enable = true;
+  #   authKeyFile = config.age.secrets.tsauthkey.path;
+  # };
+
   security.pam.services.sudo_local.touchIdAuth = true;
   # sudo with touch id
   system = {
@@ -117,49 +138,85 @@
     keyboard.enableKeyMapping = true;
     keyboard.remapCapsLockToEscape = true;
 
-    # Disable press and hold for diacritics.
-    # I want to be able to press and hold j and k
-    # in vim to move around.
-    defaults.NSGlobalDomain.ApplePressAndHoldEnabled = false;
-
     # Turn off NIX_PATH warnings now that we're using flakes
     checks.verifyNixPath = false;
 
     stateVersion = 5;
 
-    #   defaults = {
-    #     NSGlobalDomain = {
-    #       AppleShowAllExtensions = true;
-    #       ApplePressAndHoldEnabled = false;
-    #
-    #       # 120, 90, 60, 30, 12, 6, 2
-    #       KeyRepeat = 2;
-    #
-    #       # 120, 94, 68, 35, 25, 15
-    #       InitialKeyRepeat = 15;
-    #
-    #       "com.apple.mouse.tapBehavior" = 1;
-    #       "com.apple.sound.beep.volume" = 0.0;
-    #       "com.apple.sound.beep.feedback" = 0;
-    #     };
-    #
-    #     dock = {
-    #       autohide = true;
-    #       show-recents = false;
-    #       launchanim = true;
-    #       orientation = "left";
-    #       tilesize = 48;
-    #     };
-    #
-    #     finder = {
-    #       _FXShowPosixPathInTitle = false;
-    #     };
-    #
-    #     trackpad = {
-    #       Clicking = true;
-    #       TrackpadThreeFingerDrag = true;
-    #     };
-    #   };
+    defaults = {
 
+      NSGlobalDomain = {
+        AppleShowAllExtensions = true;
+        # Disable press and hold for diacritics.
+        # I want to be able to press and hold j and k
+        # in vim to move around.
+        ApplePressAndHoldEnabled = false;
+      };
+
+      dock = {
+        autohide = true;
+        show-recents = false;
+        launchanim = true;
+        orientation = "left";
+        tilesize = 48;
+        mru-spaces = false;
+      };
+
+      screencapture = {
+        location = "~/Pictures";
+        type = "png";
+      };
+
+      finder = {
+        AppleShowAllFiles = true;
+        ShowStatusBar = true;
+        ShowPathbar = true;
+        FXDefaultSearchScope = "SCcf";
+        # "icnv" = Icon view, "Nlsv" = List view, "clmv" = Column View, "Flwv" = Gallery View
+        FXPreferredViewStyle = "Nlsv";
+        AppleShowAllExtensions = true;
+        CreateDesktop = false;
+        ShowExternalHardDrivesOnDesktop = false;
+        ShowHardDrivesOnDesktop = false;
+        ShowMountedServersOnDesktop = false;
+        ShowRemovableMediaOnDesktop = false;
+        FXEnableExtensionChangeWarning = false;
+      };
+
+      # Required for paperWM
+      spaces.spans-displays = true;
+
+      CustomUserPreferences = {
+
+        NSGlobalDomain = {
+          WebKitDevelopersExtras = true;
+          AppleHighlightColor = "0.615686 0.823529 0.454902";
+        };
+
+        "com.apple.desktopservices" = {
+          # Avoid creating .DS_Store files on network or USB volumes
+          DSDontWriteNetworkStores = true;
+          DSDontWriteUSBStores = true;
+        };
+
+        "com.apple.AdLib" = {
+          allowApplePersonalizedAdvertising = false;
+        };
+
+        "com.apple.print.PrintingPrefs" = {
+          # Automatically quit printer app once the print jobs complete
+          "Quit When Finished" = true;
+        };
+
+        # Prevent Photos from opening automatically when devices are plugged in
+        "com.apple.ImageCapture".disableHotPlug = true;
+
+        "org.hammerspoon.Hammerspoon" = {
+          MJConfigFile = "~/.config/hammerspoon/init.lua";
+        };
+
+      };
+
+    };
   };
 }

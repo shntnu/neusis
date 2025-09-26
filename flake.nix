@@ -81,6 +81,20 @@
       url = "github:nikitabobko/homebrew-tap";
       flake = false;
     };
+    deskflow-tap = {
+      url = "github:deskflow/homebrew-tap";
+      flake = false;
+    };
+
+    felix-kratz-tap = {
+      url = "github:FelixKratz/homebrew-formulae";
+      flake = false;
+    };
+
+    autoraise-tap = {
+      url = "github:Dimentium/homebrew-autoraise";
+      flake = false;
+    };
 
     # disko
     disko.url = "github:nix-community/disko";

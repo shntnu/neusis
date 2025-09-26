@@ -1,4 +1,5 @@
-{inputs, user, ...}: {
+{ inputs, user, ... }:
+{
   nix-homebrew = {
     inherit user;
     enable = true;
@@ -9,6 +10,9 @@
       "macos-fuse-t/homebrew-cask" = fuse-t-cask;
       "vancluever/homebrew-input-leap" = vancluever-tap;
       "homebrew/homebrew-bundle" = homebrew-bundle;
+      "deskflow/homebrew-tap" = deskflow-tap;
+      "FelixKratz/homebrew-formulae" = felix-kratz-tap;
+      "Dimentium/homebrew-autoraise" = autoraise-tap;
     };
     mutableTaps = false;
     autoMigrate = true;
