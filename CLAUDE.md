@@ -94,3 +94,9 @@ Custom packages in `pkgs/`:
 - User configurations support per-machine customization via `homeModules.<machine>`
 - System configurations inherit from common modules in `machines/common/`
 - Templates in `templates/` for new project types
+
+## Contributing Guidelines
+
+- **No surprises**: Features must be opt-in via individual `homes/<user>/home.nix`, not forced through `homes/common/`
+- **Personal boundaries**: SSH agents, shells, and user tools belong in `homes/<user>/` configs only
+- **Cross-platform**: Don't hardcode architectures in `flake.nix` - use `machines/registry.nix` for dynamic package sets
