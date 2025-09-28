@@ -108,8 +108,18 @@ modal:bind({}, "escape", nil, function()
 end)
 
 -- set to a table of modifier keys to enable window dragging, default is nil
-PaperWM.drag_window = { "alt", "cmd" }
+-- PaperWM.drag_window = { "alt", "cmd" }
 
 -- set to a table of modifier keys to enable window lifting, default is nil
-PaperWM.lift_window = { "alt", "cmd", "shift" }
+-- PaperWM.lift_window = { "alt", "cmd", "shift" }
+
+-- Remove janky transitions
+hs.window.animationDuration = 0
+
+-- number of fingers to detect a horizontal swipe, set to 0 to disable (the default)
+PaperWM.swipe_fingers = 0
+
+-- increase this number to make windows move farther when swiping
+PaperWM.swipe_gain = 1.0
+
 PaperWM:start()
