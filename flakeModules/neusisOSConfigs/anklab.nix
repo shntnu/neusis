@@ -1,14 +1,23 @@
 {
   self,
+  lib,
   ...
+
 }:
+let
+  machinesRegistry = import ../../machines/registry.nix {
+    inherit lib;
+    nixpkgs = self.inputs.nixpkgs;
+    overlays = self.outputs.overlays;
+  };
+in
 {
   config.flake.nixosConfigurations = {
     chiral = self.lib.neusisOS.mkNeusisOS {
       machineName = "chiral";
       userModule = ../../machines/chiral;
       specialArgs = { inherit (self) inputs outputs; };
-      userConfig = import ../../users/ank.nix { };
+      userConfig = import ../../users/ank.nix { pkgs = machinesRegistry.oppy; };
       homeManager = true;
     };
   };
