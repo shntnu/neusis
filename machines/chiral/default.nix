@@ -105,40 +105,6 @@
   networking.hostName = "chiral";
   # networking.bridges.br0.interfaces = [ "enp2s0" "wlp131s0" ];
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.ank = {
-    shell = pkgs.zsh;
-    isNormalUser = true;
-    # passwordFile = config.age.secrets.karkinos_pass.path;
-    description = "Ankur Kumar";
-    extraGroups = [
-      "networkmanager"
-      "wheel"
-      "libvirtd"
-      "qemu-libvirtd"
-      "input"
-    ];
-    openssh.authorizedKeys.keyFiles = [
-      ../../homes/ank/id_rsa.pub
-      ../../homes/ank/id_ed25519.pub
-    ];
-  };
-  home-manager = {
-
-    useGlobalPkgs = true;
-    useUserPackages = true;
-    extraSpecialArgs = { inherit inputs outputs; };
-
-    # Enable home-manager for users
-    users.ank = {
-      imports = [
-        inputs.agenix.homeManagerModules.default
-        # include nixvim module
-        ../../homes/ank/machines/chiral.nix
-      ];
-    };
-  };
-
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "25.05";
 }
