@@ -22,7 +22,6 @@ let
 in
 {
   oppy = pkgsFor.x86_64-linux;
-  spirit = pkgsFor.x86_64-linux;
   karkinos = pkgsFor.x86_64-linux;
   chiral = pkgsFor.x86_64-linux;
   darwin001 = pkgsFor.aarch64-darwin;
