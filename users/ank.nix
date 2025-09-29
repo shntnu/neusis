@@ -17,6 +17,9 @@
         karkinos = [
           ../homes/ank/machines/karkinos.nix
         ];
+        chiral = [
+          ../homes/ank/machines/chiral.nix
+        ];
       };
     }
   ];
