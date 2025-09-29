@@ -37,31 +37,17 @@
 
 
       --- setup llm-nvim
-      require("llm").setup({
-        model = "starcoder2:3b",
-        context_window = 8192,
-        tokenizer = {
-          repository = "bigcode/starcoder2",
-        },
-        backend = "ollama",
-        url = "http://karkinos:11434",
-        tokens_to_clear = { "<|end_of_text|>", "<file_sep>" },
-        accept_keymap = "<C-l>",
-        dismiss_keymap = "<C-e>",
-        fim = {
-          enabled = true,
-          prefix = "<fim_prefix>",
-          middle = "<fim_middle>",
-          suffix = "<fim_suffix>",
-        },
-        lsp = {
-          bin_path = "${pkgs.llm-ls}/bin/llm-ls"
-        },
-
-      })
-
+      -- require("llm").setup({
+      --   model = "gpt-oss:latest",
+      --   backend = "ollama",
+      --   url = "http://karkinos:11434",
+      --   context_window = 128000,
+      --   accept_keymap = "<C-l>",
+      --   dismiss_keymap = "<C-e>",
+      --   lsp = {
+      --     bin_path = "${pkgs.llm-ls}/bin/llm-ls"
+      --   },
+      -- })
     '';
-
   };
-
 }

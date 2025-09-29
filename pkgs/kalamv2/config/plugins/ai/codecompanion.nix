@@ -13,7 +13,7 @@
               },
               schema = {
                 model = {
-                  default = "llama3.3:latest";
+                  default = "gptoss:latest";
                 },
                 num_ctx = {
                   default = 128000;

@@ -32,16 +32,16 @@
       providers = {
         ollama = {
           endpoint = "karkinos:11434";
-          model = "devstral:latest";
-          max_tokens = 100000;
+          model = "gpt-oss:latest";
+          max_tokens = 128000;
         };
       };
+      instructions_file = "CLAUDE.md";
+      auto_suggestion_provider = "ollama";
 
-      #auto_suggestion_provider = "";
-
-      web_search_engine = {
-        provider = "kagi";
-      };
+      # web_search_engine = {
+      #   provider = "kagi";
+      # };
 
       windows = {
         sidebar_header = {
