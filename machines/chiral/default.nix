@@ -52,11 +52,10 @@
   hardware = {
     # nvidia prop drivers
     nvidia.open = false;
-    graphics.enable = true;
-    # Enable OpenGL
-    opengl = {
+    # Enable graphics (formerly OpenGL)
+    graphics = {
       enable = true;
-      driSupport32Bit = true;
+      enable32Bit = true;
       extraPackages = with pkgs; [
         vaapiVdpau
       ];
