@@ -67,15 +67,11 @@
       # Users can access their entire /work/users/{username}/ directory
       c.SystemdSpawner.user_workingdir = '/work/users/{USERNAME}'
       c.SystemdSpawner.notebook_dir = '~/'
+      
+      # Add user's local bin to PATH for uv/pixi installations
+      c.SystemdSpawner.extra_paths = ['/work/users/{USERNAME}/.local/bin']
 
-      # Environment variables for uv/pixi
-      c.SystemdSpawner.environment = {
-          'PATH': '/work/users/{username}/.local/bin:$PATH',
-          'UV_CACHE_DIR': '/work/users/{username}/.cache/uv',
-          'PIXI_HOME': '/work/users/{username}/.pixi',
-      }
-
-      # Automatically create user directory if needed
+      # Automatically create user directory and set environment if needed
       import os
       def pre_spawn_hook(spawner):
           username = spawner.user.name
@@ -83,6 +79,12 @@
 
           # Create directory if it doesn't exist
           os.makedirs(user_dir, mode=0o755, exist_ok=True)
+          
+          # Set user-specific environment variables
+          spawner.environment.update({
+              'UV_CACHE_DIR': f'/work/users/{username}/.cache/uv',
+              'PIXI_HOME': f'/work/users/{username}/.pixi',
+          })
 
           # Set ownership (requires running as root)
           import pwd
