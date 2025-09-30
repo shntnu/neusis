@@ -142,23 +142,5 @@
   # Open firewall port
   networking.firewall.allowedTCPPorts = [ 8000 ];
 
-  # Optional: Configure nginx reverse proxy for better access
-  services.nginx = {
-    enable = true;
-    virtualHosts."jupyterhub.oppy" = {
-      locations."/" = {
-        proxyPass = "http://127.0.0.1:8000";
-        proxyWebsockets = true;
-        extraConfig = ''
-          proxy_set_header X-Real-IP $remote_addr;
-          proxy_set_header Host $host;
-          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-
-          # Needed for JupyterHub
-          proxy_set_header X-Scheme $scheme;
-          proxy_buffering off;
-        '';
-      };
-    };
-  };
+  # Nginx proxy removed - access JupyterHub directly at http://oppy:8000
 }
