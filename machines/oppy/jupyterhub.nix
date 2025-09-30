@@ -55,8 +55,8 @@
       # Admin users who can access other users' servers
       c.Authenticator.admin_users = {'shsingh'}
 
-      # Explicitly whitelist users (for now, to debug the issue)
-      c.Authenticator.allowed_users = {'shsingh', 'ank', 'amunoz', 'ngogober', 'spathak', 'jewald', 'rshen', 'jfredinh'}
+      # Allow all system users to authenticate (JupyterHub 5.0+ requires explicit allow_all)
+      c.Authenticator.allow_all = True
 
       # Spawner configuration
       c.SystemdSpawner.default_shell = '/run/current-system/sw/bin/bash'
