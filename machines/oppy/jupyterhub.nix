@@ -1,0 +1,146 @@
+{ config, pkgs, ... }:
+
+{
+  # Enable JupyterHub multi-user server
+  services.jupyterhub = {
+    enable = true;
+
+    # Network configuration
+    host = "0.0.0.0";  # Listen on all interfaces
+    port = 8000;
+
+    # Authentication - uses PAM by default for system users
+    authentication = "jupyterhub.auth.PAMAuthenticator";
+
+    # State directory for JupyterHub database and config
+    # NixOS will create this as /var/lib/jupyterhub
+    stateDirectory = "jupyterhub";
+
+    # Minimal base environment - users manage packages via uv/pixi
+    # Only includes JupyterLab itself and kernel support
+    jupyterlabEnv = pkgs.python3.withPackages (ps: with ps; [
+      jupyterlab
+      notebook
+      ipykernel
+      ipywidgets
+      # No data science packages - users will install via uv/pixi
+    ]);
+
+    # Configure kernels
+    kernels = {
+      # Minimal base Python kernel - users create their own via uv/pixi
+      python3 = let
+        env = (pkgs.python3.withPackages (ps: with ps; [
+          ipykernel
+        ]));
+      in {
+        displayName = "Python 3";
+        argv = [
+          "${env.interpreter}"
+          "-m"
+          "ipykernel_launcher"
+          "-f"
+          "{connection_file}"
+        ];
+        language = "python";
+        env = { };
+      };
+    };
+
+    # Additional configuration
+    extraConfig = ''
+      # Admin users who can access other users' servers
+      c.Authenticator.admin_users = {'shsingh'}
+
+      # Allow specific users (comment out to allow all system users)
+      # c.Authenticator.allowed_users = {'shsingh', 'user1', 'user2'}
+
+      # Spawner configuration
+      c.SystemdSpawner.default_shell = '/run/current-system/sw/bin/bash'
+      c.SystemdSpawner.mem_limit = '4G'
+      c.SystemdSpawner.cpu_limit = 2.0
+
+      # User workspace directory (aligned with data storage policy)
+      # Users can access their entire /work/users/{username}/ directory
+      c.SystemdSpawner.notebook_dir = '~/'
+      c.SystemdSpawner.home_dir_template = '/work/users/{username}'
+
+      # Environment variables for uv/pixi
+      c.SystemdSpawner.environment = {
+          'PATH': '/work/users/{username}/.local/bin:$PATH',
+          'UV_CACHE_DIR': '/work/users/{username}/.cache/uv',
+          'PIXI_HOME': '/work/users/{username}/.pixi',
+      }
+
+      # Automatically create user directory if needed
+      import os
+      def pre_spawn_hook(spawner):
+          username = spawner.user.name
+          user_dir = f'/work/users/{username}'
+
+          # Create directory if it doesn't exist
+          os.makedirs(user_dir, mode=0o755, exist_ok=True)
+
+          # Set ownership (requires running as root)
+          import pwd
+          try:
+              pw = pwd.getpwnam(username)
+              os.chown(user_dir, pw.pw_uid, pw.pw_gid)
+          except KeyError:
+              pass  # User doesn't exist yet
+
+      c.Spawner.pre_spawn_hook = pre_spawn_hook
+
+      # Cookie secret for security
+      c.JupyterHub.cookie_secret_file = '/var/lib/jupyterhub/jupyterhub_cookie_secret'
+
+      # Database location
+      c.JupyterHub.db_url = 'sqlite:////var/lib/jupyterhub/jupyterhub.sqlite'
+
+      # Cleanup settings
+      c.JupyterHub.cleanup_servers = True
+      c.JupyterHub.cleanup_proxy = True
+
+      # Activity tracking
+      c.JupyterHub.last_activity_interval = 300
+      c.JupyterHub.shutdown_on_logout = True
+
+      # Services API tokens (if needed for external services)
+      # c.JupyterHub.services = []
+    '';
+  };
+
+  # Create base directory for JupyterHub users (aligned with data storage policy)
+  systemd.tmpfiles.rules = [
+    "d /work/users 0755 root root -"
+  ];
+
+  # Install uv and pixi for user environment management
+  environment.systemPackages = with pkgs; [
+    uv        # Fast Python package manager (pip/venv replacement)
+    pixi      # Package manager for conda/PyPI packages
+  ];
+
+  # Open firewall port
+  networking.firewall.allowedTCPPorts = [ 8000 ];
+
+  # Optional: Configure nginx reverse proxy for better access
+  services.nginx = {
+    enable = true;
+    virtualHosts."jupyterhub.oppy" = {
+      locations."/" = {
+        proxyPass = "http://127.0.0.1:8000";
+        proxyWebsockets = true;
+        extraConfig = ''
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header Host $host;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+          # Needed for JupyterHub
+          proxy_set_header X-Scheme $scheme;
+          proxy_buffering off;
+        '';
+      };
+    };
+  };
+}
