@@ -25,9 +25,6 @@
     # oppy misc
     ./misc.nix
 
-    # JupyterHub multi-user server
-    ./jupyterhub.nix
-
     # vm stuff
     ./vm.nix
 
