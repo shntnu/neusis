@@ -23,7 +23,9 @@
       notebook
       ipykernel
       ipywidgets
-      # No data science packages - users will install via uv/pixi
+      # Required for users to register custom kernels
+      jupyter-client
+      # No data science packages - users install via uv/pixi
     ]);
 
     # Configure kernels
@@ -105,6 +107,14 @@
       c.JupyterHub.last_activity_interval = 300
       c.JupyterHub.shutdown_on_logout = True
 
+      # Security: Use IPC transport for kernel communication (Unix socket permissions)
+      # Prevents eavesdropping between users on shared system
+      c.KernelManager.transport = 'ipc'
+
+      # Security: Subdomain isolation (requires wildcard DNS)
+      # IMPORTANT: Configure DNS with *.jupyter.oppy -> oppy
+      # c.JupyterHub.subdomain_host = 'https://jupyter.oppy'
+
       # Services API tokens (if needed for external services)
       # c.JupyterHub.services = []
     '';
@@ -115,7 +125,9 @@
     "d /work/users 0755 root root -"
   ];
 
-  # Install uv and pixi for user environment management
+  # Install uv and pixi globally for all JupyterHub users
+  # uv: 10x faster than pip, manages Python versions and virtual environments
+  # pixi: Handles both conda and PyPI packages with lockfile support
   environment.systemPackages = with pkgs; [
     uv        # Fast Python package manager (pip/venv replacement)
     pixi      # Package manager for conda/PyPI packages
