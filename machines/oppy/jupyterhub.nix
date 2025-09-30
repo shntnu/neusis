@@ -19,6 +19,7 @@
     # Minimal base environment - users manage packages via uv/pixi
     # Only includes JupyterLab itself and kernel support
     jupyterlabEnv = pkgs.python3.withPackages (ps: with ps; [
+      jupyterhub
       jupyterlab
       notebook
       ipykernel
@@ -54,8 +55,8 @@
       # Admin users who can access other users' servers
       c.Authenticator.admin_users = {'shsingh'}
 
-      # Allow specific users (comment out to allow all system users)
-      # c.Authenticator.allowed_users = {'shsingh', 'user1', 'user2'}
+      # Explicitly whitelist users (for now, to debug the issue)
+      c.Authenticator.allowed_users = {'shsingh', 'ank', 'amunoz', 'ngogober', 'spathak', 'jewald', 'rshen', 'jfredinh'}
 
       # Spawner configuration
       c.SystemdSpawner.default_shell = '/run/current-system/sw/bin/bash'
@@ -64,8 +65,8 @@
 
       # User workspace directory (aligned with data storage policy)
       # Users can access their entire /work/users/{username}/ directory
+      c.SystemdSpawner.user_workingdir = '/work/users/{USERNAME}'
       c.SystemdSpawner.notebook_dir = '~/'
-      c.SystemdSpawner.home_dir_template = '/work/users/{username}'
 
       # Environment variables for uv/pixi
       c.SystemdSpawner.environment = {
@@ -132,6 +133,11 @@
     uv        # Fast Python package manager (pip/venv replacement)
     pixi      # Package manager for conda/PyPI packages
   ];
+
+  # Configure PAM for JupyterHub authentication
+  security.pam.services.jupyterhub = {
+    unixAuth = true;
+  };
 
   # Open firewall port
   networking.firewall.allowedTCPPorts = [ 8000 ];
