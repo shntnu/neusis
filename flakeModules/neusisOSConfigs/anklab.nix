@@ -17,7 +17,7 @@ in
       machineName = "chiral";
       userModule = ../../machines/chiral;
       specialArgs = { inherit (self) inputs outputs; };
-      userConfig = import ../../users/ank.nix { pkgs = machinesRegistry.oppy; };
+      userConfig = import ../../users/ank.nix { pkgs = machinesRegistry.chiral; };
       homeManager = true;
     };
   };

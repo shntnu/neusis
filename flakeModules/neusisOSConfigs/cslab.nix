@@ -20,14 +20,6 @@ in
       homeManager = true;
     };
 
-    spirit = self.lib.neusisOS.mkNeusisOS {
-      machineName = "spirit";
-      userModule = ../../machines/oppy;
-      specialArgs = { inherit (self) inputs outputs; };
-      userConfig = import ../../users/cslab.nix { pkgs = machinesRegistry.spirit; };
-      homeManager = true;
-    };
-
     karkinos = self.lib.neusisOS.mkNeusisOS {
       machineName = "karkinos";
       userModule = ../../machines/karkinos;

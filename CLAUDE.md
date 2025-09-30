@@ -22,7 +22,7 @@ For Darwin (macOS) machines:
 darwin-rebuild switch --flake .#darwin001
 ```
 
-Available machines: `oppy`, `spirit`, `karkinos`, `chiral` (Linux), `darwin001` (macOS)
+Available machines: `oppy`, `karkinos`, `chiral` (Linux), `darwin001` (macOS)
 
 ### Development Shell
 
