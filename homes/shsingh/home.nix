@@ -118,12 +118,6 @@ in
         # Define variables for directories
         export PATH=$HOME/.pnpm-packages/bin:$HOME/.pnpm-packages:$PATH
 
-        # Auto-add default SSH key on shell startup (prompts for passphrase once per session)
-        if [ -f ~/.ssh/id_ed25519 ]; then
-          if ! ssh-add -l &>/dev/null || ! ssh-add -l | grep -q "id_ed25519"; then
-            ssh-add ~/.ssh/id_ed25519 2>/dev/null
-          fi
-        fi
         export PATH=$HOME/.npm-packages/bin:$HOME/bin:$PATH
         export PATH=$HOME/.local/share/bin:$PATH
 
