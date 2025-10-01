@@ -107,9 +107,16 @@ in
     zsh = {
       enable = true;
       autocd = false;
+      # Override vi-mode from editors.nix - disable it
       plugins = [];
 
       initContent = lib.mkAfter ''
+        # Use emacs keybindings, not vi (override editors.nix)
+        bindkey -e
+
+        # Disable automatic menu completion that interferes with atuin
+        unsetopt auto_menu
+
         if [[ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]]; then
           . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
           . /nix/var/nix/profiles/default/etc/profile.d/nix.sh
