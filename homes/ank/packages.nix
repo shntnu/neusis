@@ -28,6 +28,7 @@ with pkgs;
   outputs.packages.${pkgs.system}.claude-code
   opencode
   bitwarden-desktop
+  pnpm
 ]
 ++ pkgs.lib.optionals pkgs.stdenv.isLinux [
   extra-container

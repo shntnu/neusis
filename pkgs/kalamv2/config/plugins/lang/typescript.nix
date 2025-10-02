@@ -17,6 +17,9 @@
     };
 
     lsp.servers = {
+      vtsls = {
+        enable = true;
+      };
       svelte.enable = true;
 
       eslint = {
@@ -45,48 +48,13 @@
           "pcss"
           "postcss"
         ];
-      };
-
-      ts_ls = {
-        enable = true;
-        filetypes = [
-          "javascript"
-          "javascriptreact"
-          "typescript"
-          "typescriptreact"
-          "svelte"
-        ];
-
         settings = {
-          complete_function_calls = true;
-          vtsls = {
-            autoUseWorkspaceTsdk = true;
-            experimental = {
-              completion = {
-                enableServerSideFuzzyMatch = true;
-              };
-            };
-          };
-
-          typescript = {
-            updateImportsOnFileMove.enabled = "always";
-            suggest = {
-              completeFunctionCalls = true;
-            };
-
-            inlayHints = {
-              enumMemberValues.enabled = true;
-              functionLikeReturnTypes.enabled = true;
-              parameterNames.enabled = "literals";
-              parameterTypes.enabled = true;
-              propertyDeclarationTypes.enabled = true;
-              variableType.enabled = false;
-            };
-          };
+          quiet = true;
+          format = false;
         };
       };
+
     };
 
-    ts-autotag.enable = true;
   };
 }
