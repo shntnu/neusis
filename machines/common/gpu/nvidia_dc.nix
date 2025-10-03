@@ -33,6 +33,9 @@ in
     # Configure Nvidia driver
     nvidia = {
       modesetting.enable = true;
+      # datacenter.enable = true causes fabricmanager to fail on boot (expected/harmless)
+      # H100 NVL uses NVLink bridges not NVSwitch - fabricmanager has nothing to manage
+      # Kept enabled to satisfy nvidia-container-toolkit requirements on NixOS 25.05
       datacenter.enable = true;
       powerManagement.enable = false;
       open = false;
