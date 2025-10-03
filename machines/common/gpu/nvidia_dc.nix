@@ -37,6 +37,7 @@ in
       powerManagement.enable = false;
       open = false;
       nvidiaSettings = true;
+      nvidiaPersistenced = true;
       package = package_ver;
     };
 
