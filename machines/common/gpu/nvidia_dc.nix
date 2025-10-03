@@ -4,7 +4,7 @@
   ...
 }:
 let
-  package_ver = config.boot.kernelPackages.nvidiaPackages.dc_565;
+  package_ver = config.boot.kernelPackages.nvidiaPackages.dc_535;
 in
 # package_ver = config.boot.kernelPackages.nvidiaPackages.mkDriver rec {
 #   version = "565.57.01";
@@ -18,6 +18,9 @@ in
 # };
 {
   hardware = {
+    # Include GSP firmware for datacenter GPUs
+    firmware = [ package_ver.firmware ];
+
     # Enable OpenGL
     graphics = {
       enable = true;
@@ -32,7 +35,7 @@ in
       modesetting.enable = true;
       datacenter.enable = true;
       powerManagement.enable = false;
-      open = true;
+      open = false;
       nvidiaSettings = true;
       package = package_ver;
     };
