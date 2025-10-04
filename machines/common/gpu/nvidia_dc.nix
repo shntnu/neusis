@@ -1,6 +1,7 @@
 {
   pkgs,
   config,
+  lib,
   ...
 }:
 let
@@ -33,9 +34,8 @@ in
     # Configure Nvidia driver
     nvidia = {
       modesetting.enable = true;
-      # datacenter.enable = true causes fabricmanager to fail on boot (expected/harmless)
-      # H100 NVL uses NVLink bridges not NVSwitch - fabricmanager has nothing to manage
-      # Kept enabled to satisfy nvidia-container-toolkit requirements on NixOS 25.05
+      # datacenter.enable required for nvidia-container-toolkit on NixOS 25.05
+      # Note: This enables fabricmanager service, but we disable it below (see systemd.services)
       datacenter.enable = true;
       powerManagement.enable = false;
       open = false;
@@ -47,6 +47,12 @@ in
     # Enable nvidia container
     nvidia-container-toolkit.enable = true;
   };
+
+  # Disable fabricmanager service to suppress boot-time failure warnings
+  # datacenter.enable automatically enables this service, but it always fails on H100 NVL
+  # (fabricmanager only manages NVSwitch fabrics for DGX/HGX, not NVLink bridges)
+  # Failure is harmless but shows as error in systemctl status - cleaner to disable entirely
+  systemd.services.nvidia-fabricmanager.enable = lib.mkForce false;
 
   # Nvidia related nix configs
   nixpkgs = {
