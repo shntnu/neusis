@@ -29,10 +29,14 @@ anndata = "*"
 pandas = "*"
 scikit-learn = "*"
 duckdb = "<1.4.0"  # copairs compatibility
+typer = "*"
+loguru = "*"
+snakemake = "*"
 
 [tool.pixi.feature.rapids.pypi-dependencies]
 rapids-singlecell = "*"
 copairs-runner = { git = "https://github.com/broadinstitute/monorepo.git", subdirectory = "libs/copairs_runner", rev = "copairs-runner" }
+upsetplot = "*"
 
 # Feature: Chemical SMILES standardization (numpy 1.x)
 # Demonstrates: Legacy package compatibility
@@ -43,9 +47,13 @@ pandas = "*"
 scikit-learn = "*"
 matplotlib = "*"
 duckdb = "<1.4.0"
+typer = "*"
+loguru = "*"
+snakemake = "*"
 
 [tool.pixi.feature.smiles.pypi-dependencies]
 jump-smiles = { git = "https://github.com/broadinstitute/monorepo.git", subdirectory = "libs/jump_smiles", rev = "smiles-updates" }
+upsetplot = "*"
 
 # Environments: Define which features to activate together
 # Usage: pixi shell -e rapids  OR  pixi shell -e smiles
