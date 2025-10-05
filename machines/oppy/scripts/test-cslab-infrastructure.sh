@@ -250,11 +250,12 @@ if systemctl cat cslab-check-quotas.service &>/dev/null; then
     if [[ -n "$SCRIPT_WRAPPER" ]] && [[ -f "$SCRIPT_WRAPPER" ]]; then
         pass "Service wrapper script exists"
 
-        # Check if actual .nu script exists in nix store using fd
-        if fd -t f check-quotas.nu /nix/store 2>/dev/null | grep -q check-quotas.nu; then
-            pass "  Monitoring script check-quotas.nu found in nix store"
+        # Extract actual script path from wrapper
+        ACTUAL_SCRIPT=$(grep -o '/nix/store/[^/]*-check-quotas.nu' "$SCRIPT_WRAPPER" 2>/dev/null | head -1)
+        if [[ -n "$ACTUAL_SCRIPT" ]] && [[ -f "$ACTUAL_SCRIPT" ]]; then
+            pass "  Monitoring script exists: $(basename $ACTUAL_SCRIPT)"
         else
-            warn "  Could not verify check-quotas.nu in nix store"
+            warn "  Could not verify check-quotas.nu in wrapper"
         fi
     else
         fail "Service wrapper script NOT found"
