@@ -319,6 +319,77 @@ cat /var/log/lab-scripts/group-violations.log
 - Mirrors Ansible pattern from `scripts/ansible/playbooks/enforce-state.yml`
 - Script auto-updates when `users/cslab.nix` changes (Nix derivation)
 - Marked "Exact group membership enforcement" as complete (NixOS native feature)
-- Still TODO: Detect undeclared users in imaging group (separate check)
+
+---
+
+## 2025-10-05 - Failed Attempt: Undeclared Users Detection
+
+**Goal**: Extend group monitoring to detect users in imaging group who aren't declared in `users/cslab.nix`
+
+**Approach Attempted**:
+```nix
+# Try 1: Use pkgs.writeShellScript with absolute path
+checkGroupsScript = pkgs.writeShellScript "check-groups.sh" ''
+  IMAGING_MEMBERS=$(${pkgs.glibc.bin}/bin/getent group imaging | ...)
+'';
+
+# Try 2: Add glibc.bin to service PATH
+systemd.services.cslab-check-groups = {
+  path = [ pkgs.glibc.bin ];
+  script = ''${checkGroupsScript}'';
+};
+
+# Try 3: Inline script in service block
+systemd.services.cslab-check-groups = {
+  path = [ pkgs.glibc.bin ];
+  script = ''
+    IMAGING_MEMBERS=$(getent group imaging | ...)
+  '';
+};
+```
+
+**Issues Encountered**:
+
+1. **pkgs.writeShellScript + absolute path**:
+   - Error: `/nix/store/.../glibc.../bin/getent: No such file or directory`
+   - Root cause: `${pkgs.glibc.bin}` referenced invalid/non-existent Nix store path
+   - writeShellScript creates separate derivation, doesn't inherit service PATH
+
+2. **Service PATH not inherited by writeShellScript**:
+   - Adding `path = [ pkgs.glibc.bin ]` to service doesn't help the script
+   - Script is a separate Nix derivation, has its own isolated environment
+
+3. **Inline script with PATH still failed**:
+   - Even with script inline and `path = [ pkgs.glibc.bin ]`, getent not found
+   - Unclear why PATH wasn't working correctly
+
+**Manual Testing** (verified logic works in bash):
+```bash
+DECLARED_USERS="ank amunoz shsingh ngogober spathak jewald rshen jfredinh"
+IMAGING_MEMBERS=$(getent group imaging | cut -d: -f4 | tr ',' ' ')
+for user in $IMAGING_MEMBERS; do
+  if ! echo "$DECLARED_USERS" | grep -qw "$user"; then
+    echo "VIOLATION: $user not declared"
+  fi
+done
+# Result: No violations (all users declared correctly)
+```
+
+**Decision**: Rolled back feature (commits `8c5b7ad` through `2b63095`)
+
+**Status**: ❌ Abandoned - Too complex for marginal benefit
+
+**Lessons Learned**:
+- `pkgs.writeShellScript` doesn't inherit systemd service PATH
+- `${pkgs.glibc.bin}` may not be the correct way to reference getent
+- NixOS package references in generated scripts are fragile
+- Simpler approach: Keep monitoring focused on critical violations (wheel group)
+- The imaging group is already controlled by NixOS config - undeclared users unlikely
+
+**Alternative Approaches** (not attempted):
+- Use `pkgs.getent` if it exists as a separate package
+- Generate script with string interpolation instead of Nix references
+- Call getent via absolute path from running system (`/usr/bin/getent`)
+- Accept that this check isn't critical enough to solve the PATH issue
 
 ---
