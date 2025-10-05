@@ -8,8 +8,7 @@
   # This is required because we are not using legacy mounts
   # We are not using it right now because of #359
   # boot.zfs.extraPools = [
-  #   "zstore16"
-  #   "zstore03"
+  #   "work"
   # ];
 
   # https://discourse.nixos.org/t/cannot-import-zfs-pool-at-boot/4805/18
