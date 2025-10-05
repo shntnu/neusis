@@ -373,16 +373,68 @@ for user in "${REGULARS[@]}"; do
 done
 
 # ============================================================
-# Test 11: Manual Service Execution
+# Test 11: Group Membership Monitoring
 # ============================================================
-section "Test 11: Manual Service Execution (Optional)"
+section "Test 11: Group Membership Monitoring"
+
+if systemctl list-timers cslab-check-groups.timer &>/dev/null; then
+    pass "cslab-check-groups.timer exists"
+
+    # Check if timer is active
+    if systemctl is-active cslab-check-groups.timer &>/dev/null; then
+        pass "Timer is active"
+    else
+        fail "Timer is NOT active"
+    fi
+
+    # Check schedule
+    NEXT_RUN=$(systemctl status cslab-check-groups.timer | grep "Trigger:" | awk '{print $2, $3, $4}')
+    if [[ -n "$NEXT_RUN" ]]; then
+        pass "Timer scheduled for: $NEXT_RUN"
+    else
+        fail "Timer has no next run scheduled"
+    fi
+
+    # Check if it's set for Wednesday 9 AM
+    CALENDAR=$(systemctl cat cslab-check-groups.timer | grep OnCalendar | awk '{print $2}')
+    if [[ "$CALENDAR" == "Wed *-*-* 09:00:00" ]]; then
+        pass "Schedule correct: Wednesday 9:00 AM"
+    else
+        warn "Schedule may be different: $CALENDAR"
+    fi
+else
+    fail "cslab-check-groups.timer does not exist"
+fi
+
+if systemctl cat cslab-check-groups.service &>/dev/null; then
+    pass "cslab-check-groups.service exists"
+
+    # Check SuccessExitStatus includes 2
+    if systemctl cat cslab-check-groups.service | grep -q "SuccessExitStatus.*2"; then
+        pass "SuccessExitStatus includes code 2 (violations found)"
+    else
+        fail "SuccessExitStatus does NOT include code 2"
+    fi
+else
+    fail "cslab-check-groups.service does not exist"
+fi
+
+# ============================================================
+# Test 12: Manual Service Execution
+# ============================================================
+section "Test 12: Manual Service Execution (Optional)"
 
 echo "To manually test the quota check service, run:"
 echo "  sudo systemctl start cslab-check-quotas.service"
 echo "  sudo systemctl status cslab-check-quotas.service"
 echo "  sudo journalctl -u cslab-check-quotas.service -n 20"
 echo ""
-echo "Expected: Service completes successfully, Slack notification sent"
+echo "To manually test the group check service, run:"
+echo "  sudo systemctl start cslab-check-groups.service"
+echo "  sudo systemctl status cslab-check-groups.service"
+echo "  sudo journalctl -u cslab-check-groups.service -n 20"
+echo ""
+echo "Expected: Services complete successfully, Slack notifications sent if issues found"
 
 # ============================================================
 # Summary
