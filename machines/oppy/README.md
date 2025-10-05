@@ -135,7 +135,7 @@ Users defined in `../../users/cslab.nix` (from neusis repo root), integrated via
 
 This README documents Oppy's NixOS configuration implementation. Operational procedures and policies are in the imaging-server-maintenance repository.
 
+- **Policies** (requirements this implements): `../../imaging-server-maintenance/policies/` - policies reference this doc for implementation status
 - **Operations** (deploy, user management, troubleshooting): `../../imaging-server-maintenance/RUNBOOK_NIX.md`
 - **Hardware** (specs, drives, network): `../../imaging-server-maintenance/INVENTORY.md`
 - **Development history**: `../../imaging-server-maintenance/assets/EXPERIMENTS_CSLAB_INFRASTRUCTURE.md`
-- **Policies** (requirements): `../../imaging-server-maintenance/policies/`
