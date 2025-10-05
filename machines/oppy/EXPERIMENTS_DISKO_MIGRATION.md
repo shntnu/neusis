@@ -288,14 +288,150 @@ zfs list
 - fix(disko): explicitly disable all snapshot types for scratch dataset
 
 **Next Steps**:
-1. Commit fixes to neusis repo
-2. Push to GitHub
-3. Deploy to production via nixos-anywhere from Spirit (when ready)
+1. ✅ Commit fixes to neusis repo
+2. ✅ Push to GitHub
+3. Deploy to production via nixos-anywhere from Spirit (instructions below)
 
 **Notes**:
 - ZFS property inheritance requires explicit override of each property
 - Setting master `com.sun:auto-snapshot = false` does NOT cascade to individual types
 - Refactor (49a5975) successfully updated cslab/ paths but missed deployment/vm.nix
 - VM testing caught both issues before production deployment
+
+---
+
+## Production Deployment Instructions (Run from Spirit)
+
+**Prerequisites:**
+- ✅ 3-drive interim config tested in VM and committed
+- ✅ Oppy has no production data (verified 2025-10-05)
+- ⚠️ **DESTRUCTIVE**: Wipes all data on oppy disks
+- 📍 Must run from **Spirit** (remote deployment)
+
+**Pre-deployment checklist:**
+
+```bash
+# On oppy: Verify all 3 Kioxia drives detected (CRITICAL)
+ssh oppy "ls -1 /dev/disk/by-id/nvme-KCD6* | grep -v '_1\|part' | wc -l"
+# Expected: 3 (if less, reboot oppy 2-3 times until all appear)
+
+# On oppy: Final check - anything important?
+ssh oppy "du -sh /datastore16/* /datastore03/* 2>/dev/null || echo 'empty'"
+# Expected: empty or nothing important
+
+# On Spirit: Clone/update neusis repo
+cd ~/work/GitHub/server
+git clone https://github.com/shntnu/neusis.git shntnu-neusis  # If not exists
+cd shntnu-neusis
+git pull origin main
+git log --oneline -3  # Verify a5f83be (3-drive config) is present
+```
+
+**Deployment procedure:**
+
+```bash
+# Step 1: Enter nix development shell (provides nixos-anywhere, agenix, etc.)
+cd ~/work/GitHub/server/shntnu-neusis
+nix develop
+
+# Step 2: Verify secrets are already decrypted (from previous deployment)
+ls -la scratch/etc/ssh/
+# Expected: ssh_host_ed25519_key and .pub (owned by shsingh, not root)
+# If missing: python scripts/anywhere.py decrypt --temp-folder scratch --key ~/.ssh/id_ed25519 secrets/oppy/anywhere
+
+# Step 3: Build kexec image (if not already built)
+nix build .#kexec_tailscale
+ls -la result  # Note the store path for next step
+
+# Step 4: Enable root SSH on oppy (required for nixos-anywhere)
+ssh oppy
+sudo passwd root  # Set temporary password, WRITE IT DOWN
+sudo nixos-rebuild switch --flake .#oppy  # Enables root SSH
+exit  # Return to Spirit
+
+# Step 5: Deploy via nixos-anywhere (THE BIG STEP - WIPES DISKS)
+python scripts/anywhere.py deploy \
+  root@oppy \
+  secrets/oppy/anywhere \
+  --flake .#oppy \
+  --temp-folder scratch \
+  --key ~/.ssh/id_ed25519 \
+  --identity-file ~/.ssh/id_ed25519 \
+  --kexec /nix/store/HASH-kexec-tarball/nixos-kexec-installer-noninteractive-x86_64-linux.tar.gz
+  # ^^^ Replace HASH with actual path from "ls -la result" in step 3
+
+# Expected timeline:
+# - Kexec boots installer (3-5 min)
+# - Disko formats drives (1-2 min)
+# - NixOS installation (10-15 min)
+# - Total: ~20 minutes
+
+# Step 6: Post-deployment - Import ZFS pools (CRITICAL)
+# Pools NOT auto-imported due to disko bug, but activation script handles future boots
+ssh oppy "sudo zpool import -f work"  # New pool name (not zstore16)
+ssh oppy "sudo passwd -d root"  # Clear root password
+
+# Step 7: Update Tailscale ACLs with new IP (if changed)
+ssh oppy "tailscale status"  # Note IP address
+# Update ACLs in Tailscale admin if needed
+```
+
+**Post-deployment verification:**
+
+```bash
+# Pool structure
+ssh oppy "zpool status work"
+# Expected: 3x Kioxia drives, ONLINE, no errors
+
+# Datasets
+ssh oppy "zfs list -o name,mountpoint,quota"
+# Expected: work/datasets, work/users, work/scratch, work/tools, work/users/_archive
+
+# Mount points
+ssh oppy "ls -la /work/"
+# Expected: datasets, users, scratch, tools directories
+
+# Snapshot properties
+ssh oppy "zfs get com.sun:auto-snapshot,com.sun:auto-snapshot:frequent work/scratch"
+# Expected: Both false (no snapshots on scratch)
+
+# CSLab infrastructure (should work as before)
+ssh oppy "sudo /run/current-system/sw/bin/test-cslab-infrastructure.sh"
+# Expected: All tests pass
+
+# Services
+ssh oppy "systemctl status grafana prometheus tailscale"
+# Expected: All active (running)
+
+# Check latest generation
+ssh oppy "nixos-rebuild list-generations | head -3"
+# Expected: New generation 1 with current timestamp
+```
+
+**Troubleshooting:**
+
+- **DNS fails during install**: See RUNBOOK_NIX.md "DNS Resolution Fix During Deployment"
+- **SSH host key changed**: `ssh-keygen -R oppy` then reconnect
+- **Drives missing**: Reboot oppy 2-3 times (Kioxia detection issue)
+- **Pool won't import**: `ssh oppy "sudo zpool import -f work"`
+
+**References:**
+- RUNBOOK_NIX.md: Complete nixos-anywhere Deployment section
+- RUNBOOK_NIX.md: Pre-Installation Drive Verification section
+- machines/oppy/deployment/disko.nix: Disk layout being deployed
+
+**Rollback plan (if deployment fails):**
+
+```bash
+# Restore backup disko.nix (old config with zstore16/zstore03)
+cd ~/work/GitHub/server/shntnu-neusis
+cp machines/oppy/deployment/disko.nix.backup machines/oppy/deployment/disko.nix
+
+# Redeploy with old config
+python scripts/anywhere.py deploy root@oppy secrets/oppy/anywhere \
+  --flake .#oppy --temp-folder scratch \
+  --key ~/.ssh/id_ed25519 --identity-file ~/.ssh/id_ed25519 \
+  --kexec /nix/store/HASH-kexec-tarball/...tar.gz
+```
 
 ---
