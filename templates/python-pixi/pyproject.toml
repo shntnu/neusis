@@ -30,6 +30,16 @@ snakemake = "*"
 duckdb = "<1.4.0"  # copairs needs older API
 anndata = "*"
 
+[tool.pixi.feature.jupyter.dependencies]
+ipykernel = ">=6.30.1,<7"
+jupyterlab = ">=4.4.9,<5"
+jupyter = ">=1.1.1,<2"
+jupytext = ">=1.17.3,<2"
+
+[tool.pixi.environments]
+default = { features = ["jupyter"], solve-group = "default" }
+minimal = { features = [], solve-group = "default" }
+
 [tool.pixi.pypi-dependencies]
 # PyPI-only packages
 upsetplot = "*"

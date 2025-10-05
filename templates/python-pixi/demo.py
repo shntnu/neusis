@@ -1,9 +1,20 @@
 #!/usr/bin/env python
+# ---
+# jupyter:
+#   jupytext:
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+# ---
+
+# %% [markdown]
 """
-Progressive Python Demo: Shows the boundary between pure Nix and uv approaches.
+# Progressive Python Demo
+Shows the boundary between pure Nix and uv approaches.
 Runs as far as it can, failing gracefully at the boundary.
 """
 
+# %%
 import sys
 import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
@@ -12,7 +23,10 @@ print("=" * 60)
 print("Python Environment Capability Demo")
 print("=" * 60)
 
-# Level 1: Standard data science (all in nixpkgs)
+# %% [markdown]
+# ## Level 1: Standard data science (all in nixpkgs)
+
+# %%
 print("\n[1] Standard data science packages:")
 try:
     import numpy as np
@@ -43,7 +57,10 @@ except ImportError as e:
     print(f"✗ Failed: {e}")
     sys.exit(1)
 
-# Level 2: Common tools (actually in nixpkgs!)
+# %% [markdown]
+# ## Level 2: Common tools (actually in nixpkgs!)
+
+# %%
 print("\n[2] Common Python tools (in nixpkgs):")
 try:
     import typer
@@ -63,7 +80,10 @@ try:
 except ImportError as e:
     print(f"✗ Failed: {e}")
 
-# Level 3: PyPI-only packages (NOT in nixpkgs)
+# %% [markdown]
+# ## Level 3: PyPI-only packages (NOT in nixpkgs)
+
+# %%
 print("\n[3] PyPI-only packages:")
 try:
     import upsetplot
@@ -88,7 +108,10 @@ try:
 except ImportError as e:
     print(f"✗ upsetplot not available (not in nixpkgs, needs uv)")
 
-# Level 4: Git sources (impossible with pure Nix)
+# %% [markdown]
+# ## Level 4: Git sources (impossible with pure Nix)
+
+# %%
 print("\n[4] Git-sourced packages:")
 
 # Try copairs-runner first (works with numpy 2.x in pixi)
@@ -126,7 +149,10 @@ else:
     print(f"✗ Git sources not available")
     print("  These require uv approach - cannot install from git in pure Nix")
 
-# Level 5: GPU/RAPIDS packages (needs CUDA and conda ecosystem)
+# %% [markdown]
+# ## Level 5: GPU/RAPIDS packages (needs CUDA and conda ecosystem)
+
+# %%
 print("\n[5] GPU/RAPIDS packages:")
 try:
     import anndata
@@ -156,7 +182,10 @@ except ImportError as e:
 except Exception as e:
     print(f"✗ GPU/RAPIDS runtime error: {e}")
 
-# Summary
+# %% [markdown]
+# ## Summary
+
+# %%
 print("\n" + "=" * 60)
 print("Demo complete! Environment capabilities:")
 print("- Levels 1-2: Standard packages (numpy, pandas, sklearn, etc.)")
