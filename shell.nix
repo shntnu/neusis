@@ -13,6 +13,12 @@
   inputs,
   ...
 }:
+let
+  pkgs-unstable = import inputs.nixpkgs-unstable {
+    system = pkgs.system;
+    config.allowUnfree = true;
+  };
+in
 {
   default = pkgs.mkShell {
     NIX_CONFIG = "extra-experimental-features = nix-command flakes";
@@ -23,6 +29,7 @@
         git
         uv
         nixos-anywhere
+        pkgs-unstable.claude-code
 
         inputs.agenix.packages.${system}.default
         ssh-to-age
