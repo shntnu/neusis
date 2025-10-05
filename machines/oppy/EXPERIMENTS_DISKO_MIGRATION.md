@@ -435,3 +435,133 @@ python scripts/anywhere.py deploy root@oppy secrets/oppy/anywhere \
 ```
 
 ---
+
+## 2025-10-05 - Production Deployment Completed with Post-Deployment Fixes
+
+**Goal**: Deploy 3-drive interim configuration to production and fix issues discovered during deployment
+
+**Deployment Method**: nixos-anywhere from Spirit
+
+**Issues Encountered**:
+
+1. **Initial deployment missing cslab infrastructure**
+   - Problem: nixos-anywhere deployed system without imaging group, SSH keys, or user directories
+   - Root cause: Unclear - possibly stale flake cache or didn't use latest git revision
+   - Fix: Ran `nixos-rebuild switch --flake .#oppy` locally on oppy to apply full configuration
+
+2. **Activation script errors on old datastore paths**
+   - Problem: boot.nix tried to `chmod /datastore16 /datastore03` which don't exist
+   - Fix: Removed chmod commands for old datastores (commit 627ff4f)
+
+3. **ZFS datasets had wrong permissions**
+   - Problem: `/work/datasets` and `/work/users/_archive` mounted as `root:root 755` instead of `root:imaging 750`
+   - Root cause: ZFS datasets created read-only, preventing permission changes
+   - Fix: Removed `readonly = "on"` from disko.nix, added activation script to fix permissions
+
+**Fixes Applied**:
+
+**Commit 627ff4f** - Remove old datastore chmod commands
+- boot.nix: Removed `chmod 0777 /datastore03 /datastore16` from activation script
+- These paths don't exist in new configuration
+
+**Commit 9a3eee4** - Update boot.nix pool name comments
+- Updated commented-out `boot.zfs.extraPools` from `["zstore16", "zstore03"]` to `["work"]`
+
+**Commit c8eac6c** - Fix ZFS dataset permissions
+- disko.nix: Removed `readonly = "on"` from work/datasets and work/users/_archive
+- cslab/infrastructure.nix: Added activation script to fix permissions after ZFS mounts:
+  ```nix
+  chown root:imaging /work/datasets /work/users/_archive
+  chmod 750 /work/datasets /work/users/_archive
+  ```
+
+**Commit [pending]** - Replace activation script with systemd service
+- cslab/infrastructure.nix: Changed from activation script to systemd service `cslab-setup-directories`
+- Service depends on `zfs-mount.service` to ensure ZFS is mounted before creating directories
+- Fixes VM boot timing issue where activation ran before ZFS finished mounting
+
+**Testing**:
+
+VM Testing (2025-10-05):
+```bash
+cd ~/neusis
+TESTVM_SECRETS="$(git rev-parse --show-toplevel)/scratch" QEMU_KERNEL_PARAMS=console=ttyS0 nix run .#nixosConfigurations.oppy.config.system.build.vmWithDisko
+```
+
+VM Test Results:
+- ✅ ZFS pool created: 3x Kioxia drives in stripe mode
+- ✅ All datasets mounted with correct quotas
+- ✅ Imaging group exists with all 8 users
+- ✅ Users have imaging group membership
+- ✅ Permissions correct after manual activation
+- ⚠️ User directories not created automatically (timing issue - activation ran before ZFS mounted)
+- ✅ Manual activation (`/run/current-system/activate`) created directories correctly
+
+Production Testing (2025-10-05):
+```bash
+ssh oppy
+sudo test-cslab-infrastructure.sh
+```
+
+Test Results: 69/69 tests passed after fixes
+
+**Status**: ✅ Complete - Production deployment successful with all issues resolved
+
+**Post-Deployment State**:
+- Pool: work (3x Kioxia 15TB, stripe mode, ~42TB usable)
+- Datasets: /work/datasets, /work/users, /work/scratch, /work/tools, /work/users/_archive
+- Permissions: root:imaging 750 on all datasets
+- Users: All 8 cslab users with imaging group
+- SSH keys: Deployed via /etc/ssh/authorized_keys.d/
+- Monitoring: cslab-check-quotas and cslab-check-groups timers active
+
+**Lessons Learned**:
+
+1. **nixos-anywhere may not apply full configuration** - Always follow up with local `nixos-rebuild switch` on target machine
+2. **ZFS readonly prevents permission changes** - Don't use `readonly = "on"` if you need to set ownership/permissions on mount points
+3. **Activation scripts run before ZFS mounts** - Use systemd services with proper dependencies for ZFS-dependent operations
+4. **VM boot timing differs from hardware** - Test activation dependencies in both environments
+
+**Next Steps**:
+1. Apply systemd service fix (replace activation script)
+2. Reboot oppy and verify cslab-setup-directories service runs correctly
+3. Update deployment procedure documentation with mandatory local rebuild step
+4. Order 3 more Kioxia drives for RAIDZ2 migration
+5. Test 6-drive RAIDZ2 config in VM before new drives arrive
+
+**Files Modified**:
+- machines/oppy/boot.nix (remove old datastore paths)
+- machines/oppy/deployment/disko.nix (remove readonly from datasets)
+- machines/oppy/cslab/infrastructure.nix (add permission fixes, convert to systemd service)
+
+**Deployment Command Archive**:
+
+Initial deployment (from Spirit):
+```bash
+cd ~/work/GitHub/server/shntnu-neusis
+nix develop
+python scripts/anywhere.py deploy root@oppy secrets/oppy/anywhere \
+  --flake .#oppy --temp-folder scratch \
+  --key ~/.ssh/id_ed25519 --identity-file ~/.ssh/id_ed25519 \
+  --kexec /nix/store/HASH-kexec-tarball/nixos-kexec-installer-noninteractive-x86_64-linux.tar.gz
+```
+
+Post-deployment fix (on oppy):
+```bash
+ssh oppy
+cd ~/neusis
+git pull
+sudo nixos-rebuild switch --flake .#oppy
+```
+
+**Verification After Reboot**:
+```bash
+ssh oppy
+systemctl status cslab-setup-directories  # Should show active (exited)
+ls -la /work/users/ /work/scratch/  # Should have all user directories
+sudo test-cslab-infrastructure.sh  # All 69 tests should pass
+zpool status work  # 3x Kioxia drives, ONLINE
+zfs list -o name,mountpoint,quota  # All datasets with correct quotas
+```
+
+---
