@@ -17,7 +17,7 @@
 
 let
   # Import cslab user config to derive expected group memberships
-  cslabUserConfig = import ../../users/cslab.nix { inherit pkgs; };
+  cslabUserConfig = import ../../../users/cslab.nix { inherit pkgs; };
 
   # Extract usernames by type
   adminUsernames = builtins.map (u: u.username) cslabUserConfig.admins;
@@ -69,7 +69,7 @@ in
 {
   # Slack webhook secret for quota notifications
   age.secrets.slack_webhook = {
-    file = ../../secrets/oppy/slack_webhook.age;
+    file = ../../../secrets/oppy/slack_webhook.age;
     mode = "400";  # Read-only by root
     owner = "root";
   };

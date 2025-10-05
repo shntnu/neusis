@@ -17,7 +17,7 @@
 let
   # Import cslab user config directly to avoid circular dependency
   # (reading config.users.users while defining users.users causes infinite recursion)
-  cslabUserConfig = import ../../users/cslab.nix { inherit pkgs; };
+  cslabUserConfig = import ../../../users/cslab.nix { inherit pkgs; };
 
   # Extract usernames from all user categories (admins, regulars, locked, guests)
   allCslabUsers =
@@ -35,6 +35,9 @@ let
   emergencyAccountViolations = builtins.filter
     (account: builtins.elem account allCslabUsers)
     emergencyAccounts;
+
+  # Package test script for system PATH
+  testScript = pkgs.writeScriptBin "test-cslab-infrastructure.sh" (builtins.readFile ./scripts/test-cslab-infrastructure.sh);
 
 in
 {
@@ -98,4 +101,7 @@ in
 
     echo "CSLab user directories created/verified for: ${lib.concatStringsSep ", " cslabUsers}"
   '';
+
+  # Add test script to system PATH
+  environment.systemPackages = [ testScript ];
 }
