@@ -340,9 +340,42 @@ else
 fi
 
 # ============================================================
-# Test 10: Manual Service Execution
+# Test 10: Sudo Access Restriction
 # ============================================================
-section "Test 10: Manual Service Execution (Optional)"
+section "Test 10: Sudo Access Restriction"
+
+# Admins should have wheel group (sudo access)
+ADMINS=(ank amunoz shsingh)
+for user in "${ADMINS[@]}"; do
+    if id "$user" &>/dev/null; then
+        if groups "$user" | grep -q wheel; then
+            pass "Admin $user has sudo access (wheel group)"
+        else
+            fail "Admin $user does NOT have wheel group"
+        fi
+    else
+        warn "Admin $user does not exist (skipping)"
+    fi
+done
+
+# Regulars should NOT have wheel group
+REGULARS=(ngogober spathak jewald rshen jfredinh)
+for user in "${REGULARS[@]}"; do
+    if id "$user" &>/dev/null; then
+        if groups "$user" | grep -q wheel; then
+            fail "Regular user $user has sudo access (should NOT have wheel group)"
+        else
+            pass "Regular user $user does NOT have sudo access (correct)"
+        fi
+    else
+        warn "Regular user $user does not exist (skipping)"
+    fi
+done
+
+# ============================================================
+# Test 11: Manual Service Execution
+# ============================================================
+section "Test 11: Manual Service Execution (Optional)"
 
 echo "To manually test the quota check service, run:"
 echo "  sudo systemctl start cslab-check-quotas.service"

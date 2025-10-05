@@ -52,10 +52,10 @@
 
 ### Critical - Blocking Spirit Migration
 
-- [ ] **Sudo restriction**: Move users from admins → regulars in `users/cslab.nix`
-  - Current: All 8 users have wheel group (sudo)
-  - Policy: 1-2 admins only post-migration
-  - Action: Reclassify jewald, rshen, jfredinh, others as regulars
+- [x] **Sudo restriction**: Move users from admins → regulars in `users/cslab.nix` ✅
+  - 3 admins (ank, amunoz, shsingh) with wheel group
+  - 5 regulars (ngogober, spathak, jewald, rshen, jfredinh) without sudo
+  - Completed: 2025-10-05
 
 ### High Priority - Security & Compliance
 
@@ -227,5 +227,36 @@ sudo systemctl start cslab-check-quotas.service
 - imaging group modifies users already created by neusisOS lib (clean separation of concerns)
 - Monitoring service has placeholder script execution (needs script path configuration)
 - All policies from imaging-server-maintenance now implemented in NixOS declaratively
+
+---
+
+## 2025-10-05 - Sudo Access Restriction
+
+**Goal**: Restrict sudo access to 3 admins, remove from 5 regular users
+
+**Implementation**:
+
+Modified `users/cslab.nix`:
+- **Admins** (keep wheel group): ank, amunoz, shsingh
+- **Regulars** (remove wheel group): ngogober, spathak, jewald, rshen, jfredinh
+- Regulars maintain all other access: imaging group, docker, libvirtd, SSH
+
+**Testing**: ✅ Deployed and verified on production Oppy
+
+**Verification**:
+```bash
+# Test script: machines/oppy/scripts/test-cslab-infrastructure.sh
+# Test 10: Sudo Access Restriction - all tests passed
+# - 3 admins verified with wheel group
+# - 5 regulars verified without wheel group
+```
+
+**Status**: ✅ Complete - Sudo restriction implemented and verified
+
+**Notes**:
+- Policy requirement from `policies/user-access.md` now enforced
+- Unblocks Spirit migration (was marked as Critical)
+- Users maintain all functionality except sudo
+- Test added to infrastructure validation script for future regression detection
 
 ---
