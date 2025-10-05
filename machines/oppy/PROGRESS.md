@@ -59,11 +59,19 @@
 
 ### High Priority - Security & Compliance
 
-- [ ] **Security auditing**: Add to `cslab-monitoring.nix` or new `cslab-security.nix`
-  - Detect undeclared users in imaging group
-  - Log state changes to `/var/log/lab-scripts/`
-  - Report group membership violations
-  - Required for audit policy compliance
+- [x] **Security auditing - group membership**: Implemented in `cslab-monitoring.nix` ✅
+  - ✅ Weekly checks for unauthorized group memberships (Wed 9 AM)
+  - ✅ Log violations to `/var/log/lab-scripts/group-violations.log`
+  - ✅ Slack alerts for group membership violations
+  - ⏳ TODO: Detect undeclared users in imaging group (separate check)
+  - Completed: 2025-10-05
+
+- [x] **Exact group membership enforcement**: NixOS handles this natively ✅
+  - NixOS already enforces exact group membership (not additive)
+  - Tested: Manual group additions removed on `nixos-rebuild switch`
+  - No additional implementation needed
+  - Monitoring added above to detect violations between rebuilds
+  - Verified: 2025-10-05
 
 - [ ] **User lifecycle - locked users**: Extend `cslab-infrastructure.nix` for oppy
   - Read locked users from config, set shell to `/usr/sbin/nologin`, lock password
@@ -76,12 +84,6 @@
   - Change ownership to root:imaging, delete account
   - Required for offboarding policy compliance
   - Extract to `lib/neusisOS.nix` when Spirit migrates
-
-- [ ] **Exact group membership enforcement**: Implement in oppy's user management
-  - Current: additive only (users keep manual group additions)
-  - Required: exact match (remove groups not in config)
-  - May need activation script or lib modification
-  - Prevents privilege creep, enforces security policy
 
 ### Medium Priority - Operational Features
 
@@ -258,5 +260,65 @@ Modified `users/cslab.nix`:
 - Unblocks Spirit migration (was marked as Critical)
 - Users maintain all functionality except sudo
 - Test added to infrastructure validation script for future regression detection
+
+---
+
+## 2025-10-05 - Group Membership Violation Monitoring
+
+**Goal**: Implement security auditing for unauthorized group memberships
+
+**Discovery**: NixOS already enforces exact group membership (not additive like traditional Linux)
+
+**Testing**:
+```bash
+# Manual test: Add regular user to wheel group
+sudo usermod -aG wheel ngogober
+groups ngogober  # Shows wheel
+
+# Rebuild NixOS
+sudo nixos-rebuild switch --flake .#oppy
+
+# Verify wheel removed automatically
+groups ngogober  # No wheel - NixOS enforced exact membership
+```
+
+**Implementation**:
+
+Modified `cslab-monitoring.nix`:
+- Added `checkGroupsScript` derived from `users/cslab.nix` (single source of truth)
+- Checks regulars don't have wheel (unauthorized sudo)
+- Checks admins DO have wheel (expected sudo)
+- Weekly timer: Wednesday 9 AM
+- Logs to `/var/log/lab-scripts/group-violations.log`
+- Slack alerts on violations
+
+**Testing**: ✅ Deployed and verified on production Oppy
+
+**Verification**:
+```bash
+# Service deployed
+systemctl status cslab-check-groups.timer  # Active, next run Wed
+systemctl start cslab-check-groups.service  # Manual test
+
+# Log file created
+cat /var/log/lab-scripts/group-violations.log
+# [2025-10-05T01:28:32-04:00] No group violations detected
+
+# Test 11: Group Membership Monitoring - all tests passed
+```
+
+**Status**: ✅ Complete - Group violation monitoring operational
+
+**Key Findings**:
+- **NixOS enforcement**: Exact group membership enforced on rebuild (removes undeclared groups)
+- **Monitoring value**: Detects violations between rebuilds (time window protection)
+- **Pattern mirrors Ansible**: Same approach as Spirit's `enforce-state.yml`
+- **Defense in depth**: Don't rely solely on rebuild schedule
+
+**Notes**:
+- Mirrors Ansible pattern from `scripts/ansible/playbooks/enforce-state.yml`
+- Script auto-updates when `users/cslab.nix` changes (Nix derivation)
+- Marked "Exact group membership enforcement" as complete (NixOS native feature)
+- Still TODO: Detect undeclared users in imaging group (separate check)
 
 ---
