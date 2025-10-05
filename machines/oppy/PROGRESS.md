@@ -114,9 +114,49 @@ systemctl status cslab-check-quotas.timer
 **Status**: ✅ Complete - Infrastructure deployed successfully
 
 **Next Steps**:
-1. Configure monitoring script path in cslab-monitoring.nix (link to imaging-server-maintenance/scripts/monitoring/check-quotas.nu)
-2. Add Slack webhook via agenix secret (when notifications needed)
+1. ~~Configure monitoring script path~~ ✅ Complete
+2. ~~Add Slack webhook via agenix secret~~ ✅ Complete
 3. Implement scratch cleanup timer when script ready
+
+---
+
+## 2025-10-05 - Monitoring Script and Slack Integration
+
+**Goal**: Wire up quota monitoring script with Slack notifications
+
+**Implementation**:
+
+1. **Copied check-quotas.nu** to `machines/oppy/scripts/check-quotas.nu`
+2. **Updated cslab-monitoring.nix**:
+   - Added `fd` to service PATH (required by script)
+   - Updated script execution to use actual Nushell script
+   - Added `SuccessExitStatus = [ 0 2 ]` (exit code 2 = user needs action, not failure)
+3. **Slack integration via agenix**:
+   - Added `oppy/slack_webhook.age` to `secrets/secrets.nix`
+   - Created encrypted secret file with webhook URL
+   - Declared secret in cslab-monitoring.nix (mode 400, root-only)
+   - Export SLACK_WEBHOOK_URL in service script from secret
+
+**Testing**: ✅ Deployed and verified on production Oppy
+
+**Verification Results**:
+```bash
+sudo systemctl start cslab-check-quotas.service
+# [INFO] Notified via Slack for user shsingh - 136.23GB used
+# [INFO] Quota check complete: 10 users checked, 1 need action
+# Service: Deactivated successfully ✅
+
+# Check Slack channel - notification received ✅
+```
+
+**Status**: ✅ Complete - Full monitoring with Slack notifications operational
+
+**Notes**:
+- Script runs weekly Monday 9 AM via systemd timer
+- Exit code 2 (user needs action) treated as success to avoid false failures
+- Slack webhook stored securely via agenix (encrypted at rest)
+- All 10 cslab users monitored automatically
+- Found: shsingh over quota (136.23GB / 100GB soft limit)
 
 **Notes**:
 - Build succeeded on first try after fixing circular dependency (importing users/cslab.nix directly)

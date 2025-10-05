@@ -14,6 +14,12 @@
 { config, lib, pkgs, ... }:
 
 {
+  # Slack webhook secret for quota notifications
+  age.secrets.slack_webhook = {
+    file = ../../secrets/oppy/slack_webhook.age;
+    mode = "400";  # Read-only by root
+    owner = "root";
+  };
   # Weekly quota monitoring - Mondays at 9 AM
   systemd.timers.cslab-check-quotas = {
     wantedBy = [ "timers.target" ];
@@ -27,6 +33,9 @@
   systemd.services.cslab-check-quotas = {
     description = "CSLab Home Directory Quota Check";
 
+    # Script requires fd for file search
+    path = [ pkgs.fd ];
+
     serviceConfig = {
       Type = "oneshot";
       User = "root";  # Needs root to read all user directories
@@ -39,26 +48,20 @@
         "LOG_DIR=/var/log/lab-scripts"
       ];
 
-      # SLACK_WEBHOOK_URL should be set via agenix secret when Slack integration is added
-      # For now, script will run without notifications (logs only)
+      # Script exits with code 2 when users need action (by design)
+      # Treat this as success so systemd doesn't report failures
+      SuccessExitStatus = [ 0 2 ];
     };
 
-    # Script execution
-    # TODO: Update path to point to actual script location
-    # Options:
-    #   1. Copy script to /etc/cslab-scripts/ via systemd.tmpfiles
-    #   2. Reference from imaging-server-maintenance repo
-    #   3. Package script in neusis
     script = ''
-      # Create log directory if it doesn't exist
+      # Create log directory
       mkdir -p /var/log/lab-scripts
 
-      # TODO: Replace with actual script path
-      # For now, this is a placeholder that logs execution
-      echo "[$(date -Iseconds)] CSLab quota check triggered (script not yet configured)" >> /var/log/lab-scripts/check-quotas.log
+      # Load Slack webhook URL from secret
+      export SLACK_WEBHOOK_URL=$(cat ${config.age.secrets.slack_webhook.path})
 
-      # Future implementation:
-      # ${pkgs.nushell}/bin/nu /path/to/check-quotas.nu
+      # Run quota check script with Slack notifications enabled
+      ${pkgs.nushell}/bin/nu ${./scripts/check-quotas.nu}
     '';
   };
 
