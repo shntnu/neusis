@@ -146,12 +146,11 @@
         };
 
         datasets = {
-          # /work/datasets - Reference data (READ-ONLY for users)
+          # /work/datasets - Reference data (controlled by permissions)
           datasets = {
             type = "zfs_fs";
             options = {
               mountpoint = "/work/datasets";
-              readonly = "on";        # Admins must unlock to write
               dedup = "off";          # Changed from current "on" - better performance
               recordsize = "1M";      # Optimize for large files
               # Keep all snapshots - critical reference data
@@ -177,7 +176,6 @@
             options = {
               mountpoint = "/work/users/_archive";
               compression = "zstd";   # Better compression for cold data
-              readonly = "on";        # Protect archived data
               # Minimal snapshots - data doesn't change
               "com.sun:auto-snapshot:frequent" = "false";
               "com.sun:auto-snapshot:hourly" = "false";

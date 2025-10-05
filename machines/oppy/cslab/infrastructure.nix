@@ -86,6 +86,11 @@ in
   # Create per-user directories in /work/users and /work/scratch
   # These are created at system activation (boot or nixos-rebuild switch)
   system.activationScripts.cslabUserDirectories = lib.stringAfter [ "users" ] ''
+    # Fix ZFS dataset mount point permissions (disko creates them with defaults)
+    # ZFS mounts override systemd.tmpfiles, so we fix them here after mounting
+    chown root:imaging /work/datasets /work/users/_archive
+    chmod 750 /work/datasets /work/users/_archive
+
     # Create user-specific directories
     ${lib.concatMapStringsSep "\n" (user: ''
       # /work/users/<username> - project workspace
