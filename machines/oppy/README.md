@@ -18,6 +18,12 @@ NixOS configuration for Oppy datacenter server.
 - Main entry point
 - Imports all oppy-specific and common modules
 - Tailscale configuration
+- Integrates with neusis lib (provides agenix, home-manager, disko via flake inputs)
+
+#### hardware-configuration.nix
+
+- Auto-generated hardware detection (nixos-generate-config)
+- File systems, kernel modules, boot loader
 
 #### boot.nix
 
@@ -71,13 +77,18 @@ Implementation Notes: These are machine-specific (not in modules/nixos/) because
 
 ### Common Modules (from ../common/)
 
-- **gpu/nvidia_dc.nix**: NVIDIA datacenter driver (535.x), persistence mode, GSP firmware
-- **zfs.nix**: ZFS kernel module, scrubbing
-- **virtualization.nix**: Libvirt, Docker, Podman
-- **ssh.nix**: SSH server configuration
-- **networking.nix**: Firewall, network utilities
-- **nix.nix**: Nix daemon, flakes, experimental features
-- **comin.nix**: Automatic system updates
+- `networking.nix`: Firewall, network utilities
+- `gpu/nvidia_dc.nix`: NVIDIA datacenter driver (535.x), persistence mode, GSP firmware
+- `substituters.nix`: Nix binary cache configuration (cachix: devenv, cuda, gaming, ai)
+- `virtualization.nix`: Libvirt, Docker, Podman
+- `input_device.nix`: X11 keyboard layout, touchpad/libinput
+- `ssh.nix`: SSH server configuration
+- `us_eng.nix`: US/English locale and timezone (America/New_York)
+- `nosleep.nix`: Disables sleep/suspend/hibernate
+- `nix.nix`: Nix daemon, flakes, experimental features
+- `printing.nix`: CUPS printing service
+- `zfs.nix`: ZFS kernel module, scrubbing
+- `comin.nix`: Automatic system updates
 
 ## Scripts
 
@@ -103,16 +114,18 @@ Implementation Notes: These are machine-specific (not in modules/nixos/) because
 
 ## Key Configuration Details
 
-**User Management**: Users defined in `../../users/cslab.nix` (from neusis repo root)
+### User Management
+
+Users defined in `../../users/cslab.nix` (from neusis repo root), integrated via `lib.neusisOS.mkNeusisOS`
 
 - Four types: admins (wheel), regulars, locked (nologin), removed (not in config)
 
-**ZFS Pools**:
+### ZFS Pools
 
 - Import: Activation script (not boot.zfs.extraPools due to disko bug #359)
 - Permissions: 0777 on /datastore03 and /datastore16
 
-**Network**:
+### Network
 
 - bond001: Static IP (defined in network.nix)
 - Infiniband: ibp69s0 configured
