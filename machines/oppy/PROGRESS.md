@@ -42,6 +42,69 @@
 
 ---
 
+## Remaining Work - Path to Full NixOS
+
+> **Context**: These features exist in Ubuntu/Ansible (Spirit) but are missing or incomplete in NixOS.
+> Once completed, imaging-server-maintenance `scripts/` can be archived and Spirit can migrate to NixOS.
+>
+> **Policy Source**: `../imaging-server-maintenance/policies/`
+> **Current Implementation**: `../imaging-server-maintenance/scripts/`
+
+### Critical - Blocking Spirit Migration
+
+- [ ] **Sudo restriction**: Move users from admins → regulars in `users/cslab.nix`
+  - Current: All 8 users have wheel group (sudo)
+  - Policy: 1-2 admins only post-migration
+  - Action: Reclassify jewald, rshen, jfredinh, others as regulars
+
+### High Priority - Security & Compliance
+
+- [ ] **Security auditing**: Add to `cslab-monitoring.nix` or new `cslab-security.nix`
+  - Detect undeclared users in imaging group
+  - Log state changes to `/var/log/lab-scripts/`
+  - Report group membership violations
+  - Required for audit policy compliance
+
+- [ ] **User lifecycle - locked users**: Extend `cslab-infrastructure.nix` for oppy
+  - Read locked users from config, set shell to `/usr/sbin/nologin`, lock password
+  - Preserve data but prevent login
+  - Required for offboarding policy compliance
+  - Extract to `lib/neusisOS.nix` when Spirit migrates
+
+- [ ] **User lifecycle - removed users**: Extend `cslab-infrastructure.nix` for oppy
+  - Archive to `/work/users/_archive/<username>_YYYY-MM-DD`
+  - Change ownership to root:imaging, delete account
+  - Required for offboarding policy compliance
+  - Extract to `lib/neusisOS.nix` when Spirit migrates
+
+- [ ] **Exact group membership enforcement**: Implement in oppy's user management
+  - Current: additive only (users keep manual group additions)
+  - Required: exact match (remove groups not in config)
+  - May need activation script or lib modification
+  - Prevents privilege creep, enforces security policy
+
+### Medium Priority - Operational Features
+
+- [ ] **Scratch cleanup**: Implement and enable 90-day retention
+  - Write `scratch-cleanup.nu` script
+  - Uncomment timer in `cslab-monitoring.nix:68-88`
+  - Test with dry-run, deploy to production
+
+- [ ] **Emergency account safeguards**: Prevent managing critical accounts
+  - Add safety check in neusisOS lib
+  - Fail build if `exx` or `root` in user lists
+  - Prevents accidental lockout
+
+### Future Considerations
+
+- [ ] Extract oppy-specific modules to `modules/nixos/cslab-*` when Spirit migrates
+- [ ] Evaluate if private user groups needed (currently imaging is primary)
+- [ ] Consider dataset registry validation script integration
+
+**Tracking**: Mark items complete by adding ✅ and moving details to dated entry below.
+
+---
+
 ## 2025-10-04 - CSLab Infrastructure Planning
 
 **Goal**: Plan NixOS implementation of lab policies (user management, directory structure, monitoring)
