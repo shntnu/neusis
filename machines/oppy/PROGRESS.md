@@ -60,10 +60,10 @@
 ### High Priority - Security & Compliance
 
 - [x] **Security auditing - group membership**: Implemented in `cslab-monitoring.nix` ✅
-  - ✅ Weekly checks for unauthorized group memberships (Wed 9 AM)
+  - ✅ Weekly checks for unauthorized sudo (regulars with wheel group)
+  - ✅ Weekly checks for missing sudo (admins without wheel group)
   - ✅ Log violations to `/var/log/lab-scripts/group-violations.log`
   - ✅ Slack alerts for group membership violations
-  - ⏳ TODO: Detect undeclared users in imaging group (separate check)
   - Completed: 2025-10-05
 
 - [x] **Exact group membership enforcement**: NixOS handles this natively ✅
