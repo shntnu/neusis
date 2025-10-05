@@ -28,6 +28,10 @@
     # vm stuff
     ./vm.nix
 
+    # cslab infrastructure and monitoring
+    ./cslab-infrastructure.nix
+    ./cslab-monitoring.nix
+
     #  common config
     ../common/networking.nix
     ../common/gpu/nvidia_dc.nix
