@@ -191,14 +191,8 @@
             type = "zfs_fs";
             options = {
               mountpoint = "/work/scratch";
-              quota = "10T";                     # Limit scratch space
-              # NO snapshots for temp data - must explicitly disable all types
-              "com.sun:auto-snapshot" = "false";
-              "com.sun:auto-snapshot:frequent" = "false";
-              "com.sun:auto-snapshot:hourly" = "false";
-              "com.sun:auto-snapshot:daily" = "false";
-              "com.sun:auto-snapshot:weekly" = "false";
-              "com.sun:auto-snapshot:monthly" = "false";
+              quota = "10T";                    # Limit scratch space
+              "com.sun:auto-snapshot" = "false"; # NO snapshots for temp data
               sync = "disabled";                 # Max performance, data is temporary
               compression = "lz4";               # Fast compression
               recordsize = "1M";                 # Large records for big files
