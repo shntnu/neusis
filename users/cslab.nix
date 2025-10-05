@@ -33,6 +33,22 @@
       };
     }
     {
+      username = "shsingh";
+      fullName = "Shantanu";
+      shell = pkgs.zsh;
+      sshKeys = [
+        ../homes/shsingh/id_ed25519.pub
+      ];
+      homeModules = {
+        oppy = [
+          ../homes/shsingh/machines/oppy.nix
+        ];
+      };
+    }
+  ];
+
+  regulars = [
+    {
       username = "ngogober";
       fullName = "Nodar";
       shell = pkgs.bash;
@@ -55,19 +71,6 @@
       homeModules = {
         oppy = [
           ../homes/spathak/machines/oppy.nix
-        ];
-      };
-    }
-    {
-      username = "shsingh";
-      fullName = "Shantanu";
-      shell = pkgs.zsh;
-      sshKeys = [
-        ../homes/shsingh/id_ed25519.pub
-      ];
-      homeModules = {
-        oppy = [
-          ../homes/shsingh/machines/oppy.nix
         ];
       };
     }
@@ -111,8 +114,6 @@
       };
     }
   ];
-
-  regulars = [ ];
   guests = [ ];
 
 }
