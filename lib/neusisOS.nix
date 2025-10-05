@@ -13,7 +13,7 @@ rec {
   showTopArgs = args;
 
   # Concatenate all user types into a single list
-  concatAllUsers = userConfig: with userConfig; admins ++ regulars ++ guests;
+  concatAllUsers = userConfig: with userConfig; admins ++ regulars ++ (userConfig.locked or []) ++ guests;
 
   # Merge all top level user configs into a single user config
   mergeUserConfigs =
@@ -22,11 +22,13 @@ rec {
       (acc: userConfig: {
         admins = acc.admins ++ userConfig.admins;
         regulars = acc.regulars ++ userConfig.regulars;
+        locked = acc.locked ++ (userConfig.locked or []);
         guests = acc.guests ++ userConfig.guests;
       })
       {
         admins = [ ];
         regulars = [ ];
+        locked = [ ];
         guests = [ ];
       }
       userConfigList;
@@ -113,6 +115,27 @@ rec {
       }
     );
 
+  # Create a locked user - account exists but cannot login, data preserved
+  mkLocked =
+    lockedConfig:
+    (
+      { config, pkgs, ... }:
+      {
+        users.users.${lockedConfig.username} = {
+          isNormalUser = true;
+          shell = "${pkgs.shadow}/bin/nologin";  # Prevent login
+          hashedPassword = "!";  # Locked password (cannot authenticate)
+          description = lockedConfig.fullName;
+          extraGroups = [
+            # Minimal groups - removed from privileged access
+            "input"
+          ];
+          openssh.authorizedKeys.keyFiles = lockedConfig.sshKeys;
+        };
+
+      }
+    );
+
   # Dynamically create all user types based on configuration
   mkDynamicUsers =
     {
@@ -125,6 +148,8 @@ rec {
       admins = builtins.map mkAdmin userConfig.admins;
       # Create regular user accounts
       regulars = builtins.map mkRegular userConfig.regulars;
+      # Create locked accounts
+      locked = builtins.map mkLocked (userConfig.locked or []);
       # Create guest accounts
       guests = builtins.map mkGuest userConfig.guests;
 
@@ -133,7 +158,7 @@ rec {
         builtins.map (user: mkHomeManagerUser machineName user) (concatAllUsers userConfig)
       );
     in
-    admins ++ regulars ++ guests ++ homeManagerUsers;
+    admins ++ regulars ++ locked ++ guests ++ homeManagerUsers;
 
   # Main function to create a NixOS system configuration with user management
   mkNeusisOS =

@@ -359,7 +359,7 @@ for user in "${ADMINS[@]}"; do
 done
 
 # Regulars should NOT have wheel group
-REGULARS=(ngogober spathak jewald rshen jfredinh)
+REGULARS=(spathak jewald rshen jfredinh)
 for user in "${REGULARS[@]}"; do
     if id "$user" &>/dev/null; then
         if groups "$user" | grep -q wheel; then
@@ -373,9 +373,56 @@ for user in "${REGULARS[@]}"; do
 done
 
 # ============================================================
-# Test 11: Group Membership Monitoring
+# Test 11: Locked User Accounts
 # ============================================================
-section "Test 11: Group Membership Monitoring"
+section "Test 11: Locked User Accounts"
+
+# Test locked users (accounts that exist but cannot login)
+LOCKED_USERS=(ngogober)
+for user in "${LOCKED_USERS[@]}"; do
+    if id "$user" &>/dev/null; then
+        pass "Locked user $user exists"
+
+        # Check shell is nologin
+        USER_SHELL=$(getent passwd "$user" | cut -d: -f7)
+        if [[ "$USER_SHELL" == *"nologin"* ]]; then
+            pass "  User $user has nologin shell: $USER_SHELL"
+        else
+            fail "  User $user has wrong shell: $USER_SHELL (expected nologin)"
+        fi
+
+        # Check password status (nologin shell is what prevents login, password is secondary)
+        SHADOW_FIELD=$(sudo grep "^$user:" /etc/shadow 2>/dev/null | cut -d: -f2)
+        if [[ "$SHADOW_FIELD" == "!" ]] || [[ "$SHADOW_FIELD" == "*" ]]; then
+            pass "  User $user has locked password"
+        elif [[ "$SHADOW_FIELD" == "\$"* ]]; then
+            warn "  User $user has hashed password (login blocked by nologin shell)"
+        else
+            warn "  Could not verify password status for $user"
+        fi
+
+        # Check still in imaging group (for data access)
+        if groups "$user" | grep -q imaging; then
+            pass "  User $user is in imaging group (data accessible to admins)"
+        else
+            fail "  User $user is NOT in imaging group"
+        fi
+
+        # Check NOT in wheel group
+        if groups "$user" | grep -q wheel; then
+            fail "  Locked user $user still has sudo access (wheel group)"
+        else
+            pass "  User $user does NOT have sudo access (correct)"
+        fi
+    else
+        warn "Locked user $user does not exist (may not be deployed yet)"
+    fi
+done
+
+# ============================================================
+# Test 12: Group Membership Monitoring
+# ============================================================
+section "Test 12: Group Membership Monitoring"
 
 if systemctl list-timers cslab-check-groups.timer &>/dev/null; then
     pass "cslab-check-groups.timer exists"
@@ -420,9 +467,9 @@ else
 fi
 
 # ============================================================
-# Test 12: Manual Service Execution
+# Test 13: Manual Service Execution
 # ============================================================
-section "Test 12: Manual Service Execution (Optional)"
+section "Test 13: Manual Service Execution (Optional)"
 
 echo "To manually test the quota check service, run:"
 echo "  sudo systemctl start cslab-check-quotas.service"

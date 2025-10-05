@@ -19,16 +19,42 @@ let
   # (reading config.users.users while defining users.users causes infinite recursion)
   cslabUserConfig = import ../../users/cslab.nix { inherit pkgs; };
 
-  # Extract usernames from all user categories (admins, regulars, guests)
+  # Extract usernames from all user categories (admins, regulars, locked, guests)
   allCslabUsers =
     (builtins.map (u: u.username) cslabUserConfig.admins) ++
     (builtins.map (u: u.username) cslabUserConfig.regulars) ++
+    (builtins.map (u: u.username) (cslabUserConfig.locked or [])) ++
     (builtins.map (u: u.username) cslabUserConfig.guests);
 
   cslabUsers = allCslabUsers;
 
+  # Emergency accounts that must NEVER be in user configuration
+  emergencyAccounts = [ "exx" "root" ];
+
+  # Check if any emergency accounts are in the configuration
+  emergencyAccountViolations = builtins.filter
+    (account: builtins.elem account allCslabUsers)
+    emergencyAccounts;
+
 in
 {
+  # Build-time safety check: Fail if emergency accounts in config
+  assertions = [
+    {
+      assertion = emergencyAccountViolations == [];
+      message = ''
+        CRITICAL BUILD FAILURE: Emergency accounts detected in users/cslab.nix
+
+        Accounts found: ${builtins.toString emergencyAccountViolations}
+
+        The following accounts must NEVER be managed by this configuration:
+        - exx: Emergency admin account (prevents lockout)
+        - root: System root account (security critical)
+
+        Action required: Remove these accounts from users/cslab.nix immediately.
+      '';
+    }
+  ];
   # Create imaging group for all lab members
   users.groups.imaging = {
     gid = 1000; # Consistent GID across reinstalls
