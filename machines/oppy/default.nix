@@ -40,7 +40,6 @@
     ../common/nix.nix
     ../common/printing.nix
     ../common/zfs.nix
-    ../common/comin.nix
 
   ];
 
