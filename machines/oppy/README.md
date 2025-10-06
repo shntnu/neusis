@@ -46,10 +46,11 @@ machines/oppy/
 ├── deployment/
 │   ├── disko.nix                  # Disk partitioning & ZFS pools:
 │   │                              #   - Boot: Samsung 990 PRO 4TB (ssd00)
-│   │                              #   - zstore03: 4x Intel 3.2TB RAID-Z (~12TB, /datastore03)
-│   │                              #   - zstore16: 3x Kioxia 15.3TB RAID-Z (~42TB, /datastore16)
-│   │                              #   - Config: lz4 compression, dedup enabled
+│   │                              #   - work: 3x Kioxia 15TB stripe (~42TB usable)
+│   │                              #   - Datasets: /work/{datasets,users,scratch,tools,users/_archive}
+│   │                              #   - Config: lz4 compression, dedup OFF, per-dataset snapshot policies
 │   │                              #   WARNING: Changes NOT applied on rebuild, only during install
+│   │                              #   See ../../imaging-server-maintenance/assets/EXPERIMENTS_DISKO_MIGRATION.md
 │   └── vm.nix                     # VM testing config (vmVariantWithDisko)
 │                                  #   Usage: TESTVM_SECRETS=$(pwd)/scratch nix run .#nixosConfigurations.oppy.config.system.build.vmWithDisko
 │                                  #   Mounts secrets from host via virtio for testing
@@ -79,8 +80,7 @@ Oppy imports 12 shared modules used across all neusis machines:
 ├── nosleep.nix             # Disable sleep/suspend/hibernate (server stays on)
 ├── nix.nix                 # Flakes enabled, weekly GC (15d retention), auto-optimize
 ├── printing.nix            # CUPS printing service
-├── zfs.nix                 # ZFS kernel modules, auto-scrub, trim, NFS server
-└── comin.nix               # Auto-updates: watches leoank/neusis prod branch, rebuilds on push
+└── zfs.nix                 # ZFS kernel modules, auto-scrub, trim, NFS server
 ```
 
 ## Related Configuration
