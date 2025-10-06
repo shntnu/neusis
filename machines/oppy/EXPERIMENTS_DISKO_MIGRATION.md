@@ -565,3 +565,91 @@ zfs list -o name,mountpoint,quota  # All datasets with correct quotas
 ```
 
 ---
+
+## 2025-10-05 - Comin Auto-Deployment Service Broke Production System
+
+**Goal**: Understand why the imaging group disappeared 53 minutes after successful deployment
+
+**What Happened**:
+
+Timeline:
+- 20:15 - nixos-anywhere deployment completed successfully
+- 20:17 - Manual verification showed all infrastructure working (imaging group, user directories, all tests passing)
+- 20:18-20:22 - **Comin service automatically pulled and deployed configuration from GitHub**
+- 20:22 - Comin removed imaging group, breaking entire cslab infrastructure
+- 21:10 - User discovered all tests failing, imaging group missing
+
+**Root Cause**:
+
+Comin (automatic deployment service) was configured to poll `leoank/neusis` repository every 60 seconds and automatically deploy changes:
+
+```yaml
+# /var/lib/comin/comin.yaml
+remotes:
+- name: origin
+  url: https://github.com/leoank/neusis.git
+  branches:
+    main:
+      name: prod
+  poller:
+    period: 60
+```
+
+**The Problem**:
+1. User's fixes were pushed to `shntnu/neusis` (their fork)
+2. Comin was watching `leoank/neusis` (upstream repo)
+3. `leoank/neusis` didn't have the latest cslab infrastructure changes
+4. Comin automatically deployed the older configuration
+5. The older config removed the imaging group that was just created
+
+**Evidence from journalctl**:
+
+```
+Oct 05 20:22:25 oppy comin[129149]: removing group 'imaging'
+Oct 05 20:22:25 oppy comin[129063]: Activation script snippet 'importzfsandchmod' failed (1)
+```
+
+**Fix Applied**:
+
+Removed comin from oppy configuration to prevent automatic deployments:
+
+```bash
+# machines/oppy/default.nix
+# Removed line: ../common/comin.nix
+```
+
+**Commit**: `4015b15` - fix(oppy): disable comin auto-deployment service
+
+**Lessons Learned**:
+
+1. **Comin is dangerous without coordination** - Automatic deployments can break working systems if repo forks are out of sync
+2. **Always check for auto-update services** - Services like comin, system.autoUpgrade can silently change configurations
+3. **Successful manual verification isn't enough** - Need to monitor for hours to catch scheduled/automatic changes
+4. **Fork coordination required** - If using comin with a fork, ensure all changes are synced to the watched repo
+
+**Post-Fix Verification**:
+
+```bash
+# Verified no other auto-deployment services on oppy:
+# ✅ No system.autoUpgrade
+# ✅ No other nixos-rebuild automation
+# ✅ Only safe automatic services: zfs.autoScrub, nix-gc, nix-optimise
+```
+
+Applied fix via local nixos-rebuild:
+```bash
+ssh oppy
+cd ~/neusis
+git clone https://github.com/shntnu/neusis.git  # User's fork with fixes
+sudo nixos-rebuild switch --flake .#oppy
+```
+
+**Status**: ✅ Complete - Comin disabled, system stable
+
+**Next Steps**:
+1. ✅ Comin removed from oppy
+2. Document this in deployment procedures
+3. Consider if comin should be disabled on other machines (karkinos also has it)
+4. If using comin in future, ensure fork sync or point directly to canonical repo
+
+---
