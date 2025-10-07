@@ -11,23 +11,24 @@
       let
         pkgs = import nixpkgs {
           inherit system;
-          config.allowUnfree = true;
+          config = {
+            allowUnfree = true;
+            nvidia.acceptLicense = true;
+          };
         };
       in
       {
         devShells.default = pkgs.mkShell {
           packages = with pkgs; [
             pixi
-            linuxPackages.nvidia_x11
           ];
 
           shellHook = ''
             echo "Pixi GPU Development Environment"
           '';
 
-          LD_LIBRARY_PATH = "${pkgs.lib.makeLibraryPath [
-            pkgs.linuxPackages.nvidia_x11
-          ]}";
+          # Use system NVIDIA driver libraries to avoid version mismatch
+          LD_LIBRARY_PATH = "/run/opengl-driver/lib";
         };
       });
 }
