@@ -12,6 +12,7 @@
     ../../common/dev/kalam.nix
     ../../common/themes
     ../../common/browsers/brave.nix
+    ../configs/tmux.nix
     (import ../../common/dev/editors.nix {
       inherit pkgs config inputs;
       enableNvim = false;

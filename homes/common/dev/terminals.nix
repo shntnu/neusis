@@ -3,6 +3,9 @@
   pkgs,
   ...
 }:
+let
+  hide_window_kitty = if pkgs.stdenv.isDarwin then "titlebar-only" else "yes";
+in
 {
   home.packages = [
     pkgs.wezterm
@@ -31,7 +34,7 @@
     kitty = {
       enable = true;
       settings = {
-        hide_window_decorations = "true";
+        hide_window_decorations = hide_window_kitty;
         draw_minimal_borders = "yes";
       };
 

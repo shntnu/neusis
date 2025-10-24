@@ -41,4 +41,5 @@ with pkgs;
   pkgs.master.whatsapp-for-mac
   spotify
   obsidian
+  blender
 ]

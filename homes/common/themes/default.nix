@@ -12,6 +12,7 @@
       gnome.enable = false;
       gtk.enable = false;
       wezterm.enable = true;
+      tmux.enable = false;
     };
 
     # Edited catppuccin
