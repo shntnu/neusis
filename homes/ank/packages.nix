@@ -26,7 +26,7 @@ with pkgs;
   procs
   bandwhich
   outputs.packages.${pkgs.system}.claude-code
-  opencode
+  pkgs.master.opencode
   bitwarden-desktop
   pnpm
 ]

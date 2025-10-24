@@ -5,6 +5,7 @@
 }:
 let
   hide_window_kitty = if pkgs.stdenv.isDarwin then "titlebar-only" else "yes";
+  atuin_enable = if pkgs.stdenv.isDarwin then true else false;
 in
 {
   home.packages = [
@@ -13,7 +14,7 @@ in
   ];
   programs = {
     atuin = {
-      enable = false;
+      enable = atuin_enable;
       enableZshIntegration = true;
       daemon.enable = true;
       settings = {

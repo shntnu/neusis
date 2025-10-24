@@ -13,6 +13,7 @@
     ../../common/themes
     ../../common/browsers/brave.nix
     ../configs/tmux.nix
+    ../configs/opencode.nix
     (import ../../common/dev/editors.nix {
       inherit pkgs config inputs;
       enableNvim = false;

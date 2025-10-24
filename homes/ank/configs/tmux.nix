@@ -21,6 +21,8 @@
           bind-key j select-pane -D
           bind-key k select-pane -U
           bind-key l select-pane -R
+          unbind -T root C-\\
+          unbind -T copy-mode-vi C-\\
         '';
       }
       # {
