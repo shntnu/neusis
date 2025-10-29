@@ -76,10 +76,10 @@ in
     "d /work 0750 root imaging - -"
 
     # Subdirectories for data organization (see policies/data-storage.md)
-    "d /work/datasets 0750 root imaging - -"      # Reference data (read-only)
+    "d /work/datasets 0770 root imaging - -"      # Reference data (group writable for REGISTRY.yaml)
     "d /work/users 0750 root imaging - -"         # Project workspaces
-    "d /work/scratch 0750 root imaging - -"       # Temporary workspace (90-day retention)
-    "d /work/tools 0750 root imaging - -"         # Shared software
+    "d /work/scratch 0770 root imaging - -"       # Temporary workspace (group writable)
+    "d /work/tools 0770 root imaging - -"         # Shared software (group writable)
     "d /work/users/_archive 0750 root imaging - -" # Archived user data
   ];
 
@@ -97,8 +97,9 @@ in
     script = ''
       # Fix ZFS dataset mount point permissions (disko creates them with defaults)
       # ZFS mounts override systemd.tmpfiles, so we fix them here after mounting
-      chown root:imaging /work/datasets /work/users/_archive
-      chmod 750 /work/datasets /work/users/_archive
+      chown root:imaging /work/datasets /work/tools /work/users/_archive
+      chmod 770 /work/datasets /work/tools
+      chmod 750 /work/users/_archive
 
       # Create user-specific directories
       ${lib.concatMapStringsSep "\n" (user: ''
