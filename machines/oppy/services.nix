@@ -16,7 +16,7 @@
   # Enable ZFS auto-snapshots
   services.zfs.autoSnapshot = {
     enable = true;
-    frequent = 4;   # Keep 4 snapshots (15 min intervals)k
+    frequent = 4;   # Keep 4 snapshots (15 min intervals)
     hourly = 24;    # Keep 24 snapshots
     daily = 31;     # Keep 31 snapshots
     weekly = 8;     # Keep 8 snapshots
