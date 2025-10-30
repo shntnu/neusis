@@ -5,10 +5,6 @@
     homeDirectory = "/home/amunoz";
 
     packages = with pkgs; [
-      fd
-      gawk
-      rg
-      emacs
       autoconf
       automake
       autotools-language-server
@@ -25,7 +21,9 @@
       dua # better du
       duckdb
       dust # interactive du in tust
+      emacs
       emacs-all-the-icons-fonts
+      fd
       fd # faster find
       ffmpeg # video processing needs
       fish
@@ -34,6 +32,7 @@
       fishPlugins.pure
       fontconfig # Needed for napari
       fzf # fuzzy finder
+      gawk
       git
       gnumake # Necessary for emacs' vterm
       gnumeric
@@ -77,6 +76,7 @@
       podman # for container needs
       ps # processes
       qrtool # encode and decode qr codes
+      rg
       ripgrep # faster grep in rust
       rsync # sync data
       ruff # python
