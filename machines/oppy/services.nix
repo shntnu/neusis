@@ -16,7 +16,7 @@
   # Enable ZFS auto-snapshots
   services.zfs.autoSnapshot = {
     enable = true;
-    frequent = 4;   # Keep 4 snapshots (15 min intervals)
+    frequent = 4;   # Keep 4 snapshots (15 min intervals)k
     hourly = 24;    # Keep 24 snapshots
     daily = 31;     # Keep 31 snapshots
     weekly = 8;     # Keep 8 snapshots
@@ -31,4 +31,6 @@
   services.udev.extraRules = ''
     KERNEL=="ipmi*", MODE="0660", GROUP="ipmiusers"
   '';
+
+  services.emacs.enable = true;
 }
