@@ -67,7 +67,6 @@
       parallel # GNU parallel
       pdftk
       pigz # threaded gunzip
-      pinta # Basic image editing
       podman # for container needs
       ps # processes
       qrtool # encode and decode qr codes
@@ -76,7 +75,7 @@
       ruff # python
       rustc # rust compiler
       screen # ssh in and out of a server
-      semgrep # generalistic semantic grep
+      semgrep # generalist semantic grep
       shellcheck
       shfmt
       tldr # quick explanations
