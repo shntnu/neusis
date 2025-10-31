@@ -4,6 +4,39 @@
     username = "amunoz";
     homeDirectory = "/home/amunoz";
 
+    programs.fish = {
+      enable = true;
+      plugins = [
+        # Enable a plugin (here grc for colorized command output) from nixpkgs
+        {
+          name = "pure";
+          src = pkgs.fishPlugins.pure.src;
+        }
+        {
+          name = "autopair";
+          src = pkgs.fishPlugins.autopair.src;
+        }
+        {
+          name = "fishbang";
+          src = pkgs.fishPlugins.fishbang.src;
+        }
+        {
+          name = "fish-you-should-use";
+          src = pkgs.fishPlugins.fish-you-should-use.src;
+        }
+        {
+          name = "sponge";
+          src = pkgs.fishPlugins.sponge.src;
+        }
+        {
+          name = "async-prompt";
+          src = pkgs.fishPlugins.async-prompt.src;
+        }
+      ];
+      interactiveShellInit = ''
+        set --universal pure_enable_nixdevshell true
+      '';
+    };
     packages = with pkgs; [
       autoconf
       automake
@@ -24,10 +57,6 @@
       emacs-all-the-icons-fonts
       fd # faster find
       ffmpeg # video processing needs
-      fish
-      fishPlugins.async-prompt
-      fishPlugins.autopair
-      fishPlugins.pure
       fontconfig # Needed for napari
       fzf # fuzzy finder
       gawk # Main awk
