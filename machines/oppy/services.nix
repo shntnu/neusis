@@ -31,4 +31,6 @@
   services.udev.extraRules = ''
     KERNEL=="ipmi*", MODE="0660", GROUP="ipmiusers"
   '';
+
+  services.emacs.enable = true;
 }
