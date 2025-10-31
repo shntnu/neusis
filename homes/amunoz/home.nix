@@ -30,7 +30,7 @@
       fishPlugins.pure
       fontconfig # Needed for napari
       fzf # fuzzy finder
-      gawk
+      gawk # Main awk
       git
       gnumake # Necessary for emacs' vterm
       gnumeric
@@ -47,7 +47,6 @@
       inkscape # Graphics editing
       jq # process json
       killall # kill all the processes by name
-      kitty
       lemminx # xml
       libtool # Necessary for emacs' vterm
       lsof # Files and their processes
@@ -57,7 +56,6 @@
       marksman # markdown
       mawk # faster awk
       mermaid-cli # text to diagrams
-      mpv # video player
       nil # Nix
       nix-index # locate packages that provide a certain file
       nix-output-monitor
@@ -81,17 +79,14 @@
       semgrep # generalistic semantic grep
       shellcheck
       shfmt
-      shiori # download whole html websites
       tldr # quick explanations
       tree
       unzip # extract zips
       uv
-      wezterm
       wget # fetch stuff
       xclip # clipboard manipulation tool
       yaml-language-server # yaml
       zip
-      zotero
     ];
   };
 }
