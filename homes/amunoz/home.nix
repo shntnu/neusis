@@ -7,7 +7,6 @@
     packages = with pkgs; [
       autoconf
       automake
-      autotools-language-server
       autotools-language-server # make
       bc # calculator
       btop-cuda # nicer top
@@ -23,7 +22,6 @@
       dust # interactive du in tust
       emacs
       emacs-all-the-icons-fonts
-      fd
       fd # faster find
       ffmpeg # video processing needs
       fish
@@ -54,11 +52,10 @@
       libtool # Necessary for emacs' vterm
       lsof # Files and their processes
       ltex-ls # language tool LSP for latex and org-mode
-      ltex-ls # latex/org-mode
       luajitPackages.fennel # lua in fennel
       magic-wormhole # easy sharing
       marksman # markdown
-      mawk
+      mawk # faster awk
       mermaid-cli # text to diagrams
       mpv # video player
       nil # Nix
@@ -76,7 +73,6 @@
       podman # for container needs
       ps # processes
       qrtool # encode and decode qr codes
-      rg
       ripgrep # faster grep in rust
       rsync # sync data
       ruff # python
@@ -85,7 +81,6 @@
       semgrep # generalistic semantic grep
       shellcheck
       shfmt
-      shiori
       shiori # download whole html websites
       tldr # quick explanations
       tree
