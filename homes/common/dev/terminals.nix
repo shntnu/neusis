@@ -3,6 +3,10 @@
   pkgs,
   ...
 }:
+let
+  hide_window_kitty = if pkgs.stdenv.isDarwin then "titlebar-only" else "yes";
+  atuin_enable = if pkgs.stdenv.isDarwin then true else false;
+in
 {
   home.packages = [
     pkgs.wezterm
@@ -10,7 +14,7 @@
   ];
   programs = {
     atuin = {
-      enable = false;
+      enable = atuin_enable;
       enableZshIntegration = true;
       daemon.enable = true;
       settings = {
@@ -31,7 +35,7 @@
     kitty = {
       enable = true;
       settings = {
-        hide_window_decorations = "true";
+        hide_window_decorations = hide_window_kitty;
         draw_minimal_borders = "yes";
       };
 

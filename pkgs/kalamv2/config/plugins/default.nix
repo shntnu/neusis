@@ -1,6 +1,7 @@
 {
   imports = [
     ./ai/avante.nix
+    #./ai/opencode.nix
     ./completion/blink.nix
 
     ./debug/dap.nix
@@ -62,7 +63,7 @@
     ./util/nvim-surround.nix
     ./util/persistence.nix
     #./util/project-nvim.nix
-    #./util/snacks.nix
+    ./util/snacks.nix
     ./util/csvview.nix
   ];
 }

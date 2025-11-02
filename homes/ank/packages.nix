@@ -26,7 +26,7 @@ with pkgs;
   procs
   bandwhich
   outputs.packages.${pkgs.system}.claude-code
-  opencode
+  pkgs.master.opencode
   bitwarden-desktop
   pnpm
 ]
@@ -41,4 +41,5 @@ with pkgs;
   pkgs.master.whatsapp-for-mac
   spotify
   obsidian
+  blender
 ]
