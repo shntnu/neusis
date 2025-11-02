@@ -131,6 +131,11 @@
           dnodesize = "auto";
           normalization = "formD";
 
+          # IMPORTANT: ZFS dataset properties below are ONLY applied during installation.
+          # They do NOT update on nixos-rebuild. To change after installation, use:
+          # sudo zfs set property=value dataset
+          # Example: sudo zfs set com.sun:auto-snapshot:daily=false work/scratch
+
           # Enable auto-snapshots by default (disable per-dataset as needed)
           "com.sun:auto-snapshot" = "true";
           "com.sun:auto-snapshot:frequent" = "true";  # Every 15 mins, keep 4
