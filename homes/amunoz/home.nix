@@ -4,39 +4,6 @@
     username = "amunoz";
     homeDirectory = "/home/amunoz";
 
-    programs.fish = {
-      enable = true;
-      plugins = [
-        # Enable a plugin (here grc for colorized command output) from nixpkgs
-        {
-          name = "pure";
-          src = pkgs.fishPlugins.pure.src;
-        }
-        {
-          name = "autopair";
-          src = pkgs.fishPlugins.autopair.src;
-        }
-        {
-          name = "fishbang";
-          src = pkgs.fishPlugins.fishbang.src;
-        }
-        {
-          name = "fish-you-should-use";
-          src = pkgs.fishPlugins.fish-you-should-use.src;
-        }
-        {
-          name = "sponge";
-          src = pkgs.fishPlugins.sponge.src;
-        }
-        {
-          name = "async-prompt";
-          src = pkgs.fishPlugins.async-prompt.src;
-        }
-      ];
-      interactiveShellInit = ''
-        set --universal pure_enable_nixdevshell true
-      '';
-    };
     packages = with pkgs; [
       autoconf
       automake
@@ -116,5 +83,39 @@
       yaml-language-server # yaml
       zip
     ];
+  };
+
+  programs.fish = {
+    enable = true;
+    plugins = [
+      # Enable a plugin (here grc for colorized command output) from nixpkgs
+      {
+        name = "pure";
+        src = pkgs.fishPlugins.pure.src;
+      }
+      {
+        name = "autopair";
+        src = pkgs.fishPlugins.autopair.src;
+      }
+      # {
+      #   name = "fishbang";
+      #   src = pkgs.fishPlugins.fishbang.src;
+      # }
+      {
+        name = "fish-you-should-use";
+        src = pkgs.fishPlugins.fish-you-should-use.src;
+      }
+      {
+        name = "sponge";
+        src = pkgs.fishPlugins.sponge.src;
+      }
+      {
+        name = "async-prompt";
+        src = pkgs.fishPlugins.async-prompt.src;
+      }
+    ];
+    interactiveShellInit = ''
+      set --universal pure_enable_nixdevshell true
+    '';
   };
 }
