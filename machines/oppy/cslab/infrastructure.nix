@@ -17,6 +17,8 @@
 let
   # Import cslab user config directly to avoid circular dependency
   # (reading config.users.users while defining users.users causes infinite recursion)
+  # See this comment thread for alternatives
+  # https://github.com/leoank/neusis/pull/36#discussion_r2490494840
   cslabUserConfig = import ../../../users/cslab.nix { inherit pkgs; };
 
   # Extract usernames from all user categories (admins, regulars, locked, guests)
