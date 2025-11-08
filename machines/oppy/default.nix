@@ -18,6 +18,7 @@
     ./system.nix
     ./packages.nix
     ./services.nix
+    ./ollama.nix
 
     # Deployment configs
     inputs.disko.nixosModules.disko
