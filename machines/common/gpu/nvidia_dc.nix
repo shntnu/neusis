@@ -7,6 +7,8 @@
 let
   package_ver = config.boot.kernelPackages.nvidiaPackages.dc_535;
 in
+# See https://github.com/broadinstitute/imaging-server-maintenance/blob/c9d89c013607ca85c8bb3bcce8cedb66f6662a7d/MAINTENANCE_LOG.md?plain=1#L673
+# for rationale on keeping dc_535 for now
 # package_ver = config.boot.kernelPackages.nvidiaPackages.mkDriver rec {
 #   version = "565.57.01";
 #   url = "https://us.download.nvidia.com/tesla/${version}/NVIDIA-Linux-x86_64-${version}.run";
@@ -38,6 +40,9 @@ in
       # Note: This enables fabricmanager service, but we disable it below (see systemd.services)
       datacenter.enable = true;
       powerManagement.enable = false;
+      # Keeping this closed for now until we upgrade to >v560 (and even then, )
+      # https://nixos.org/manual/nixos/stable/options.html#opt-hardware.nvidia.open
+
       open = false;
       nvidiaSettings = true;
       nvidiaPersistenced = true;
