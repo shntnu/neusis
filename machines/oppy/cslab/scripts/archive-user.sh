@@ -26,8 +26,8 @@ ARCHIVE_DATE=$(date +%Y-%m-%d)
 ARCHIVE_PATH="/work/users/_archive/${USERNAME}_${ARCHIVE_DATE}"
 
 # Safety checks
-if [ "$USERNAME" = "exx" ] || [ "$USERNAME" = "root" ]; then
-    echo "ERROR: Cannot archive emergency account: $USERNAME"
+if [ "$USERNAME" = "root" ]; then
+    echo "ERROR: Cannot archive system account: $USERNAME"
     exit 1
 fi
 

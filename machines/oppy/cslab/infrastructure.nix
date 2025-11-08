@@ -30,33 +30,25 @@ let
 
   cslabUsers = allCslabUsers;
 
-  # Emergency accounts that must NEVER be in user configuration
-  emergencyAccounts = [ "exx" "root" ];
-
-  # Check if any emergency accounts are in the configuration
-  emergencyAccountViolations = builtins.filter
-    (account: builtins.elem account allCslabUsers)
-    emergencyAccounts;
+  # Ensure root account is never in user configuration
+  # (root is a system account that must not be redefined)
+  rootInConfig = builtins.elem "root" allCslabUsers;
 
   # Package test script for system PATH
   testScript = pkgs.writeScriptBin "test-cslab-infrastructure.sh" (builtins.readFile ./scripts/test-cslab-infrastructure.sh);
 
 in
 {
-  # Build-time safety check: Fail if emergency accounts in config
+  # Build-time safety check: Fail if root account in config
   assertions = [
     {
-      assertion = emergencyAccountViolations == [];
+      assertion = !rootInConfig;
       message = ''
-        CRITICAL BUILD FAILURE: Emergency accounts detected in users/cslab.nix
+        CRITICAL BUILD FAILURE: 'root' account detected in users/cslab.nix
 
-        Accounts found: ${builtins.toString emergencyAccountViolations}
+        The root account is a system account that must not be redefined.
 
-        The following accounts must NEVER be managed by this configuration:
-        - exx: Emergency admin account (prevents lockout)
-        - root: System root account (security critical)
-
-        Action required: Remove these accounts from users/cslab.nix immediately.
+        Action required: Remove 'root' from users/cslab.nix immediately.
       '';
     }
   ];
