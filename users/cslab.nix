@@ -33,18 +33,21 @@
       };
     }
     {
-      username = "ngogober";
-      fullName = "Nodar";
-      shell = pkgs.bash;
+      username = "shsingh";
+      fullName = "Shantanu";
+      shell = pkgs.zsh;
       sshKeys = [
-        ../homes/ngogober/id_ed25519.pub
+        ../homes/shsingh/id_ed25519.pub
       ];
       homeModules = {
         oppy = [
-          ../homes/ngogober/machines/oppy.nix
+          ../homes/shsingh/machines/oppy.nix
         ];
       };
     }
+  ];
+
+  regulars = [
     {
       username = "spathak";
       fullName = "Suraj";
@@ -55,19 +58,6 @@
       homeModules = {
         oppy = [
           ../homes/spathak/machines/oppy.nix
-        ];
-      };
-    }
-    {
-      username = "shsingh";
-      fullName = "Shantanu";
-      shell = pkgs.zsh;
-      sshKeys = [
-        ../homes/shsingh/id_ed25519.pub
-      ];
-      homeModules = {
-        oppy = [
-          ../homes/shsingh/machines/oppy.nix
         ];
       };
     }
@@ -112,7 +102,23 @@
     }
   ];
 
-  regulars = [ ];
+  # Locked users - accounts exist but cannot login, data preserved
+  locked = [
+    {
+      username = "ngogober";
+      fullName = "Nodar";
+      shell = pkgs.bash;  # Will be overridden to nologin by mkLocked
+      sshKeys = [
+        ../homes/ngogober/id_ed25519.pub
+      ];
+      homeModules = {
+        oppy = [
+          ../homes/ngogober/machines/oppy.nix
+        ];
+      };
+    }
+  ];
+
   guests = [ ];
 
 }

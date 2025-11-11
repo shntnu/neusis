@@ -37,6 +37,11 @@ in
     shantanu
     oppy
   ];
+  "oppy/slack_webhook.age".publicKeys = [
+    ank
+    shantanu
+    oppy
+  ];
 
   # # ank
   # "ank/ghauth.age".publicKeys = [ ank ];

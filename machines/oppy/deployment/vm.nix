@@ -11,9 +11,9 @@
     neusis.tailscale = lib.mkForce {
       isPersistent = true;
       hostName = "diskoTest${config.networking.hostName}";
-      persistent_authkey_file = ../../secrets/common/persistent_cslab_mesh.age;
-      clientIdFile = ../../secrets/common/tsclient.age;
-      clientSecretFile = ../../secrets/common/tssecret.age;
+      persistent_authkey_file = ../../../secrets/common/persistent_cslab_mesh.age;
+      clientIdFile = ../../../secrets/common/tsclient.age;
+      clientSecretFile = ../../../secrets/common/tssecret.age;
       disableKeyExpiry = true;
       tailnetOrg = "shntnu.github";
     };

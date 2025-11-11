@@ -22,7 +22,7 @@ For Darwin (macOS) machines:
 darwin-rebuild switch --flake .#darwin001
 ```
 
-Available machines: `oppy`, `karkinos`, `chiral` (Linux), `darwin001` (macOS)
+Available machines: `oppy`, `karkinos`, `chiral`(Linux), `rogue` , `darwin001` (macOS)
 
 ### Development Shell
 
@@ -88,7 +88,6 @@ Each machine follows this structure:
 Custom packages in `pkgs/`:
 
 - `kalam`/`kalampy`/`kalamv2`: Neovim distributions
-- `claude-code`: Claude Code CLI
 - Hardware-specific packages (Intel FPGA, Xilinx, NVIDIA vGPU)
 
 ### Secrets Management
@@ -104,8 +103,23 @@ Custom packages in `pkgs/`:
 - System configurations inherit from common modules in `machines/common/`
 - Templates in `templates/` for new project types
 
+## User Types and Management
+
+The system supports four user types defined in `lib/neusisOS.nix`:
+
+1. **Admins** (`mkAdmin`): Full privileges with wheel group, networkmanager, libvirtd, docker, podman access
+2. **Regulars** (`mkRegular`): Standard users with libvirtd, docker, podman access (no wheel/sudo)
+3. **Locked** (`mkLocked`): Account exists with data preserved but cannot login (shell set to nologin, password locked with "!")
+4. **Guests** (`mkGuest`): Minimal privileges with basic input, podman, docker access
+
+User definitions are merged from `users/*.nix` files via `mergeUserConfigs` in `users/all.nix`. Each user config specifies:
+- `username`, `fullName`, `shell`
+- `sshKeys`: List of SSH public key file paths
+- `homeModules.<machine>`: Per-machine home-manager configuration paths
+
 ## Contributing Guidelines
 
 - **No surprises**: Features must be opt-in via individual `homes/<user>/home.nix`, not forced through `homes/common/`
 - **Personal boundaries**: SSH agents, shells, and user tools belong in `homes/<user>/` configs only
 - **Cross-platform**: Don't hardcode architectures in `flake.nix` - use `machines/registry.nix` for dynamic package sets
+- **User management**: Add new users to `users/*.nix` files, never hardcode in machine configs

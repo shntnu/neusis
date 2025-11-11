@@ -12,23 +12,24 @@
 
     ./hardware-configuration.nix
 
-    # boot config
+    # System configuration
     ./boot.nix
-
-    # Disko configuration
-    inputs.disko.nixosModules.disko
-    ./disko.nix
-
-    # oppy networking config
     ./network.nix
+    ./system.nix
+    ./packages.nix
+    ./services.nix
+    ./ollama.nix
 
-    # oppy misc
-    ./misc.nix
+    # Deployment configs
+    inputs.disko.nixosModules.disko
+    ./deployment/disko.nix
+    ./deployment/vm.nix
 
-    # vm stuff
-    ./vm.nix
+    # CSLab infrastructure and monitoring
+    ./cslab/infrastructure.nix
+    ./cslab/monitoring.nix
 
-    #  common config
+    # Common config
     ../common/networking.nix
     ../common/gpu/nvidia_dc.nix
     ../common/substituters.nix
@@ -40,7 +41,6 @@
     ../common/nix.nix
     ../common/printing.nix
     ../common/zfs.nix
-    ../common/comin.nix
 
   ];
 
