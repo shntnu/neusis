@@ -92,7 +92,11 @@ in
       pre-commit
       
       # AI tools
-      pkgs-unstable.claude-code  # Claude Code CLI (latest from unstable)
+      # claude-code: Managed imperatively for frequent updates (sometimes hourly releases)
+      #   Install: nix profile install github:sadjow/claude-code-nix
+      #   Update:  nix profile upgrade claude-code-nix --refresh
+      #   Why:     Avoids constant system rebuilds for fast-updating tool
+      #   Rollback: nix profile rollback (if issues with new version)
     ];
   };
 
