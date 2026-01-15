@@ -100,6 +100,19 @@
         ];
       };
     }
+    {
+      username = "jrietdij";
+      fullName = "Jonne Rietdijk";
+      shell = pkgs.zsh;
+      sshKeys = [
+        ../homes/jrietdij/id_ed25519.pub
+      ];
+      homeModules = {
+        oppy = [
+          ../homes/jrietdij/machines/oppy.nix
+        ];
+      };
+    }
   ];
 
   # Locked users - accounts exist but cannot login, data preserved
