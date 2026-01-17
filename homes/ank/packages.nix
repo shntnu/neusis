@@ -37,8 +37,9 @@ with pkgs;
   nixos-generators
 ]
 ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [
-  pkgs.master.signal-desktop-bin
-  pkgs.master.whatsapp-for-mac
+  # goes out of date very quickly
+  # pkgs.master.signal-desktop-bin
+  # pkgs.master.whatsapp-for-mac
   spotify
   obsidian
   blender

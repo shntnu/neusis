@@ -94,6 +94,7 @@
       "Microsoft Outlook" = 985367838;
     };
     brews = [
+      "kanata"
       "felixkratz/formulae/svim"
       "dimentium/autoraise/autoraise"
     ];
@@ -101,6 +102,10 @@
       builtins.attrNames config.nix-homebrew.taps
     );
     casks = [
+      "signal"
+      "whatsapp"
+      "karabiner-elements"
+      "keycastr"
       "fiji"
       "hammerspoon"
       "deskflow"
