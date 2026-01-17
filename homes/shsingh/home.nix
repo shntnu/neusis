@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, ... }:
+{ config, pkgs, lib, inputs, outputs, ... }:
 
 let 
   name = "Shantanu Singh";
@@ -76,6 +76,7 @@ in
       
       # Shell enhancements
       atuin  # Better shell history
+      tmux   # Terminal multiplexer
       
       # Misc utilities
       tldr  # Simplified man pages
@@ -97,6 +98,9 @@ in
       #   Update:  nix profile upgrade claude-code-nix --refresh
       #   Why:     Avoids constant system rebuilds for fast-updating tool
       #   Rollback: nix profile rollback (if issues with new version)
+    ] ++ [
+      # Custom packages from pkgs/
+      outputs.packages.${pkgs.system}.specstory  # CLI wrapper for claude-code conversation saving
     ];
   };
 
