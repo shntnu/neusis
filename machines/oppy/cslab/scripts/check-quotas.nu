@@ -127,22 +127,37 @@ def log [level: string, message: string] {
     }
 }
 
-# Get home directory usage for a user
+# Get home directory usage for a user (excludes cache directories)
 def get-user-usage [username: string] {
     let cfg = (config)
     let home_path = $"($cfg.home_base)/($username)"
-    
+
     if not ($home_path | path exists) {
         return null
     }
-    
-    let size_bytes = (du $home_path | get physical | first)
-    
+
+    # Use GNU du with --exclude to skip cache directories
+    # Excludes: .pixi/cache, .cache, .conda/pkgs (all package manager caches)
+    let du_result = (^du -sb
+        --exclude=".pixi/cache"
+        --exclude=".cache"
+        --exclude=".conda/pkgs"
+        $home_path
+        | complete)
+
+    if $du_result.exit_code != 0 {
+        log "WARNING" $"Failed to calculate usage for ($username): ($du_result.stderr)"
+        return null
+    }
+
+    let size_bytes = ($du_result.stdout | lines | first | split row "\t" | first | into int)
+    let gb_divisor = 1000000000  # 1GB in bytes
+
     {
         user: $username
         path: $home_path
         size_bytes: $size_bytes
-        size_gb: ($size_bytes / 1GB | math round -p 2)
+        size_gb: ($size_bytes / $gb_divisor | math round -p 2)
     }
 }
 
@@ -186,11 +201,51 @@ def get-large-files [username: string, threshold_gb: int] {
     | first 10
 }
 
-# Generate unified notification message  
-def generate-message [user: record, large_files: list, over_quota: bool] {
+# Find pixi environments and check for old ones (>90 days unused)
+def get-pixi-envs [username: string] {
+    let cfg = (config)
+    let home_path = $"($cfg.home_base)/($username)"
+
+    if not ($home_path | path exists) {
+        return {total: 0, old: 0, old_paths: []}
+    }
+
+    # Find all .pixi directories (project environments)
+    let pixi_dirs_result = (^fd -H -t d "^\\.pixi$" $home_path | complete)
+
+    if $pixi_dirs_result.exit_code != 0 or ($pixi_dirs_result.stdout | str length) == 0 {
+        return {total: 0, old: 0, old_paths: []}
+    }
+
+    let pixi_dirs = ($pixi_dirs_result.stdout | lines | where { |line| ($line | str length) > 0 })
+    let ninety_days_ago = ((date now) - 90day)
+
+    # Check each .pixi directory for age
+    let old_envs = $pixi_dirs | each { |pixi_dir|
+        try {
+            let modified = (ls -l $pixi_dir | first | get modified)
+            if $modified < $ninety_days_ago {
+                $pixi_dir
+            } else {
+                null
+            }
+        } catch {
+            null
+        }
+    } | compact
+
+    {
+        total: ($pixi_dirs | length)
+        old: ($old_envs | length)
+        old_paths: $old_envs
+    }
+}
+
+# Generate unified notification message
+def generate-message [user: record, large_files: list, pixi_envs: record, over_quota: bool] {
     let cfg = (config)
     let hostname = (sys host).hostname
-    
+
     # Show only top 3 files to keep it concise
     let top_files = $large_files | first 3
     let files_list = if ($top_files | is-empty) {
@@ -198,23 +253,35 @@ def generate-message [user: record, large_files: list, over_quota: bool] {
     } else {
         $top_files | each { |f| $"• ($f.size_mb)MB - ($f.name)" } | str join "\n"
     }
-    
+
     let more_count = ($large_files | length) - 3
     let more_text = if $more_count > 0 { $" \(plus ($more_count) more\)" } else { "" }
-    
+
+    # Add pixi environment info if any exist
+    let pixi_info = if $pixi_envs.total > 0 {
+        if $pixi_envs.old > 0 {
+            let old_count = $pixi_envs.old
+            $"\n\n📦 ($pixi_envs.total) pixi environments \(($old_count) older than 90 days\)"
+        } else {
+            $"\n\n📦 ($pixi_envs.total) pixi environments"
+        }
+    } else {
+        ""
+    }
+
     let subject = if $over_quota {
         $"⚠️ [($hostname)] ($user.user): ($user.size_gb)GB / ($cfg.soft_quota_gb)GB quota"
     } else {
         $"📁 [($hostname)] ($user.user): ($large_files | length) large files in /home"
     }
-    
-    let body = $"*($user.user)@($hostname)*: ($user.size_gb)GB used, ($large_files | length) files >($cfg.large_file_threshold_gb)GB
 
-($files_list)($more_text)
+    let body = $"*($user.user)@($hostname)*: ($user.size_gb)GB used \(excludes .pixi/cache, .cache, .conda/pkgs\), ($large_files | length) files >($cfg.large_file_threshold_gb)GB
+
+($files_list)($more_text)($pixi_info)
 
 → Move to `/work/users/($user.user)/`
 ───────────────────"
-    
+
     {subject: $subject, body: $body}
 }
 
@@ -271,14 +338,15 @@ def check-user-quota [username: string, --dry-run, --verbose] {
         return {user: $username, status: "no_home", size_gb: 0, action: "none"}
     }
     
-    # Check quotas and large files
+    # Check quotas, large files, and pixi environments
     let over_quota = $usage.size_gb > $cfg.soft_quota_gb
     let large_files = (get-large-files $username $cfg.large_file_threshold_gb)
     let has_large_files = ($large_files | length) > 0
-    
+    let pixi_envs = (get-pixi-envs $username)
+
     # Determine if notification is needed
     if $over_quota or $has_large_files {
-        let message_content = (generate-message $usage $large_files $over_quota)
+        let message_content = (generate-message $usage $large_files $pixi_envs $over_quota)
         let user_info = {
             user: $username
             status: "needs_action"
