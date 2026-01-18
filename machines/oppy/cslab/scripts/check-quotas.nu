@@ -251,7 +251,7 @@ def generate-message [user: record, large_files: list, pixi_envs: record, over_q
     let files_list = if ($top_files | is-empty) {
         ""
     } else {
-        $top_files | each { |f| $"• ($f.size_mb)MB - ($f.name)" } | str join "\n"
+        $top_files | each { |f| $"• ($f.size_mb)MB - ($f.path)" } | str join "\n"
     }
 
     let more_count = ($large_files | length) - 3
