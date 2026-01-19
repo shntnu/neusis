@@ -173,8 +173,13 @@ def get-large-files [username: string, threshold_gb: int] {
     let threshold_bytes = $threshold_gb * 1GB
     
     # Use fd for fast file discovery (includes hidden directories with -H)
+    # Exclude cache directories to match quota calculation
     # The complete command captures stdout/stderr separately for cleaner handling
-    let fd_result = (^fd -t f -H --size $"+($threshold_gb)G" . $home_path) | complete
+    let fd_result = (^fd -t f -H
+        --exclude ".cache"
+        --exclude ".pixi/cache"
+        --exclude ".conda/pkgs"
+        --size $"+($threshold_gb)G" . $home_path) | complete
     let files = if ($fd_result.exit_code == 0) {
         $fd_result.stdout | lines | where { |line| ($line | str length) > 0 }
     } else {
