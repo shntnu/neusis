@@ -118,4 +118,27 @@
       set --universal pure_enable_nixdevshell true
     '';
   };
+  programs.atuin =
+    let
+      atuin_daemon_p = if pkgs.stdenv.isLinux then true else false;
+    in
+    {
+      enable = true;
+      # package = pkgs.stable.atuin;
+      enableFishIntegration = true;
+      enableBashIntegration = true;
+      enableNushellIntegration = true;
+      settings = {
+        auto_sync = true;
+        sync_frequency = "5m";
+        sync_address = "https://api.atuin.sh";
+        search_mode = "prefix";
+        daemon = {
+          enabled = atuin_daemon_p;
+          socket_path = "/home/amunoz/.local/share/atuin/atuin.sock";
+        };
+        # // atuin_key_path;
+      };
+    };
+
 }
