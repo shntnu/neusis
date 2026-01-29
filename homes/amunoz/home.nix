@@ -5,7 +5,6 @@
     homeDirectory = "/home/amunoz";
 
     packages = with pkgs; [
-      atuin # shared command history
       autoconf
       automake
       autotools-language-server # make
