@@ -98,6 +98,9 @@ in
       #   Update:  nix profile upgrade claude-code-nix --refresh
       #   Why:     Avoids constant system rebuilds for fast-updating tool
       #   Rollback: nix profile rollback (if issues with new version)
+      # gemini-cli: Managed imperatively (same pattern as claude-code)
+      #   Install: nix profile install github:sadjow/gemini-cli-nix
+      #   Update:  nix profile upgrade gemini-cli-nix --refresh
     ] ++ [
       # Custom packages from pkgs/
       outputs.packages.${pkgs.system}.specstory  # CLI wrapper for claude-code conversation saving
