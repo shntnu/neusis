@@ -27,6 +27,7 @@
       fontconfig # Needed for napari
       fzf # fuzzy finder
       gawk # Main awk
+      gemini-cli
       git
       gnumake # Necessary for emacs' vterm
       gnumeric
