@@ -71,7 +71,7 @@
     machineName = "Oppy";
     slackWebhookSecretFile = ../../secrets/oppy/slack_webhook.age;
     quotaCheckScript = ../../modules/nixos/cslab-scripts/check-quotas.nu;
-    # quotaLimit defaults to "100" — correct for Oppy
+    # quotaLimit defaults to 100 — correct for Oppy
     # homeBaseDir defaults to "/home" — correct for Oppy
   };
 

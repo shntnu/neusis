@@ -1,11 +1,4 @@
-{
-  lib,
-  config,
-  pkgs,
-  inputs,
-  outputs,
-  ...
-}:
+{ ... }:
 {
   # Required for nvidia dc drivers
   services.xserver.enable = false;

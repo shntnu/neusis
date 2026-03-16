@@ -87,7 +87,8 @@ in
 
     machineName = lib.mkOption {
       type = lib.types.str;
-      description = "Machine name used in Slack alert messages (e.g. 'Oppy', 'Karkinos')";
+      default = config.networking.hostName;
+      description = "Machine name used in Slack alert messages (defaults to hostname)";
     };
 
     slackWebhookSecretFile = lib.mkOption {
@@ -102,8 +103,8 @@ in
     };
 
     quotaLimit = lib.mkOption {
-      type = lib.types.str;
-      default = "100";
+      type = lib.types.ints.positive;
+      default = 100;
       description = "Quota limit in GB for home directory checks";
     };
 
@@ -145,7 +146,7 @@ in
         # Environment variables for script configuration
         Environment = [
           "HOME_BASE_DIR=${cfg.homeBaseDir}"
-          "QUOTA_GB=${cfg.quotaLimit}"
+          "QUOTA_GB=${toString cfg.quotaLimit}"
           "LARGE_FILE_GB=1"
           "LOG_DIR=/var/log/lab-scripts"
         ];

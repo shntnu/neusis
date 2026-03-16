@@ -25,6 +25,9 @@
     KERNEL=="ipmi*", MODE="0660", GROUP="ipmiusers"
   '';
 
+  # NFS server (Oppy-specific, not in common/zfs.nix)
+  services.nfs.server.enable = true;
+
   # NFS exports over InfiniBand link to Spirit (192.0.2.2)
   # Shares datasets and tools for distributed computing
   # See: imaging-server-maintenance/INVENTORY.md (Inter-Server Connection)
