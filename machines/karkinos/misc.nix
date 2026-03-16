@@ -16,6 +16,15 @@
   services.xserver.displayManager.gdm.autoSuspend = false;
   services.xserver.desktopManager.gnome.enable = true;
 
+  # Prevent GNOME from attempting idle suspend on a shared server
+  # (nosleep.nix masks the systemd targets, but gsd-power still sends a
+  # misleading "The system will suspend now!" broadcast before logind refuses)
+  services.xserver.desktopManager.gnome.extraGSettingsOverrides = ''
+    [org.gnome.settings-daemon.plugins.power]
+    sleep-inactive-ac-type='nothing'
+    sleep-inactive-battery-type='nothing'
+  '';
+
   # Have to add this to make theme related things work in GUI less env
   programs.dconf.enable = true;
 
