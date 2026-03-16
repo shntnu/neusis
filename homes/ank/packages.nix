@@ -29,6 +29,7 @@ with pkgs;
   pkgs.master.opencode
   bitwarden-desktop
   pnpm
+  mosh
 ]
 ++ pkgs.lib.optionals pkgs.stdenv.isLinux [
   extra-container

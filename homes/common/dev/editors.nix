@@ -169,6 +169,10 @@ in
         nix-shell -p $@
       }
 
+      function nxp() {
+        nix-shell -p "python3.withPackages(p: with p; [$@])"
+      }
+
       function rcssh() {
         rclone mount --sftp-host $1 :sftp:$2 $3 --volname $4 --sftp-user $5 --sftp-key-file ~/.ssh/id_ed25519
       }

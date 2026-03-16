@@ -5,6 +5,12 @@
   outputs,
   ...
 }:
+let
+  mkGreedy = caskName: {
+    name = caskName;
+    greedy = true;
+  };
+in
 {
   imports = [
     inputs.mac-app-util.darwinModules.default
@@ -101,7 +107,10 @@
     taps = map (key: builtins.replaceStrings [ "homebrew-" ] [ "" ] key) (
       builtins.attrNames config.nix-homebrew.taps
     );
-    casks = [
+    # https://github.com/nix-darwin/nix-darwin/issues/935
+    # https://github.com/nix-darwin/nix-darwin/pull/1382
+    # greedyCasks = true;
+    casks = map mkGreedy [
       "signal"
       "whatsapp"
       "karabiner-elements"
@@ -109,6 +118,7 @@
       "fiji"
       "hammerspoon"
       "deskflow"
+      "superwhisper"
     ];
     onActivation = {
       cleanup = "uninstall";

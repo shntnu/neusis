@@ -24,7 +24,7 @@ in
       machineName = "karkinos";
       userModule = ../../machines/karkinos;
       specialArgs = { inherit (self) inputs outputs; };
-      userConfig = import ../../users/ank.nix { pkgs = machinesRegistry.karkinos; };
+      userConfig = import ../../users/cslab_karkinos.nix { pkgs = machinesRegistry.karkinos; };
       homeManager = true;
     };
 
