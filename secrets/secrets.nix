@@ -46,5 +46,5 @@ in
   # # ank
   # "ank/ghauth.age".publicKeys = [ ank ];
 
-  # "common/persistent_cslab_mesh.age".publicKeys = machines;
+  "common/persistent_cslab_mesh.age".publicKeys = machines ++ users;
 }
