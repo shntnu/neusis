@@ -10,7 +10,7 @@
     remotes = [
       {
         name = "origin";
-        url = "https://github.com/leoank/neusis.git";
+        url = "https://github.com/shntnu/neusis.git";
         branches.main.name = "prod";
       }
     ];
