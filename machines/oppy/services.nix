@@ -13,15 +13,8 @@
   # Enable monitoring
   neusis.services.monitoring.enable = true;
 
-  # Enable ZFS auto-snapshots
-  services.zfs.autoSnapshot = {
-    enable = true;
-    frequent = 4;   # Keep 4 snapshots (15 min intervals)
-    hourly = 24;    # Keep 24 snapshots
-    daily = 31;     # Keep 31 snapshots
-    weekly = 8;     # Keep 8 snapshots
-    monthly = 12;   # Keep 12 snapshots
-  };
+  # Enable ZFS auto-snapshots (retention policy defined in common/zfs.nix)
+  neusis.zfs.autoSnapshot.enable = true;
 
   # Add udev rules and user for IPMI device
   users.groups.ipmiusers = {
@@ -31,6 +24,9 @@
   services.udev.extraRules = ''
     KERNEL=="ipmi*", MODE="0660", GROUP="ipmiusers"
   '';
+
+  # NFS server (Oppy-specific, not in common/zfs.nix)
+  services.nfs.server.enable = true;
 
   # NFS exports over InfiniBand link to Spirit (192.0.2.2)
   # Shares datasets and tools for distributed computing

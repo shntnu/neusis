@@ -1,12 +1,8 @@
 {
   pkgs,
-  outputs,
   ...
 }:
 {
-
-  # FHS
-  programs.nix-ld.enable = true;
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
@@ -25,9 +21,6 @@
     sleep-inactive-battery-type='nothing'
   '';
 
-  # Have to add this to make theme related things work in GUI less env
-  programs.dconf.enable = true;
-
   # enable ollama
   services.ollama = {
     enable = true;
@@ -41,24 +34,10 @@
     };
   };
 
-  nixpkgs = {
-    # You can add overlays here
-    overlays = builtins.attrValues outputs.overlays;
-    # Configure your nixpkgs instance
-    config = {
-      sunshine = {
-        cudaSupport = true;
-      };
-      # Disable if you don't want unfree packages
-      allowUnfree = true;
-    };
-  };
+  nixpkgs.config.sunshine.cudaSupport = true;
 
-  # Default system wide packages
+  # Karkinos-specific packages (base packages in common/system.nix)
   environment.systemPackages = with pkgs; [
-    vim
-    dive
-    podman-tui
     unstable.ollama
     gnomeExtensions.forge
     gnomeExtensions.blur-my-shell
@@ -66,8 +45,5 @@
     gnomeExtensions.appindicator
     gnomeExtensions.unite
   ];
-  environment.shells = [ pkgs.zsh ];
-  programs.zsh.enable = true;
-  programs.fish.enable = true;
 
 }
