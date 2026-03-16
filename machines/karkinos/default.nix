@@ -34,6 +34,7 @@
     ./vm.nix
 
     # common config
+    ../common/system.nix
     ../common/networking.nix
     ../common/gpu/nvidia_dc.nix
     ../common/substituters.nix
