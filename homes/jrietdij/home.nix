@@ -7,7 +7,7 @@ let
 
   # Create pkgs-unstable with unfree allowed
   pkgs-unstable = import inputs.nixpkgs-unstable {
-    system = pkgs.system;
+    stdenv.hostPlatform.system = pkgs.stdenv.hostPlatform.system;
     config.allowUnfree = true;
   };
 in
@@ -152,12 +152,12 @@ in
     git = {
       enable = true;
       ignores = [ "*.swp" ];
-      userName = name;
-      userEmail = email;
-      lfs = {
-        enable = true;
-      };
-      extraConfig = {
+      lfs.enable = true;
+      settings = {
+        user = {
+          name = name;
+          email = email;
+        };
         init.defaultBranch = "main";
         core = {
           editor = "nvim";
@@ -182,9 +182,16 @@ in
     # SSH configuration
     ssh = {
       enable = true;
+      enableDefaultConfig = false;
       includes = [
         "${config.home.homeDirectory}/.ssh/config_external"
       ];
+      matchBlocks."*" = {
+        extraOptions = {
+          "AddKeysToAgent" = "yes";
+          "IdentityFile" = "~/.ssh/id_rsa";
+        };
+      };
     };
   };
 

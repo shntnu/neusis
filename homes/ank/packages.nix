@@ -25,7 +25,7 @@ with pkgs;
   gping
   procs
   bandwhich
-  outputs.packages.${pkgs.system}.claude-code
+  outputs.packages.${pkgs.stdenv.hostPlatform.system}.claude-code
   pkgs.master.opencode
   bitwarden-desktop
   pnpm
