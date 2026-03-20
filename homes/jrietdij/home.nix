@@ -1,10 +1,10 @@
-{ config, pkgs, lib, inputs, outputs, ... }:
+{ config, pkgs, lib, inputs, ... }:
 
-let 
-  name = "Shantanu Singh";
-  user = "shsingh";
-  email = "shsingh@broadinstitute.org";
-  
+let
+  name = "Jonne Rietdijk";
+  user = "jrietdij";
+  email = "jrietdij@broadinstitute.org";
+
   # Create pkgs-unstable with unfree allowed
   pkgs-unstable = import inputs.nixpkgs-unstable {
     system = pkgs.system;
@@ -13,8 +13,8 @@ let
 in
 {
   home = {
-    username = "shsingh";
-    homeDirectory = "/home/shsingh";
+    username = "jrietdij";
+    homeDirectory = "/home/jrietdij";
 
     packages = with pkgs; [
       # Data tools
@@ -22,7 +22,7 @@ in
       jq
       yq-go  # YAML processor
       sqlite
-      
+
       # Development tools
       gh  # GitHub CLI
       lazygit  # Terminal UI for git
@@ -33,20 +33,20 @@ in
       ripgrep  # Fast grep
       fzf  # Fuzzy finder
       just  # Command runner
-      
+
       # System monitoring
       htop
       btop  # Better htop
       ncdu  # Disk usage analyzer
       duf  # Better df
       iftop  # Network bandwidth monitor
-      
+
       # Network tools
       curl
       wget
       httpie  # Better curl for APIs
       mtr  # Network diagnostic tool
-      
+
       # Cloud and containers
       awscli2
       docker
@@ -54,30 +54,30 @@ in
       rclone
       s5cmd
       nodePackages.aws-cdk  # AWS CDK CLI
-      
+
       # File management
       tree
       ranger  # Terminal file manager
       yazi  # Modern terminal file manager
-      
+
       # Text processing
       neovim
-      
+
       # Archive tools
       unzip
       zip
       p7zip
-      
+
       # Python tools
       python3
       virtualenv
       uv
       pixi
-      
+
       # Shell enhancements
       atuin  # Better shell history
       tmux   # Terminal multiplexer
-      
+
       # Misc utilities
       tldr  # Simplified man pages
       direnv  # Directory-specific environments
@@ -86,24 +86,11 @@ in
       ffmpeg
       pandoc
       graphviz
-      
+
       # Linting and formatting
       nixpkgs-fmt  # Nix formatter
       ruff  # Python linter
       pre-commit
-      
-      # AI tools
-      # claude-code: Managed imperatively for frequent updates (sometimes hourly releases)
-      #   Install: nix profile install github:sadjow/claude-code-nix
-      #   Update:  nix profile upgrade claude-code-nix --refresh
-      #   Why:     Avoids constant system rebuilds for fast-updating tool
-      #   Rollback: nix profile rollback (if issues with new version)
-      # gemini-cli: Managed imperatively (same pattern as claude-code)
-      #   Install: nix profile install github:sadjow/gemini-cli-nix
-      #   Update:  nix profile upgrade gemini-cli-nix --refresh
-    ] ++ [
-      # Custom packages from pkgs/
-      outputs.packages.${pkgs.system}.specstory  # CLI wrapper for claude-code conversation saving
     ];
   };
 
@@ -137,7 +124,7 @@ in
         export PATH=$HOME/.pnpm-packages/bin:$HOME/.pnpm-packages:$PATH
 
         export PATH=$HOME/.npm-packages/bin:$HOME/bin:$PATH
-        export PATH=$HOME/.local/bin:$HOME/.local/share/bin:$PATH
+        export PATH=$HOME/.local/share/bin:$PATH
 
         # Remove history data we don't want to see
         export HISTIGNORE="pwd:ls:cd"

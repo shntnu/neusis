@@ -13,6 +13,9 @@ let
     ../machines/oppy/network.nix
     {
       system.kexec-installer.name = "nixos-kexec-installer-noninteractive";
+
+      # Disable bcachefs - not needed and works around nixpkgs bug with bcachefs-tools
+      boot.supportedFilesystems.bcachefs = false;
       
       # SSH configuration for kexec installer
       services.openssh.settings.PermitRootLogin = "yes";

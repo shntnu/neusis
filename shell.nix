@@ -29,7 +29,7 @@ in
         git
         uv
         nixos-anywhere
-        pkgs-unstable.claude-code
+        # claude-code: Managed imperatively - see homes/shsingh/home.nix for details
 
         inputs.agenix.packages.${system}.default
         ssh-to-age

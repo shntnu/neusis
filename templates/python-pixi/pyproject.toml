@@ -3,7 +3,7 @@ name = "pixi-demo"
 version = "0.1.0"
 description = "2025 Best Practice: Pure Pixi for GPU/RAPIDS Python Development"
 authors = [{name = "Shantanu Singh", email = "shsingh@broadinstitute.org"}]
-requires-python = ">= 3.13"
+requires-python = ">= 3.12"
 
 [build-system]
 build-backend = "hatchling.build"
@@ -16,9 +16,9 @@ platforms = ["linux-64"]
 
 [tool.pixi.dependencies]
 # Core RAPIDS environment (provides numpy, pandas, cupy, etc.)
-rapids = "25.08.*"
-python = "3.13.*"
-cuda-version = "12.8.*"  # Match NixOS system CUDA
+rapids = "25.02.*"
+python = "3.12.*"
+cuda-version = "12.8.*"  # CUDA runtime (compatible with dc_535 driver 12.2)
 cudnn = "*"
 cutensor = "*"
 cusparselt = "*"
@@ -27,7 +27,7 @@ cusparselt = "*"
 typer = "*"
 loguru = "*"
 snakemake = "*"
-duckdb = "<1.4.0"  # copairs needs older API
+duckdb = "*"
 anndata = "*"
 
 [tool.pixi.feature.jupyter.dependencies]

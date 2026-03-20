@@ -26,10 +26,11 @@
     ./deployment/vm.nix
 
     # CSLab infrastructure and monitoring
-    ./cslab/infrastructure.nix
-    ./cslab/monitoring.nix
+    outputs.nixosModules.cslab-infrastructure
+    outputs.nixosModules.cslab-monitoring
 
     # Common config
+    ../common/system.nix
     ../common/networking.nix
     ../common/gpu/nvidia_dc.nix
     ../common/substituters.nix
@@ -55,7 +56,25 @@
     disableKeyExpiry = true;
     tailnetOrg = "shntnu.github";
   };
-  
+
+  neusis.cslab.infrastructure = {
+    enable = true;
+    userConfigPath = ../../users/cslab.nix;
+    testScriptPath = ./cslab/scripts/test-cslab-infrastructure.sh;
+    # dataRoot defaults to "/work" — correct for Oppy
+    # imagingGid defaults to 1000 — correct for Oppy
+  };
+
+  neusis.cslab.monitoring = {
+    enable = true;
+    userConfigPath = ../../users/cslab.nix;
+    machineName = "Oppy";
+    slackWebhookSecretFile = ../../secrets/oppy/slack_webhook.age;
+    quotaCheckScript = ../../modules/nixos/cslab-scripts/check-quotas.nu;
+    # quotaLimit defaults to 100 — correct for Oppy
+    # homeBaseDir defaults to "/home" — correct for Oppy
+  };
+
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "25.05";
 }
