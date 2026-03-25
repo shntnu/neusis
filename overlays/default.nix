@@ -5,25 +5,25 @@
 }:
 {
   # For every flake input, aliases 'pkgs.inputs.${flake}' to
-  # 'inputs.${flake}.packages.${pkgs.system}' or
-  # 'inputs.${flake}.legacyPackages.${pkgs.system}'
+  # 'inputs.${flake}.packages.${pkgs.stdenv.hostPlatform.system}' or
+  # 'inputs.${flake}.legacyPackages.${pkgs.stdenv.hostPlatform.system}'
   flake-inputs = final: _: {
     inputs = builtins.mapAttrs (
       _: flake:
       let
-        legacyPackages = (flake.legacyPackages or { }).${final.system} or { };
-        packages = (flake.packages or { }).${final.system} or { };
+        legacyPackages = (flake.legacyPackages or { }).${final.stdenv.hostPlatform.system} or { };
+        packages = (flake.packages or { }).${final.stdenv.hostPlatform.system} or { };
       in
       if legacyPackages != { } then legacyPackages else packages
     ) inputs;
   };
 
-  # Adds pkgs.unstable == inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}
+  # Adds pkgs.unstable == inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system}
   unstable =
     final: _:
     let
       upkgs = import inputs.nixpkgs-unstable {
-        system = final.system;
+        system = final.stdenv.hostPlatform.system;
         config.allowUnfree = true;
         config.cudaSupport = true;
       };
@@ -32,12 +32,12 @@
       unstable = upkgs;
     };
 
-  # Adds pkgs.master == inputs.nixpkgs-master.legacyPackages.${pkgs.system}
+  # Adds pkgs.master == inputs.nixpkgs-master.legacyPackages.${pkgs.stdenv.hostPlatform.system}
   master =
     final: _:
     let
       mpkgs = import inputs.nixpkgs-master {
-        system = final.system;
+        system = final.stdenv.hostPlatform.system;
         config.allowUnfree = true;
         config.cudaSupport = true;
       };
