@@ -7,18 +7,18 @@
   ...
 }:
 let
-  # nixvimLib = inputs.nixvim.lib.${pkgs.system};
-  nixvim' = inputs.nixvim.legacyPackages.${pkgs.system};
+  # nixvimLib = inputs.nixvim.lib.${pkgs.stdenv.hostPlatform.system};
+  nixvim' = inputs.nixvim.legacyPackages.${pkgs.stdenv.hostPlatform.system};
   nixvimModule =
     let
       upkgs = import inputs.nixpkgs-unstable {
-        inherit (pkgs) system;
+        system = pkgs.stdenv.hostPlatform.system;
         config.allowUnfree = true;
         config.cudaSupport = true;
       };
 
       mpkgs = import inputs.nixpkgs-master {
-        inherit (pkgs) system;
+        system = pkgs.stdenv.hostPlatform.system;
         config.allowUnfree = true;
         config.cudaSupport = true;
       };
