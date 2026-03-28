@@ -22,7 +22,12 @@
   '';
 
   # ollama needs imaging group to traverse /work (0750 root:imaging)
-  users.users.ollama.extraGroups = [ "imaging" ];
+  users.users.ollama = {
+    isSystemUser = true;
+    group = "ollama";
+    extraGroups = [ "imaging" ];
+  };
+  users.groups.ollama = {};
 
   # enable ollama
   services.ollama = {
