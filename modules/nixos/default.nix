@@ -9,5 +9,6 @@
   sunshine = import ./sunshine.nix;
   monitoring = import ./monitoring.nix;
   tailscale = import ./tailscale.nix;
+  zfs = import ./zfs.nix;
   xilinx = import ./xilinx.nix { inherit outputs; };
 }

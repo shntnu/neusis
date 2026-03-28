@@ -41,7 +41,7 @@
     ../common/nosleep.nix
     ../common/nix.nix
     ../common/printing.nix
-    ../common/zfs.nix
+    outputs.nixosModules.zfs
 
   ];
 

@@ -13,7 +13,7 @@
   # Enable monitoring
   neusis.services.monitoring.enable = true;
 
-  # Enable ZFS auto-snapshots (retention policy defined in common/zfs.nix)
+  # Enable ZFS auto-snapshots (retention policy defined in modules/nixos/zfs.nix)
   neusis.zfs.autoSnapshot.enable = true;
 
   # Add udev rules and user for IPMI device
@@ -25,7 +25,7 @@
     KERNEL=="ipmi*", MODE="0660", GROUP="ipmiusers"
   '';
 
-  # NFS server (Oppy-specific, not in common/zfs.nix)
+  # NFS server (Oppy-specific, not in modules/nixos/zfs.nix)
   services.nfs.server.enable = true;
 
   # NFS exports over InfiniBand link to Spirit (192.0.2.2)
