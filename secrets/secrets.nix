@@ -41,6 +41,7 @@ in
     ank
     shantanu
     oppy
+    karkinos
   ];
 
   # # ank
