@@ -28,7 +28,7 @@
       ];
       homeModules = {
         karkinos = [
-          ../homes/amunoz/machines/oppy.nix
+          ../homes/amunoz/machines/karkinos.nix
         ];
       };
     }
@@ -41,7 +41,7 @@
       ];
       homeModules = {
         karkinos = [
-          ../homes/shsingh/machines/oppy.nix
+          ../homes/shsingh/machines/karkinos.nix
         ];
       };
     }
@@ -54,7 +54,7 @@
       ];
       homeModules = {
         karkinos = [
-          ../homes/jfredinh/machines/oppy.nix
+          ../homes/jfredinh/machines/karkinos.nix
         ];
       };
     }
