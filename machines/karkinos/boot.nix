@@ -16,10 +16,8 @@
   #boot.zfs.devNodes = "/dev/disk/by-id";
 
   # Zfs second pool import issue: https://github.com/nix-community/disko/issues/359
-  # Make sure to update the chmod commands if dataset names change
-  system.activationScripts."importzfsandchmod" = ''
+  system.activationScripts."importzfs" = ''
     ${pkgs.zfs}/bin/zpool import -fa
-    chmod 0777 /datastore
   '';
 
 }
