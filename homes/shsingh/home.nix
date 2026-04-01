@@ -7,7 +7,7 @@ let
   
   # Create pkgs-unstable with unfree allowed
   pkgs-unstable = import inputs.nixpkgs-unstable {
-    system = pkgs.system;
+    stdenv.hostPlatform.system = pkgs.stdenv.hostPlatform.system;
     config.allowUnfree = true;
   };
 in
@@ -103,7 +103,7 @@ in
       #   Update:  nix profile upgrade gemini-cli-nix --refresh
     ] ++ [
       # Custom packages from pkgs/
-      outputs.packages.${pkgs.system}.specstory  # CLI wrapper for claude-code conversation saving
+      outputs.packages.${pkgs.stdenv.hostPlatform.system}.specstory  # CLI wrapper for claude-code conversation saving
     ];
   };
 
@@ -165,12 +165,12 @@ in
     git = {
       enable = true;
       ignores = [ "*.swp" ];
-      userName = name;
-      userEmail = email;
-      lfs = {
-        enable = true;
-      };
-      extraConfig = {
+      lfs.enable = true;
+      settings = {
+        user = {
+          name = name;
+          email = email;
+        };
         init.defaultBranch = "main";
         core = {
           editor = "nvim";
@@ -194,11 +194,19 @@ in
 
     # SSH configuration
     ssh = {
-      enable = true;
       includes = [
         "${config.home.homeDirectory}/.ssh/config_external"
       ];
+      enable = true;
+      enableDefaultConfig = false;
+      matchBlocks."*" = {
+        extraOptions = {
+          "AddKeysToAgent" = "yes";
+          "IdentityFile" = "~/.ssh/id_rsa";
+        };
+      };
     };
+
   };
 
   # SSH Agent configuration - automatically manages encrypted SSH keys

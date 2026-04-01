@@ -13,29 +13,9 @@
       };
     };
 
-    lsp = {
-      servers = {
-        html = {
-          enable = true;
-          cmd = [
-            "${pkgs.vscode-langservers-extracted}/bin/vscode-html-language-server"
-            "--stdio"
-          ];
-        };
-      };
-
-      enabledServers = [
-        {
-          name = "emmet_language_server";
-          extraOptions = {
-            cmd = [
-              (lib.getExe pkgs.emmet-language-server)
-              "--stdio"
-            ];
-            filetypes = [ "html" ];
-          };
-        }
-      ];
+    lsp.servers = {
+      html.enable = true;
+      emmet_ls.enable = true;
     };
   };
 }

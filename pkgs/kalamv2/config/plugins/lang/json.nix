@@ -15,12 +15,13 @@
 
     lint = {
       lintersByFt = {
-        json = [ "jsonlint" ];
+        json = [ "jq" ];
       };
 
       linters = {
-        jsonlint = {
-          cmd = "${pkgs.nodePackages_latest.jsonlint}/bin/jsonlint";
+        jq = {
+          cmd = "${pkgs.jq}/bin/jq";
+          args = [ "." ];
         };
       };
     };

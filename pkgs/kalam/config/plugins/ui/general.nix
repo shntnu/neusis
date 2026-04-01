@@ -1,9 +1,9 @@
-{ helpers, ... }:
+{ lib, ... }:
 {
   plugins = {
 
     # image = {
-    #   enable = helpers.enableExceptInTests;
+    #   enable = lib.nixvim.enableExceptInTests;
     #   integrations.markdown = {
     #     clearInInsertMode = true;
     #     onlyRenderImageAtCursor = true;

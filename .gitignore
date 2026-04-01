@@ -6,3 +6,4 @@ neusis.code-workspace
 scratch
 .direnv
 imaging-server-resources
+/.agent-shell/

@@ -5,20 +5,20 @@
   ...
 }:
 let
-  package_ver = config.boot.kernelPackages.nvidiaPackages.dc_535;
+  # package_ver = config.boot.kernelPackages.nvidiaPackages.latest;
+  package_ver = config.boot.kernelPackages.nvidiaPackages.mkDriver rec {
+    version = "565.57.01";
+    url = "https://us.download.nvidia.com/tesla/${version}/NVIDIA-Linux-x86_64-${version}.run";
+    sha256_64bit = "sha256-buvpTlheOF6IBPWnQVLfQUiHv4GcwhvZW3Ks0PsYLHo=";
+    persistencedSha256 = "sha256-hdszsACWNqkCh8G4VBNitDT85gk9gJe1BlQ8LdrYIkg=";
+    fabricmanagerSha256 = "sha256-umhyehddbQ9+xhhoiKC7SOSVxscA5pcnqvkQOOLIdsM=";
+    useSettings = false;
+    usePersistenced = true;
+    useFabricmanager = true;
+  };
 in
 # See https://github.com/broadinstitute/imaging-server-maintenance/blob/c9d89c013607ca85c8bb3bcce8cedb66f6662a7d/MAINTENANCE_LOG.md?plain=1#L673
 # for rationale on keeping dc_535 for now
-# package_ver = config.boot.kernelPackages.nvidiaPackages.mkDriver rec {
-#   version = "565.57.01";
-#   url = "https://us.download.nvidia.com/tesla/${version}/NVIDIA-Linux-x86_64-${version}.run";
-#   sha256_64bit = "sha256-buvpTlheOF6IBPWnQVLfQUiHv4GcwhvZW3Ks0PsYLHo=";
-#   persistencedSha256 = "sha256-hdszsACWNqkCh8G4VBNitDT85gk9gJe1BlQ8LdrYIkg=";
-#   fabricmanagerSha256 = "sha256-umhyehddbQ9+xhhoiKC7SOSVxscA5pcnqvkQOOLIdsM=";
-#   useSettings = false;
-#   usePersistenced = true;
-#   useFabricmanager = true;
-# };
 {
   hardware = {
     # Include GSP firmware for datacenter GPUs
@@ -29,7 +29,7 @@ in
       enable = true;
       enable32Bit = true;
       extraPackages = with pkgs; [
-        vaapiVdpau
+        libva-vdpau-driver
       ];
     };
 
@@ -58,6 +58,7 @@ in
   # (fabricmanager only manages NVSwitch fabrics for DGX/HGX, not NVLink bridges)
   # Failure is harmless but shows as error in systemctl status - cleaner to disable entirely
   systemd.services.nvidia-fabricmanager.enable = lib.mkForce false;
+  systemd.services.nvidia-fabricmanager.serviceConfig = lib.mkForce {};
 
   # Nvidia related nix configs
   nixpkgs = {

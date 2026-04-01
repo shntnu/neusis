@@ -11,7 +11,6 @@
       pkgs,
       inputs',
       self',
-      system,
       ...
     }:
     {
