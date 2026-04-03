@@ -49,6 +49,7 @@
     ../common/nix.nix
     ../common/printing.nix
     outputs.nixosModules.zfs
+    ../common/sudo.nix
   ];
 
   neusis.tailscale = {
