@@ -1,5 +1,9 @@
 { pkgs, ... }:
 {
+  imports = [
+    ./configs/opencode.nix
+  ];
+
   home = {
     username = "amunoz";
     homeDirectory = "/home/amunoz";
