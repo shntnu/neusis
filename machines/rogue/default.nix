@@ -96,8 +96,8 @@ in
   homebrew = {
     enable = true;
     masApps = {
-      Xcode = 497799835;
-      "Microsoft Outlook" = 985367838;
+      #Xcode = 497799835;
+      #"Microsoft Outlook" = 985367838;
     };
     brews = [
       "kanata"
@@ -115,7 +115,7 @@ in
       "whatsapp"
       "karabiner-elements"
       "keycastr"
-      "fiji"
+      #"fiji"
       "hammerspoon"
       "deskflow"
       "superwhisper"
