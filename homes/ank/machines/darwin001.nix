@@ -6,11 +6,14 @@
   ...
 }:
 {
+  nixpkgs.config.allowUnfree = true;
   imports = [
     ../../common/home_manager.nix
     ../../common/dev
     ../../common/dev/kalam.nix
     ../../common/themes
+    ../configs/tmux.nix
+    ../configs/opencode.nix
     (import ../../common/dev/editors.nix {
       inherit pkgs config inputs;
       enableNvim = false;
@@ -24,4 +27,10 @@
   ];
 
   home.packages = import ../packages.nix { inherit pkgs outputs; };
+
+  # Add hammerspoon config
+  xdg.configFile."hammerspoon" = {
+    source = ../configs/hammerspoon;
+    recursive = true;
+  };
 }
