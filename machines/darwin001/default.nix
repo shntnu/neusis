@@ -3,10 +3,18 @@
   pkgs,
   inputs,
   outputs,
+  lib,
   ...
 }:
+let
+  mkGreedy = caskName: {
+    name = caskName;
+    greedy = true;
+  };
+in
 {
   imports = [
+    inputs.mac-app-util.darwinModules.default
     inputs.home-manager.darwinModules.home-manager
     inputs.nix-homebrew.darwinModules.nix-homebrew
     #../common/darwin_home_manager.nix
@@ -16,6 +24,7 @@
     })
     ../common/nix.nix
     ../common/substituters.nix
+    ../../homes/ank/configs/kanata_system.nix
   ];
 
   # Configure nixpkgs
@@ -29,8 +38,26 @@
     };
   };
 
+  fonts.packages = [
+    pkgs.nerd-fonts.iosevka
+  ];
+
+  nix.linux-builder = {
+    enable = true;
+    ephemeral = true;
+    maxJobs = 10;
+    config = {
+      virtualisation = {
+        darwin-builder = {
+          diskSize = 100 * 1024;
+          memorySize = 24 * 1024;
+        };
+        cores = 10;
+      };
+    };
+  };
+
   nix.settings = {
-    linux-builder.enable = true;
 
     trusted-users = [
       "@admin"
@@ -59,17 +86,23 @@
   homebrew = {
     enable = true;
     masApps = {
-      Xcode = 497799835;
+      #Xcode = 497799835;
       "Microsoft Outlook" = 985367838;
     };
     brews = [
       "pixi"
       "gnu-sed"
-    ]; # Example of brew
+    ];
     taps = map (key: builtins.replaceStrings [ "homebrew-" ] [ "" ] key) (
       builtins.attrNames config.nix-homebrew.taps
     );
-    casks = pkgs.callPackage ../common/casks.nix { };
+    casks = map mkGreedy [
+      "keycastr"
+      #"fiji"
+      "hammerspoon"
+      "deskflow"
+      "superwhisper"
+    ];
     onActivation = {
       cleanup = "uninstall";
       autoUpdate = true;
@@ -79,12 +112,13 @@
 
   # Configure home manager
   home-manager = {
-    #useGlobalPkgs = true;
+    useGlobalPkgs = lib.mkForce false;
     # Look into why enabling this break shell for starship
     #useUserPackages = true;
     extraSpecialArgs = { inherit inputs outputs; };
     users.kumarank = {
       imports = [
+        inputs.mac-app-util.homeManagerModules.default
         ../../homes/ank/machines/darwin001.nix
       ];
     };
@@ -99,49 +133,85 @@
     keyboard.enableKeyMapping = true;
     keyboard.remapCapsLockToEscape = true;
 
-    # Disable press and hold for diacritics.
-    # I want to be able to press and hold j and k
-    # in vim to move around.
-    defaults.NSGlobalDomain.ApplePressAndHoldEnabled = false;
-
     # Turn off NIX_PATH warnings now that we're using flakes
     checks.verifyNixPath = false;
 
     stateVersion = 5;
 
-    #   defaults = {
-    #     NSGlobalDomain = {
-    #       AppleShowAllExtensions = true;
-    #       ApplePressAndHoldEnabled = false;
-    #
-    #       # 120, 90, 60, 30, 12, 6, 2
-    #       KeyRepeat = 2;
-    #
-    #       # 120, 94, 68, 35, 25, 15
-    #       InitialKeyRepeat = 15;
-    #
-    #       "com.apple.mouse.tapBehavior" = 1;
-    #       "com.apple.sound.beep.volume" = 0.0;
-    #       "com.apple.sound.beep.feedback" = 0;
-    #     };
-    #
-    #     dock = {
-    #       autohide = true;
-    #       show-recents = false;
-    #       launchanim = true;
-    #       orientation = "left";
-    #       tilesize = 48;
-    #     };
-    #
-    #     finder = {
-    #       _FXShowPosixPathInTitle = false;
-    #     };
-    #
-    #     trackpad = {
-    #       Clicking = true;
-    #       TrackpadThreeFingerDrag = true;
-    #     };
-    #   };
+    defaults = {
 
+      NSGlobalDomain = {
+        AppleShowAllExtensions = true;
+        # Disable press and hold for diacritics.
+        # I want to be able to press and hold j and k
+        # in vim to move around.
+        ApplePressAndHoldEnabled = false;
+      };
+
+      dock = {
+        autohide = true;
+        show-recents = false;
+        launchanim = true;
+        orientation = "left";
+        tilesize = 48;
+        mru-spaces = false;
+      };
+
+      screencapture = {
+        location = "~/Pictures";
+        type = "png";
+      };
+
+      finder = {
+        AppleShowAllFiles = true;
+        ShowStatusBar = true;
+        ShowPathbar = true;
+        FXDefaultSearchScope = "SCcf";
+        # "icnv" = Icon view, "Nlsv" = List view, "clmv" = Column View, "Flwv" = Gallery View
+        FXPreferredViewStyle = "Nlsv";
+        AppleShowAllExtensions = true;
+        CreateDesktop = false;
+        ShowExternalHardDrivesOnDesktop = false;
+        ShowHardDrivesOnDesktop = false;
+        ShowMountedServersOnDesktop = false;
+        ShowRemovableMediaOnDesktop = false;
+        FXEnableExtensionChangeWarning = false;
+      };
+
+      # Required for paperWM
+      spaces.spans-displays = true;
+
+      CustomUserPreferences = {
+
+        NSGlobalDomain = {
+          WebKitDevelopersExtras = true;
+          AppleHighlightColor = "0.615686 0.823529 0.454902";
+        };
+
+        "com.apple.desktopservices" = {
+          # Avoid creating .DS_Store files on network or USB volumes
+          DSDontWriteNetworkStores = true;
+          DSDontWriteUSBStores = true;
+        };
+
+        "com.apple.AdLib" = {
+          allowApplePersonalizedAdvertising = false;
+        };
+
+        "com.apple.print.PrintingPrefs" = {
+          # Automatically quit printer app once the print jobs complete
+          "Quit When Finished" = true;
+        };
+
+        # Prevent Photos from opening automatically when devices are plugged in
+        "com.apple.ImageCapture".disableHotPlug = true;
+
+        "org.hammerspoon.Hammerspoon" = {
+          MJConfigFile = "~/.config/hammerspoon/init.lua";
+        };
+
+      };
+
+    };
   };
 }
