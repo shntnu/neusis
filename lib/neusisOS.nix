@@ -47,11 +47,11 @@ rec {
   mkAdmin =
     adminConfig:
     (
-      { config, ... }:
+      { config, pkgs, ... }:
       {
         users.users.${adminConfig.username} = {
           isNormalUser = true;
-          shell = adminConfig.shell;
+          shell = pkgs.${adminConfig.shell};
           hashedPasswordFile = config.age.secrets.commonInitialHashedPassword.path;
           description = adminConfig.fullName;
           extraGroups = [

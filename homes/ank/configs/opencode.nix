@@ -32,7 +32,7 @@ let
     {
       extraPkgs ? [ ],
     }:
-    jail "jailed-opencode" opencode_pkg (
+    jail "opencode" opencode_pkg (
       with jail.combinators;
       (
         commonJailOptions

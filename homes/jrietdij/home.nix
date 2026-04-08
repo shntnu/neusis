@@ -1,4 +1,10 @@
-{ config, pkgs, lib, inputs, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  inputs,
+  ...
+}:
 
 let
   name = "Jonne Rietdijk";
@@ -20,32 +26,32 @@ in
       # Data tools
       duckdb
       jq
-      yq-go  # YAML processor
+      yq-go # YAML processor
       sqlite
 
       # Development tools
-      gh  # GitHub CLI
-      lazygit  # Terminal UI for git
-      delta  # Better git diff
-      bat  # Better cat with syntax highlighting
-      eza  # Modern ls replacement
-      fd  # Better find
-      ripgrep  # Fast grep
-      fzf  # Fuzzy finder
-      just  # Command runner
+      gh # GitHub CLI
+      lazygit # Terminal UI for git
+      delta # Better git diff
+      bat # Better cat with syntax highlighting
+      eza # Modern ls replacement
+      fd # Better find
+      ripgrep # Fast grep
+      fzf # Fuzzy finder
+      just # Command runner
 
       # System monitoring
       htop
-      btop  # Better htop
-      ncdu  # Disk usage analyzer
-      duf  # Better df
-      iftop  # Network bandwidth monitor
+      btop # Better htop
+      ncdu # Disk usage analyzer
+      duf # Better df
+      iftop # Network bandwidth monitor
 
       # Network tools
       curl
       wget
-      httpie  # Better curl for APIs
-      mtr  # Network diagnostic tool
+      httpie # Better curl for APIs
+      mtr # Network diagnostic tool
 
       # Cloud and containers
       awscli2
@@ -53,12 +59,12 @@ in
       docker-compose
       rclone
       s5cmd
-      nodePackages.aws-cdk  # AWS CDK CLI
+      nodePackages.aws-cdk # AWS CDK CLI
 
       # File management
       tree
-      ranger  # Terminal file manager
-      yazi  # Modern terminal file manager
+      ranger # Terminal file manager
+      yazi # Modern terminal file manager
 
       # Text processing
       neovim
@@ -75,21 +81,21 @@ in
       pixi
 
       # Shell enhancements
-      atuin  # Better shell history
-      tmux   # Terminal multiplexer
+      atuin # Better shell history
+      tmux # Terminal multiplexer
 
       # Misc utilities
-      tldr  # Simplified man pages
-      direnv  # Directory-specific environments
-      starship  # Modern shell prompt
-      parallel  # GNU parallel
+      tldr # Simplified man pages
+      pkgs.unstable.direnv # Directory-specific environments
+      starship # Modern shell prompt
+      parallel # GNU parallel
       ffmpeg
       pandoc
       graphviz
 
       # Linting and formatting
-      nixpkgs-fmt  # Nix formatter
-      ruff  # Python linter
+      nixpkgs-fmt # Nix formatter
+      ruff # Python linter
       pre-commit
     ];
   };
@@ -106,7 +112,7 @@ in
       enable = true;
       autocd = false;
       # Override vi-mode from editors.nix - disable it
-      plugins = [];
+      plugins = [ ];
 
       initContent = lib.mkAfter ''
         # Use emacs keybindings, not vi (override editors.nix)
