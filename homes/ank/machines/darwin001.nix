@@ -3,10 +3,10 @@
   pkgs,
   inputs,
   outputs,
+  lib,
   ...
 }:
 {
-  nixpkgs.config.allowUnfree = true;
   imports = [
     ../../common/home_manager.nix
     ../../common/dev
@@ -26,6 +26,19 @@
     })
   ];
 
+  # Configure nixpkgs
+  nixpkgs = {
+    # You can add overlays here
+    overlays = builtins.attrValues outputs.overlays;
+    # Configure your nixpkgs instance
+    config = {
+      # Disable if you don't want unfree packages
+      allowUnfree = true;
+    };
+  };
+
+  home.username = "kumarank";
+  home.homeDirectory = "/Users/kumarank";
   home.packages = import ../packages.nix { inherit pkgs outputs; };
 
   # Add hammerspoon config

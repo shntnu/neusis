@@ -1,10 +1,10 @@
-{ pkgs, ... }:
+{ ... }:
 {
   admins = [
     {
       username = "ank";
       fullName = "Ankur Kumar";
-      shell = pkgs.zsh;
+      shell = "zsh";
       sshKeys = [
         ../homes/ank/id_rsa.pub
         ../homes/ank/id_ed25519.pub
@@ -22,7 +22,7 @@
     {
       username = "amunoz";
       fullName = "Alan";
-      shell = pkgs.fish;
+      shell = "fish";
       sshKeys = [
         ../homes/amunoz/id_ed25519.pub
       ];
@@ -35,7 +35,7 @@
     {
       username = "shsingh";
       fullName = "Shantanu";
-      shell = pkgs.zsh;
+      shell = "zsh";
       sshKeys = [
         ../homes/shsingh/id_ed25519.pub
       ];
@@ -48,7 +48,7 @@
     {
       username = "jfredinh";
       fullName = "Johan";
-      shell = pkgs.zsh;
+      shell = "zsh";
       sshKeys = [
         ../homes/jfredinh/id_ed25519.pub
       ];

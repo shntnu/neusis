@@ -7,3 +7,4 @@ scratch
 .direnv
 imaging-server-resources
 /.agent-shell/
+.mypy_cache

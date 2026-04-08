@@ -1,10 +1,10 @@
-{ pkgs, ... }:
+{ ... }:
 {
   admins = [
     {
       username = "ank";
       fullName = "Ankur Kumar";
-      shell = pkgs.zsh;
+      shell = "zsh";
       sshKeys = [
         ../homes/ank/id_rsa.pub
         ../homes/ank/id_ed25519.pub
@@ -22,7 +22,7 @@
     {
       username = "amunoz";
       fullName = "Alan";
-      shell = pkgs.fish;
+      shell = "fish";
       sshKeys = [
         ../homes/amunoz/id_ed25519.pub
       ];
@@ -35,7 +35,7 @@
     {
       username = "shsingh";
       fullName = "Shantanu";
-      shell = pkgs.zsh;
+      shell = "zsh";
       sshKeys = [
         ../homes/shsingh/id_ed25519.pub
       ];
@@ -51,7 +51,7 @@
     {
       username = "spathak";
       fullName = "Suraj";
-      shell = pkgs.zsh;
+      shell = "zsh";
       sshKeys = [
         ../homes/spathak/id_ed25519.pub
       ];
@@ -64,7 +64,7 @@
     {
       username = "jewald";
       fullName = "Jess";
-      shell = pkgs.zsh;
+      shell = "zsh";
       sshKeys = [
         ../homes/jewald/id_ed25519.pub
       ];
@@ -77,7 +77,7 @@
     {
       username = "rshen";
       fullName = "Runxi";
-      shell = pkgs.zsh;
+      shell = "zsh";
       sshKeys = [
         ../homes/rshen/id_ed25519.pub
       ];
@@ -90,7 +90,7 @@
     {
       username = "jfredinh";
       fullName = "Johan";
-      shell = pkgs.zsh;
+      shell = "zsh";
       sshKeys = [
         ../homes/jfredinh/id_ed25519.pub
       ];
@@ -103,7 +103,7 @@
     {
       username = "jrietdij";
       fullName = "Jonne Rietdijk";
-      shell = pkgs.zsh;
+      shell = "zsh";
       sshKeys = [
         ../homes/jrietdij/id_ed25519.pub
       ];
@@ -120,7 +120,7 @@
     {
       username = "ngogober";
       fullName = "Nodar";
-      shell = pkgs.bash;  # Will be overridden to nologin by mkLocked
+      shell = "bash"; # Will be overridden to nologin by mkLocked
       sshKeys = [
         ../homes/ngogober/id_ed25519.pub
       ];

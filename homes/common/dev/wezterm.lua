@@ -7,6 +7,9 @@ end
 
 config.default_cursor_style = "BlinkingBlock"
 
+-- enable kitty keyboard protocol: https://sw.kovidgoyal.net/kitty/keyboard-protocol/
+config.enable_kitty_keyboard = true
+
 -- title bar
 config.window_decorations = "RESIZE"
 

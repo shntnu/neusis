@@ -3,6 +3,7 @@
   pkgs,
   inputs,
   outputs,
+  lib,
   ...
 }:
 {
@@ -26,6 +27,19 @@
     })
   ];
 
+  # Configure nixpkgs
+  nixpkgs = {
+    # You can add overlays here
+    overlays = builtins.attrValues outputs.overlays;
+    # Configure your nixpkgs instance
+    config = {
+      # Disable if you don't want unfree packages
+      allowUnfree = true;
+    };
+  };
+
+  home.username = "ank";
+  home.homeDirectory = "/Users/ank";
   home.packages = import ../packages.nix { inherit pkgs outputs; };
 
   # Add sketchybar config

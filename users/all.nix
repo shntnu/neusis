@@ -1,9 +1,9 @@
-{ self, pkgs, ... }:
+{ self, ... }:
 let
   userConfigList = [
-    (import ./cslab.nix { inherit pkgs; })
-    (import ./cslab_karkinos.nix { inherit pkgs; })
-    (import ./ank.nix { inherit pkgs; })
+    (import ./cslab.nix { })
+    (import ./cslab_karkinos.nix { })
+    (import ./ank.nix { })
   ];
 in
 self.lib.neusisOS.mergeUserConfigs userConfigList

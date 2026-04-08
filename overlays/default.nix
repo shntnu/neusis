@@ -32,20 +32,6 @@
       unstable = upkgs;
     };
 
-  # Adds pkgs.master == inputs.nixpkgs-master.legacyPackages.${pkgs.system}
-  master =
-    final: _:
-    let
-      mpkgs = import inputs.nixpkgs-master {
-        system = final.system;
-        config.allowUnfree = true;
-        config.cudaSupport = true;
-      };
-    in
-    {
-      master = mpkgs;
-    };
-
   # Adds pkgs.git-worktree-custom == A custom version of this package
   git-worktree = final: _: {
     git-worktree-custom = final.vimUtils.buildVimPlugin {

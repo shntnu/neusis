@@ -80,6 +80,7 @@ in
   };
 
   programs.direnv = {
+    package = pkgs.unstable.direnv;
     enable = true;
     enableZshIntegration = true;
     nix-direnv.enable = true;
@@ -171,6 +172,10 @@ in
 
       function nxp() {
         nix-shell -p "python3.withPackages(p: with p; [$@])"
+      }
+
+      function nxpc() {
+        nix-shell --arg config "{ allowUnfree = true; cudaSupport = true; }" -p "python3.withPackages(p: with p; [$@])"
       }
 
       function rcssh() {

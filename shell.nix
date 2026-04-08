@@ -13,12 +13,6 @@
   inputs,
   ...
 }:
-let
-  pkgs-unstable = import inputs.nixpkgs-unstable {
-    system = pkgs.system;
-    config.allowUnfree = true;
-  };
-in
 {
   default = pkgs.mkShell {
     NIX_CONFIG = "extra-experimental-features = nix-command flakes";
@@ -31,7 +25,7 @@ in
         nixos-anywhere
         # claude-code: Managed imperatively - see homes/shsingh/home.nix for details
 
-        inputs.agenix.packages.${system}.default
+        inputs.agenix.packages.${pkgs.stdenv.hostPlatform.system}.default
         ssh-to-age
         gnupg
         age

@@ -5,7 +5,6 @@
     # Nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-master.url = "github:nixos/nixpkgs/master";
 
     # flake-parts
     flake-parts = {
@@ -42,18 +41,19 @@
     };
 
     stylix.url = "github:danth/stylix/release-25.11";
+    stylix.inputs.nixpkgs.follows = "nixpkgs";
 
     #------------------------------------------------------------
 
     # wsl
-    nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
+    nixos-wsl.url = "github:nix-community/NixOS-WSL/release-25.11";
+    nixos-wsl.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
     # darwin inputs
     darwin = {
-      url = "github:LnL7/nix-darwin/nix-darwin-25.05";
+      url = "github:LnL7/nix-darwin/nix-darwin-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    mac-app-util.url = "github:hraban/mac-app-util";
     nix-homebrew = {
       url = "github:zhaofengli-wip/nix-homebrew";
     };
@@ -110,8 +110,13 @@
     };
 
     agenix.url = "github:ryantm/agenix";
+    agenix.inputs.nixpkgs.follows = "nixpkgs";
 
     hardware.url = "github:nixos/nixos-hardware";
+
+    jail-nix.url = "sourcehut:~alexdavid/jail.nix";
+    llm-agents.url = "github:numtide/llm-agents.nix";
+    llm-agents.inputs.nixpkgs.follows = "nixpkgs-unstable";
   };
 
   outputs =
@@ -119,35 +124,18 @@
     # Define all the reusable modules for external use
     flake-parts.lib.mkFlake { inherit inputs; } (
       top@{
+        config,
         withSystem,
         moduleWithSystem,
         flake-parts-lib,
-        self,
-        lib,
         ...
       }:
       let
-        inherit (flake-parts-lib) importApply;
-
-        # Helper
-        mkImportApply =
-          moduleFileAttrs:
-          builtins.mapAttrs (
-            name: value:
-            importApply value {
-              localFlake = self;
-              inherit withSystem moduleWithSystem flake-parts-lib;
-              #inherit (inputs) nixpkgs;
-            }
-          ) moduleFileAttrs;
-
         # Flake modules for external and internal use
         publicFlakeModules = rec {
           default = ./flakeModules/lib.nix;
           neusis = default;
 
-        }
-        // mkImportApply rec {
         };
       in
       {
@@ -170,16 +158,12 @@
         # Per system stuff
         perSystem =
           {
-            config,
             pkgs,
-            inputs',
-            self',
-            system,
             ...
           }:
           {
             devShells = import ./shell.nix {
-              inherit (self) inputs;
+              inherit (top.self) inputs;
               inherit pkgs;
             };
 
@@ -192,23 +176,20 @@
           # For backward compat
           flakeModule = flakeModules.default;
 
-          overlays = import ./overlays { inherit (self) inputs outputs; };
+          overlays = import ./overlays { inherit (top.self) inputs outputs; };
           templates = import ./templates;
 
           # All home configs dynamically generated
-          homeConfigurations = self.lib.neusisOS.mkHomeConfigurations {
+          homeConfigurations = top.self.lib.neusisOS.mkHomeConfigurations {
             machinesRegistry = import ./machines/registry.nix {
-              inherit lib;
-              nixpkgs = self.inputs.nixpkgs;
-              overlays = self.outputs.overlays;
+              inherit (top) lib;
+              nixpkgs = top.self.inputs.nixpkgs;
+              overlays = top.self.outputs.overlays;
             };
-            # FIXME: Hardcoded x86_64-linux breaks Darwin/ARM support
-            # See https://github.com/leoank/neusis/pull/32#discussion_r2373029616
             userConfig = import ./users/all.nix {
-              inherit self;
-              pkgs = import self.inputs.nixpkgs { system = "x86_64-linux"; };
+              inherit (top) self;
             };
-            specialArgs = { inherit (self) inputs outputs; };
+            specialArgs = { inherit (top.self) inputs outputs; };
           };
 
         };
