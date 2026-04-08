@@ -18,6 +18,10 @@
   # Zfs second pool import issue: https://github.com/nix-community/disko/issues/359
   system.activationScripts."importzfs" = ''
     ${pkgs.zfs}/bin/zpool import -fa
+    chmod 0777 /work
+    chmod 0777 -R /work/datasets
+    chmod 0777 -R /work/scratch
+    chmod 0777 -R /work/tools
   '';
 
 }

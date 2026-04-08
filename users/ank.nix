@@ -1,10 +1,10 @@
-{ pkgs, ... }:
+{ ... }:
 {
   admins = [
     {
       username = "ank";
       fullName = "Ankur Kumar";
-      shell = pkgs.zsh;
+      shell = "zsh";
       sshKeys = [
         ../homes/ank/id_rsa.pub
         ../homes/ank/id_ed25519.pub
@@ -19,6 +19,12 @@
         ];
         chiral = [
           ../homes/ank/machines/chiral.nix
+        ];
+        rogue = [
+          ../homes/ank/machines/rogue.nix
+        ];
+        darwin001 = [
+          ../homes/ank/machines/darwin001.nix
         ];
       };
     }

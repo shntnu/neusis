@@ -14,6 +14,7 @@ let
   pkgsFor = lib.genAttrs systems (
     system:
     import nixpkgs {
+      # The new stdenv hostPlatform doesn't work here
       inherit system;
       overlays = builtins.attrValues overlays;
       config.allowUnfree = true;
@@ -25,4 +26,5 @@ in
   karkinos = pkgsFor.x86_64-linux;
   chiral = pkgsFor.x86_64-linux;
   darwin001 = pkgsFor.aarch64-darwin;
+  rogue = pkgsFor.aarch64-darwin;
 }

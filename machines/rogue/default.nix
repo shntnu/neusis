@@ -3,6 +3,7 @@
   pkgs,
   inputs,
   outputs,
+  lib,
   ...
 }:
 let
@@ -13,16 +14,15 @@ let
 in
 {
   imports = [
-    inputs.mac-app-util.darwinModules.default
     inputs.home-manager.darwinModules.home-manager
     inputs.nix-homebrew.darwinModules.nix-homebrew
-    #../common/darwin_home_manager.nix
     (import ../common/nix-homebrew.nix {
       inherit inputs;
       user = "ank";
     })
     ../common/nix.nix
     ../common/substituters.nix
+    ../../homes/ank/configs/kanata_system.nix
   ];
 
   # Configure nixpkgs
@@ -39,11 +39,6 @@ in
   # Enable apple ssh server
   services.openssh.enable = true;
   services.eternal-terminal.enable = true;
-
-  # Enable sketchy bar
-  # services.sketchybar = {
-  #   enable = true;
-  # };
 
   fonts.packages = [
     pkgs.nerd-fonts.iosevka
@@ -100,9 +95,8 @@ in
       #"Microsoft Outlook" = 985367838;
     };
     brews = [
-      "kanata"
-      "felixkratz/formulae/svim"
-      "dimentium/autoraise/autoraise"
+      "pixi"
+      "gnu-sed"
     ];
     taps = map (key: builtins.replaceStrings [ "homebrew-" ] [ "" ] key) (
       builtins.attrNames config.nix-homebrew.taps
@@ -113,7 +107,6 @@ in
     casks = map mkGreedy [
       "signal"
       "whatsapp"
-      "karabiner-elements"
       "keycastr"
       #"fiji"
       "hammerspoon"
@@ -129,20 +122,14 @@ in
 
   # Configure home manager
   home-manager = {
+    useGlobalPkgs = lib.mkForce false;
     extraSpecialArgs = { inherit inputs outputs; };
     users.ank = {
       imports = [
-        inputs.mac-app-util.homeManagerModules.default
         ../../homes/ank/machines/rogue.nix
       ];
     };
   };
-
-  # age.secrets.tsauthkey.file = ../../secrets/common/persistent_tsauthkey.age;
-  # services.tailscale = {
-  #   enable = true;
-  #   authKeyFile = config.age.secrets.tsauthkey.path;
-  # };
 
   security.pam.services.sudo_local.touchIdAuth = true;
   # sudo with touch id

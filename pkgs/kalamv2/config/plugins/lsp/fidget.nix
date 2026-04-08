@@ -1,8 +1,7 @@
-{ mpkgs, ... }:
+{ ... }:
 {
   plugins.fidget = {
     enable = true;
-    package = mpkgs.vimPlugins.fidget-nvim;
     settings = {
       logger = {
         level = "warn"; # “off”, “error”, “warn”, “info”, “debug”, “trace”

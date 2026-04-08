@@ -1,3 +1,4 @@
+{ pkgs, ... }:
 {
   config = {
     extraConfigLuaPre = ''
@@ -11,7 +12,7 @@
     # offering improved performance and flexibility.
     luaLoader.enable = true;
 
-    clipboard.providers.wl-copy.enable = true;
+    clipboard.providers.wl-copy.enable = if pkgs.stdenv.isLinux then true else false;
 
     opts = {
       virtualedit = "block"; # Allow cursor to move where there is no text in visual block mode

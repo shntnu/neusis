@@ -13,12 +13,6 @@
   inputs,
   ...
 }:
-let
-  pkgs-unstable = import inputs.nixpkgs-unstable {
-    system = pkgs.stdenv.hostPlatform.system;
-    config.allowUnfree = true;
-  };
-in
 {
   default = pkgs.mkShell {
     NIX_CONFIG = "extra-experimental-features = nix-command flakes";

@@ -3,7 +3,7 @@ with pkgs;
 [
   duckdb
   jq
-  mpv
+  pkgs.unstable.mpv
   nix-output-monitor
   nix-fast-build
   nh
@@ -26,7 +26,6 @@ with pkgs;
   procs
   bandwhich
   outputs.packages.${pkgs.stdenv.hostPlatform.system}.claude-code
-  pkgs.master.opencode
   bitwarden-desktop
   pnpm
   mosh
@@ -43,5 +42,6 @@ with pkgs;
   # pkgs.master.whatsapp-for-mac
   spotify
   obsidian
-  blender
+  # broken right now. uncomment later
+  #pkgs.unstable.blender
 ]

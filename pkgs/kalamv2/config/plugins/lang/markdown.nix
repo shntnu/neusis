@@ -5,7 +5,7 @@
     render-markdown.enable = true;
     clipboard-image = {
       enable = true;
-      clipboardPackage = pkgs.wl-clipboard;
+      clipboardPackage = if pkgs.stdenv.isLinux then pkgs.wl-clipboard else pkgs.pngpaste;
     };
 
     markdown-preview = {

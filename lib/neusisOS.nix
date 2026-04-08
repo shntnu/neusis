@@ -13,7 +13,8 @@ rec {
   showTopArgs = args;
 
   # Concatenate all user types into a single list
-  concatAllUsers = userConfig: with userConfig; admins ++ regulars ++ (userConfig.locked or []) ++ guests;
+  concatAllUsers =
+    userConfig: with userConfig; admins ++ regulars ++ (userConfig.locked or [ ]) ++ guests;
 
   # Merge all top level user configs into a single user config
   mergeUserConfigs =
@@ -22,7 +23,7 @@ rec {
       (acc: userConfig: {
         admins = acc.admins ++ userConfig.admins;
         regulars = acc.regulars ++ userConfig.regulars;
-        locked = acc.locked ++ (userConfig.locked or []);
+        locked = acc.locked ++ (userConfig.locked or [ ]);
         guests = acc.guests ++ userConfig.guests;
       })
       {
@@ -46,11 +47,11 @@ rec {
   mkAdmin =
     adminConfig:
     (
-      { config, ... }:
+      { config, pkgs, ... }:
       {
         users.users.${adminConfig.username} = {
           isNormalUser = true;
-          shell = adminConfig.shell;
+          shell = pkgs.${adminConfig.shell};
           hashedPasswordFile = config.age.secrets.commonInitialHashedPassword.path;
           description = adminConfig.fullName;
           extraGroups = [
@@ -123,8 +124,8 @@ rec {
       {
         users.users.${lockedConfig.username} = {
           isNormalUser = true;
-          shell = "${pkgs.shadow}/bin/nologin";  # Prevent login
-          hashedPassword = "!";  # Locked password (cannot authenticate)
+          shell = "${pkgs.shadow}/bin/nologin"; # Prevent login
+          hashedPassword = "!"; # Locked password (cannot authenticate)
           description = lockedConfig.fullName;
           extraGroups = [
             # Minimal groups - removed from privileged access
@@ -149,7 +150,7 @@ rec {
       # Create regular user accounts
       regulars = builtins.map mkRegular userConfig.regulars;
       # Create locked accounts
-      locked = builtins.map mkLocked (userConfig.locked or []);
+      locked = builtins.map mkLocked (userConfig.locked or [ ]);
       # Create guest accounts
       guests = builtins.map mkGuest userConfig.guests;
 
@@ -226,6 +227,7 @@ rec {
       ];
     in
     inputs.darwin.lib.darwinSystem {
+      # stdenv.hostPlatform.system doesn't work here
       inherit system;
       modules = [ userModule ] ++ userConfigModules ++ homeManagerModules;
       inherit specialArgs;
@@ -255,7 +257,8 @@ rec {
         lib.lists.flatten ((builtins.map (user: userAndMachineSet' user) allUsers))
       );
     in
-    builtins.mapAttrs (name: value: 
+    builtins.mapAttrs (
+      name: value:
       inputs.home-manager.lib.homeManagerConfiguration {
         pkgs = machinesRegistry.${lib.last (lib.strings.splitString "@" name)};
         extraSpecialArgs = specialArgs;

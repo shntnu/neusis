@@ -16,7 +16,7 @@
       cmake # c compiler
       devenv
       difftastic # better diffs
-      direnv # Per-project isolated environment
+      pkgs.unstable.direnv # Per-project isolated environment
       dua # better du
       duckdb
       dust # interactive du in tust
