@@ -74,11 +74,11 @@ rec {
   mkRegular =
     regularConfig:
     (
-      { config, ... }:
+      { config, pkgs, ... }:
       {
         users.users.${regularConfig.username} = {
           isNormalUser = true;
-          shell = regularConfig.shell;
+          shell = pkgs.${regularConfig.shell};
           hashedPasswordFile = config.age.secrets.commonInitialHashedPassword.path;
           description = regularConfig.fullName;
           extraGroups = [
@@ -98,11 +98,11 @@ rec {
   mkGuest =
     guestConfig:
     (
-      { config, ... }:
+      { config, pkgs, ... }:
       {
         users.users.${guestConfig.username} = {
           isNormalUser = true;
-          shell = guestConfig.shell;
+          shell = pkgs.${guestConfig.shell};
           hashedPasswordFile = config.age.secrets.commonInitialHashedPassword.path;
           description = guestConfig.fullName;
           extraGroups = [
