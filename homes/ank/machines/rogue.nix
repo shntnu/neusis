@@ -15,6 +15,7 @@
     ../../common/browsers/brave.nix
     ../configs/tmux.nix
     ../configs/opencode.nix
+    ../configs/zsh_alias.nix
     (import ../../common/dev/editors.nix {
       inherit pkgs config inputs;
       enableNvim = false;

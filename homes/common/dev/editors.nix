@@ -161,35 +161,9 @@ in
         sudo nixos-rebuild switch --flake .#$1 -v
       }
 
-      function nz() {
-        cd $(zoxide query $1) && nvim
+      function darwin() {
+        sudo darwin-rebuild switch --flake .#$1 -v
       }
-
-      function nx() {
-        nix-shell -p $@
-      }
-
-      function nxp() {
-        nix-shell -p "python3.withPackages(p: with p; [$@])"
-      }
-
-      function nxpc() {
-        nix-shell --arg config "{ allowUnfree = true; cudaSupport = true; }" -p "python3.withPackages(p: with p; [$@])"
-      }
-
-      function rcssh() {
-        rclone mount --sftp-host $1 :sftp:$2 $3 --volname $4 --sftp-user $5 --sftp-key-file ~/.ssh/id_ed25519
-      }
-
-      function rcssha() {
-        rclone mount --sftp-host $1 :sftp:$2 $3 --volname $(uuidgen | head -c 8)-vol --allow-other --allow-non-empty --sftp-user ank --sftp-key-file ~/.ssh/id_ed25519 \
-          --sftp-shell-type unix --sftp-md5sum-command md5sum --sftp-sha1sum-command sha1sum
-      }
-
-      bindkey '^I' complete-word
-      bindkey '^[[Z' autosuggest-accept
-      export EDITOR=nvim
-      export TERM=xterm
     '';
     history.size = 10000;
     history.path = "${config.xdg.dataHome}/zsh/history";
