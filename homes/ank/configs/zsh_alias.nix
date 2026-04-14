@@ -16,10 +16,11 @@
         "git"
         "gh"
         "globalias"
+        "fzf"
       ];
     };
     shellGlobalAliases = {
-      G = "| grep --color=auto -i -n -c";
+      G = "| grep --color=auto -i -n";
     };
     shellAliases = {
       oc = "opencode";
@@ -44,23 +45,46 @@
         compinit -C
       fi
     '';
-    initContent = ''
-      function nz() {
-        cd $(zoxide query $1) && nvim
-      }
-      function nx() {
-        nix-shell -p $@
-      }
-      function nxp() {
-        nix-shell -p "python3.withPackages(p: with p; [$@])"
-      }
-      function nxpc() {
-        nix-shell --arg config "{ allowUnfree = true; cudaSupport = true; }" -p "python3.withPackages(p: with p; [$@])"
-      }
+    initContent =
+      let
+        zshConfig = pkgs.lib.mkOrder 1000 ''
+          function nz() {
+            cd $(zoxide query $1) && nvim
+          }
+          function nx() {
+            nix-shell -p $@
+          }
+          function nxp() {
+            nix-shell -p "python3.withPackages(p: with p; [$@])"
+          }
+          function nxpc() {
+            nix-shell --arg config "{ allowUnfree = true; cudaSupport = true; }" -p "python3.withPackages(p: with p; [$@])"
+          }
 
-      export EDITOR=nvim
-      export TERM=xterm
-    '';
+
+          export EDITOR=nvim
+          export TERM=xterm
+          # Add env var for vi mode editor
+          export ZVM_VI_EDITOR=$EDITOR
+          # Add keytimeout for surround to work
+          # https://github.com/softmoth/zsh-vim-mode/issues/13?issue=zsh-users%7Czsh-autosuggestions%7C254
+          export KEYTIMEOUT=30
+        '';
+        zshLateInit = pkgs.lib.mkOrder 1500 ''
+          # https://github.com/nix-community/home-manager/issues/7816
+          # https://github.com/jeffreytse/zsh-vi-mode/issues/242
+          # Workaround to make vi-mode work with atuin
+          # Similarly fzf can also be enabled if required
+          function zvm_after_init() {
+            zvm_bindkey viins '^R' atuin-search
+            zvm_bindkey vicmd '^R' atuin-search
+          }
+        '';
+      in
+      pkgs.lib.mkMerge [
+        zshConfig
+        zshLateInit
+      ];
 
   };
 }

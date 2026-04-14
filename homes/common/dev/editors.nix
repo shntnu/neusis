@@ -113,7 +113,6 @@ in
   programs.starship.enable = false;
   programs.fzf = {
     enable = true;
-    enableBashIntegration = true;
     enableZshIntegration = true;
     defaultOptions = [
       "--style full"
@@ -146,6 +145,24 @@ in
   programs.delta = {
     enable = true;
     enableGitIntegration = true;
+    options = {
+      decorations = {
+        commit-decoration-style = "bold yellow box ul";
+        file-decoration-style = "none";
+        file-style = "bold yellow ul";
+        hunk-header-decoration-style = "cyan box ul";
+      };
+      features = "side-by-side line-numbers decorations";
+      syntax-theme = "dracula";
+      plus-style = "syntax '#003800'";
+      minus-style = "syntax '#3f0001'";
+      line-numbers = {
+        line-numbers-left-style = "cyan";
+        line-numbers-right-style = "cyan";
+        line-numbers-minus-style = "124";
+        line-numbers-plus-style = "28";
+      };
+    };
   };
   programs.zoxide = {
     enable = true;

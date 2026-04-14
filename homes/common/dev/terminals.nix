@@ -18,7 +18,6 @@ in
       daemon.enable = true;
       flags = [
         "--disable-up-arrow"
-        "--disable-ctrl-r"
       ];
       settings = {
         auto_sync = true;
@@ -27,6 +26,7 @@ in
         search_mode = "fuzzy";
         enter_accept = false;
       };
+      enableZshIntegration = true;
     };
 
     wezterm = {
