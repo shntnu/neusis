@@ -14,7 +14,6 @@ let
 in
 {
   imports = [
-    inputs.mac-app-util.darwinModules.default
     inputs.home-manager.darwinModules.home-manager
     inputs.nix-homebrew.darwinModules.nix-homebrew
     #../common/darwin_home_manager.nix
@@ -83,11 +82,12 @@ in
   programs.zsh.enable = true;
 
   # Configure homebrew
+  # https://github.com/nix-community/home-manager/issues/8336
   homebrew = {
     enable = true;
     masApps = {
       #Xcode = 497799835;
-      "Microsoft Outlook" = 985367838;
+      #"Microsoft Outlook" = 985367838;
     };
     brews = [
       "pixi"
@@ -102,6 +102,8 @@ in
       "hammerspoon"
       "deskflow"
       "superwhisper"
+      "thaw"
+      "linearmouse"
     ];
     onActivation = {
       cleanup = "uninstall";
@@ -118,7 +120,6 @@ in
     extraSpecialArgs = { inherit inputs outputs; };
     users.kumarank = {
       imports = [
-        inputs.mac-app-util.homeManagerModules.default
         ../../homes/ank/machines/darwin001.nix
       ];
     };

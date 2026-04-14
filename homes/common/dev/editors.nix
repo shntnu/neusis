@@ -134,7 +134,6 @@ in
     enable = true;
     extensions = [ pkgs.gh-dash ];
   };
-  programs.pay-respects.enable = true;
   programs.zsh = {
     enable = true;
     enableCompletion = true;
