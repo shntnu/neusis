@@ -66,9 +66,6 @@
           export TERM=xterm
           # Add env var for vi mode editor
           export ZVM_VI_EDITOR=$EDITOR
-          # Add keytimeout for surround to work
-          # https://github.com/softmoth/zsh-vim-mode/issues/13?issue=zsh-users%7Czsh-autosuggestions%7C254
-          export KEYTIMEOUT=30
         '';
         zshLateInit = pkgs.lib.mkOrder 1500 ''
           # https://github.com/nix-community/home-manager/issues/7816
@@ -78,6 +75,9 @@
           function zvm_after_init() {
             zvm_bindkey viins '^R' atuin-search
             zvm_bindkey vicmd '^R' atuin-search
+            # Add keytimeout for surround to work
+            # https://github.com/softmoth/zsh-vim-mode/issues/13?issue=zsh-users%7Czsh-autosuggestions%7C254
+            export KEYTIMEOUT=30
           }
         '';
       in
