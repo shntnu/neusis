@@ -1,13 +1,9 @@
 {
   pkgs,
   config,
-  inputs,
-  enableNvim ? false,
-  enableAstro ? false,
   ...
 }:
 let
-  astroank_src = inputs.astroank;
   pdf_viewer = if pkgs.stdenv.isDarwin then [ ] else [ pkgs.sioyek ]; # sioyek is not building on darwin
 in
 {
@@ -86,50 +82,6 @@ in
     nix-direnv.enable = true;
   };
 
-  programs.neovim =
-    if enableNvim then
-      {
-        enable = true;
-        package = pkgs.neovim-unwrapped;
-        # whatever other neovim configuration you have
-        extraPackages = with pkgs; [
-          # ... other packages
-          imagemagick # for image rendering
-          zlib
-          sqlite
-        ];
-        extraLuaPackages = ps: [
-          # ... other lua packages
-          ps.magick # for image rendering
-          ps.luarocks
-        ];
-        extraPython3Packages =
-          ps: with ps; [
-            # ... other python packages
-            pynvim
-            jupyter-client
-            cairosvg # for image rendering
-            pnglatex # for image rendering
-            plotly # for image rendering
-            # kaleido # molten
-            nbformat # molten
-            pyperclip
-          ];
-      }
-    else
-      { enable = false; };
-
-  xdg.configFile =
-    if enableAstro then
-      {
-        "nvim" = {
-          source = astroank_src;
-          recursive = true;
-        };
-      }
-    else
-      { };
-
   programs.gh = {
     enable = true;
     extensions = [ pkgs.gh-dash ];
@@ -137,25 +89,17 @@ in
   programs.zsh = {
     enable = true;
     enableCompletion = true;
+    enableVteIntegration = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
-    plugins = [
-      {
-        name = "vi-mode";
-        src = pkgs.zsh-vi-mode;
-        file = "share/zsh-vi-mode/zsh-vi-mode.plugin.zsh";
-      }
-    ];
-
-    shellAliases = {
-      ls = "eza";
-      ll = "eza -lah";
-      n = "nvim";
-      ns = "nix search nixpkgs";
-      cat = "bat";
-      df = "duf";
-
+    dotDir = "${config.xdg.configHome}/zsh";
+    history.path = "${config.xdg.dataHome}/zsh/history";
+    history.size = 10000;
+    oh-my-zsh = {
+      enable = true;
+      theme = "fino-time";
     };
+
     initContent = ''
       function update() {
         sudo nixos-rebuild switch --flake .#$1 -v
@@ -165,19 +109,44 @@ in
         sudo darwin-rebuild switch --flake .#$1 -v
       }
     '';
-    history.size = 10000;
-    history.path = "${config.xdg.dataHome}/zsh/history";
-    oh-my-zsh = {
-      enable = true;
-      plugins = [
-        "git"
-        "gh"
-      ];
-      theme = "fino-time";
-    };
   };
   programs.starship.enable = false;
-  programs.fzf.enable = true;
+  programs.fzf = {
+    enable = true;
+    enableBashIntegration = true;
+    enableZshIntegration = true;
+    defaultOptions = [
+      "--style full"
+    ];
+    fileWidgetOptions = [
+      "--preview='bat --color=always {}'"
+    ];
+  };
+  programs.television = {
+    enable = true;
+    package = pkgs.unstable.television;
+    enableZshIntegration = false;
+  };
+  programs.nix-search-tv = {
+    enable = true;
+    enableTelevisionIntegration = true;
+  };
+  programs.nix-your-shell = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+  programs.nix-init = {
+    enable = true;
+    settings = {
+      maintainers = [
+        "ank"
+      ];
+    };
+  };
+  programs.delta = {
+    enable = true;
+    enableGitIntegration = true;
+  };
   programs.zoxide = {
     enable = true;
     enableBashIntegration = true;

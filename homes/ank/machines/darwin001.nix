@@ -15,10 +15,9 @@
     ../configs/tmux.nix
     ../configs/opencode.nix
     ../configs/zsh_alias.nix
+    ../configs/zsh_perf.nix
     (import ../../common/dev/editors.nix {
-      inherit pkgs config inputs;
-      enableNvim = false;
-      enableAstro = false;
+      inherit pkgs config;
     })
     (import ../../common/dev/git.nix {
       username = "Ankur Kumar";

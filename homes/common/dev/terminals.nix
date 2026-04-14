@@ -9,26 +9,30 @@ let
 in
 {
   home.packages = [
-    pkgs.wezterm
     (pkgs.writers.writePython3Bin "gclb" { } ./gclb.py)
   ];
+
   programs = {
     atuin = {
       enable = atuin_enable;
-      enableZshIntegration = true;
       daemon.enable = true;
+      flags = [
+        "--disable-up-arrow"
+        "--disable-ctrl-r"
+      ];
       settings = {
         auto_sync = true;
         sync_frequency = "5m";
         sync_address = "https://api.atuin.sh";
         search_mode = "fuzzy";
+        enter_accept = false;
       };
     };
 
     wezterm = {
       enable = true;
       package = pkgs.wezterm;
-      enableZshIntegration = true;
+      enableZshIntegration = false;
       extraConfig = builtins.readFile ./wezterm.lua;
     };
 

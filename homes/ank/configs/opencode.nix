@@ -52,6 +52,9 @@ let
   custom_opencode_pkg = if pkgs.stdenv.isLinux then jailed_opencode else pkgs.opencode;
 in
 {
+  home.packages = [
+    inputs.llm-agents.packages.${pkgs.hostPlatform.system}.agent-deck
+  ];
   programs.opencode = {
     package = custom_opencode_pkg;
     enable = true;

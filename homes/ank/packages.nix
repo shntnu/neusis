@@ -7,7 +7,6 @@ with pkgs;
   nix-output-monitor
   nix-fast-build
   nh
-  television
   comma
   manix
   nix-index
