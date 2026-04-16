@@ -112,6 +112,8 @@ in
       "hammerspoon"
       "deskflow"
       "superwhisper"
+      "thaw"
+      "linearmouse"
     ];
     onActivation = {
       cleanup = "uninstall";

@@ -14,8 +14,7 @@
     ../../common/themes
     ../configs/tmux.nix
     ../configs/opencode.nix
-    ../configs/zsh_alias.nix
-    ../configs/zsh_perf.nix
+    ../configs/zsh.nix
     (import ../../common/dev/editors.nix {
       inherit pkgs config;
     })

@@ -13,14 +13,10 @@
     ../../common/dev/kalam.nix
     ../../common/themes
     ../../common/browsers/brave.nix
+    ../../common/dev/editors.nix
     ../configs/tmux.nix
     ../configs/opencode.nix
-    ../configs/zsh_alias.nix
-    (import ../../common/dev/editors.nix {
-      inherit pkgs config inputs;
-      enableNvim = false;
-      enableAstro = false;
-    })
+    ../configs/zsh.nix
     (import ../../common/dev/git.nix {
       username = "Ankur Kumar";
       userEmail = "ank@leoank.me";
@@ -42,12 +38,6 @@
   home.username = "ank";
   home.homeDirectory = "/Users/ank";
   home.packages = import ../packages.nix { inherit pkgs outputs; };
-
-  # Add sketchybar config
-  # xdg.configFile."sketchybar" = {
-  #   source = ../configs/sketchybar;
-  #   recursive = true;
-  # };
 
   # Add hammerspoon config
   xdg.configFile."hammerspoon" = {
