@@ -1,5 +1,9 @@
 { pkgs, ... }:
 {
+  imports = [
+    ./configs/opencode.nix
+  ];
+
   home = {
     username = "amunoz";
     homeDirectory = "/home/amunoz";
@@ -13,6 +17,7 @@
       cargo # rust packages
       clang # c language
       clang-tools # tools for c language
+      claude-code
       cmake # c compiler
       devenv
       difftastic # better diffs
@@ -27,6 +32,7 @@
       fontconfig # Needed for napari
       fzf # fuzzy finder
       gawk # Main awk
+      gemini-cli
       gemini-cli
       git
       gnumake # Necessary for emacs' vterm
@@ -60,6 +66,7 @@
       nixfmt-rfc-style # Nix formatting (for nixpkgs)
       nixfmt-tree # Format entire directories of nix
       nodePackages.bash-language-server # bash
+      opencode
       pandoc # Convert between formats
       parallel # GNU parallel
       pdftk
