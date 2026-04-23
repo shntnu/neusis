@@ -217,8 +217,9 @@ in
 
     # nixos/tailscale: tailscaled-autoconnect.service prevents multi-user.target from reaching "active" state when server errors #430756
     # https://github.com/NixOS/nixpkgs/issues/430756
-    #systemd.services.tailscaled-autoconnect.serviceConfig.TimeoutStartSec = "30s";
-    systemd.services.tailscaled-autoconnect.serviceConfig.Type = lib.mkForce "simple";
+    # Keep upstream Type=notify (script uses systemd-notify --ready) but add 30s timeout
+    # so it can't block multi-user.target indefinitely if tailscale never connects
+    systemd.services.tailscaled-autoconnect.serviceConfig.TimeoutStartSec = "30s";
 
   };
 }

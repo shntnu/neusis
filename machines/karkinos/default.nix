@@ -10,6 +10,8 @@
     inputs.agenix.nixosModules.default
     outputs.nixosModules.tailscale
     outputs.nixosModules.monitoring
+    outputs.nixosModules.cslab-infrastructure
+    outputs.nixosModules.cslab-monitoring
 
     # Import your generated (nixos-generate-config) hardware configuration
     ./hardware-configuration.nix
@@ -46,7 +48,8 @@
     ../common/nosleep.nix
     ../common/nix.nix
     ../common/printing.nix
-    ../common/zfs.nix
+    outputs.nixosModules.zfs
+    ../common/sudo.nix
   ];
 
   neusis.tailscale = {
@@ -65,6 +68,26 @@
     enable = true;
     alloy.enable = false;
   };
+
+  neusis.cslab.infrastructure = {
+    enable = true;
+    userConfigPath = ../../users/cslab_karkinos.nix;
+    # dataRoot defaults to "/work" — correct after ZFS restructure
+    # imagingGid defaults to 1000 — verified unoccupied on Karkinos
+  };
+
+  neusis.cslab.monitoring = {
+    enable = true;
+    userConfigPath = ../../users/cslab_karkinos.nix;
+    machineName = "Karkinos";
+    slackWebhookSecretFile = ../../secrets/oppy/slack_webhook.age;
+    quotaCheckScript = ../../modules/nixos/cslab-scripts/check-quotas.nu;
+    # quotaLimit defaults to 100 — same as Oppy
+    # homeBaseDir defaults to "/home" — correct for Karkinos
+  };
+
+  neusis.zfs.autoSnapshot.enable = true;
+
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "25.11";
 }

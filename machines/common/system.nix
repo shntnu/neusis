@@ -24,6 +24,10 @@
     podman-tui
   ];
 
+  # Ensure terminfo entries for modern terminals (ghostty, kitty, etc.)
+  # are available so SSH sessions from these terminals work correctly
+  environment.enableAllTerminfo = true;
+
   environment.shells = [ pkgs.zsh ];
   programs.zsh.enable = true;
   programs.fish.enable = true;

@@ -21,6 +21,14 @@
     sleep-inactive-battery-type='nothing'
   '';
 
+  # ollama needs imaging group to traverse /work (0750 root:imaging)
+  users.users.ollama = {
+    isSystemUser = true;
+    group = "ollama";
+    extraGroups = [ "imaging" ];
+  };
+  users.groups.ollama = {};
+
   # enable ollama
   services.ollama = {
     enable = true;

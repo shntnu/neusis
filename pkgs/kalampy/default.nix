@@ -6,12 +6,12 @@
   ...
 }:
 let
-  # nixvimLib = inputs.nixvim.lib.${pkgs.system};
-  nixvim' = inputs.nixvim.legacyPackages.${pkgs.system};
+  # nixvimLib = inputs.nixvim.lib.${pkgs.stdenv.hostPlatform.system};
+  nixvim' = inputs.nixvim.legacyPackages.${pkgs.stdenv.hostPlatform.system};
   nixvimModule =
     let
       upkgs = import inputs.nixpkgs {
-        inherit (pkgs) system;
+        system = pkgs.stdenv.hostPlatform.system;
         config.allowUnfree = true;
         config.cudaSupport = true;
         overlays = [ outputs.overlays.git-worktree ];

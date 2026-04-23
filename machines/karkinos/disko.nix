@@ -5,7 +5,7 @@
       # SSD cluster
       ssd0 = {
         type = "disk";
-        device = "/dev/nvme1n1";
+        device = "/dev/disk/by-id/nvme-Samsung_SSD_990_PRO_4TB_S7KGNJ0WC00172Y";
         imageSize = "3G";
         content = {
           type = "gpt";
@@ -31,7 +31,7 @@
       };
       ssd1 = {
         type = "disk";
-        device = "/dev/nvme0n1";
+        device = "/dev/disk/by-id/nvme-Samsung_SSD_990_PRO_4TB_S7KGNJ0X145183K";
         imageSize = "3G";
         content = {
           type = "gpt";
@@ -48,7 +48,7 @@
       };
       ssd2 = {
         type = "disk";
-        device = "/dev/nvme2n1";
+        device = "/dev/disk/by-id/nvme-Samsung_SSD_990_PRO_4TB_S7KGNJ0X151766K";
         imageSize = "3G";
         content = {
           type = "gpt";
@@ -67,7 +67,7 @@
       # HDD cluster
       hdd0 = {
         type = "disk";
-        device = "/dev/sda";
+        device = "/dev/disk/by-id/ata-TOSHIBA_HDWG51GUZSVB_34A0A00AF1FJ";
         imageSize = "1G";
         content = {
           type = "gpt";
@@ -85,7 +85,7 @@
 
       hdd1 = {
         type = "disk";
-        device = "/dev/sdb";
+        device = "/dev/disk/by-id/ata-TOSHIBA_HDWG51GUZSVB_34M0A02EF1FJ";
         imageSize = "1G";
         content = {
           type = "gpt";
@@ -103,7 +103,7 @@
 
       hdd2 = {
         type = "disk";
-        device = "/dev/sdc";
+        device = "/dev/disk/by-id/ata-TOSHIBA_HDWG51GUZSVB_3490A031F1FJ";
         imageSize = "1G";
         content = {
           type = "gpt";
@@ -181,10 +181,74 @@
         options.autotrim = "on";
 
         datasets = {
-          datastore = {
+          # /work - Parent dataset
+          work = {
+            type = "zfs_fs";
+            options.mountpoint = "/work";
+          };
+
+          # /work/datasets - Reference data
+          "work/datasets" = {
             type = "zfs_fs";
             options = {
-              mountpoint = "/datastore";
+              mountpoint = "/work/datasets";
+              recordsize = "1M";      # Optimize for large files
+            };
+          };
+
+          # /work/users - Active project workspaces
+          "work/users" = {
+            type = "zfs_fs";
+            options = {
+              mountpoint = "/work/users";
+              quota = "20T";
+              "com.sun:auto-snapshot:frequent" = "false";
+              "com.sun:auto-snapshot:hourly" = "false";
+            };
+          };
+
+          # /work/users/_archive - Archived user data
+          "work/users/_archive" = {
+            type = "zfs_fs";
+            options = {
+              mountpoint = "/work/users/_archive";
+              compression = "zstd";
+              "com.sun:auto-snapshot:frequent" = "false";
+              "com.sun:auto-snapshot:hourly" = "false";
+              "com.sun:auto-snapshot:daily" = "false";
+              "com.sun:auto-snapshot:weekly" = "false";
+            };
+          };
+
+          # /work/scratch - Temporary workspace (90-day retention)
+          "work/scratch" = {
+            type = "zfs_fs";
+            options = {
+              mountpoint = "/work/scratch";
+              quota = "10T";
+              # NO snapshots for temp data - explicitly disable parent and all tiers.
+              # Defense-in-depth: if pool-level per-tier properties are ever added
+              # (as in Oppy's disko.nix), they would override a dataset-level parent
+              # false. Disabling each tier prevents unwanted snapshots regardless.
+              "com.sun:auto-snapshot" = "false";
+              "com.sun:auto-snapshot:frequent" = "false";
+              "com.sun:auto-snapshot:hourly" = "false";
+              "com.sun:auto-snapshot:daily" = "false";
+              "com.sun:auto-snapshot:weekly" = "false";
+              "com.sun:auto-snapshot:monthly" = "false";
+              sync = "disabled";
+              compression = "lz4";
+              recordsize = "1M";
+              atime = "on";
+            };
+          };
+
+          # /work/tools - Shared software and models
+          "work/tools" = {
+            type = "zfs_fs";
+            options = {
+              mountpoint = "/work/tools";
+              recordsize = "128K";
             };
           };
         };

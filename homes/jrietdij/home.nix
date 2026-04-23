@@ -13,7 +13,7 @@ let
 
   # Create pkgs-unstable with unfree allowed
   pkgs-unstable = import inputs.nixpkgs-unstable {
-    stdenv.hostPlatform.system = pkgs.stdenv.hostPlatform.system;
+    system = pkgs.stdenv.hostPlatform.system;
     config.allowUnfree = true;
   };
 in
