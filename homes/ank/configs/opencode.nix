@@ -1,7 +1,7 @@
 { pkgs, inputs, ... }:
 let
   jail = inputs.jail-nix.lib.init pkgs;
-  opencode_pkg = inputs.llm-agents.packages.${pkgs.hostPlatform.system}.opencode;
+  opencode_pkg = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.opencode;
   # Common packages available to both agents
   commonPkgs = with pkgs; [
     bashInteractive
@@ -53,7 +53,7 @@ let
 in
 {
   home.packages = [
-    inputs.llm-agents.packages.${pkgs.hostPlatform.system}.agent-deck
+    inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.agent-deck
   ];
   programs.opencode = {
     package = custom_opencode_pkg;
