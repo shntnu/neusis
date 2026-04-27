@@ -11,7 +11,7 @@
     ../../common/dev
     ../../common/dev/kalam.nix
     ../../common/themes
-    ../configs/zsh_alias.nix
+    ../configs/zsh.nix
     (import ../../common/dev/editors.nix {
       inherit pkgs config inputs;
       enableNvim = false;
