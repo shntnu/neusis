@@ -32,6 +32,11 @@
       unstable = upkgs;
     };
 
+  # Override claude-code with the version from sadjow/claude-code-nix
+  claude-code = final: _: {
+    claude-code = inputs.claude-code-nix.packages.${final.stdenv.hostPlatform.system}.claude-code;
+  };
+
   # Adds pkgs.git-worktree-custom == A custom version of this package
   git-worktree = final: _: {
     git-worktree-custom = final.vimUtils.buildVimPlugin {
