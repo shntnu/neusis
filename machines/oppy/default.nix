@@ -43,6 +43,7 @@
     ../common/printing.nix
     outputs.nixosModules.zfs
     ../common/sudo.nix
+    ../common/security.nix
 
   ];
 
