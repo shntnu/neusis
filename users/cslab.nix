@@ -113,6 +113,19 @@
         ];
       };
     }
+    {
+      username = "kshimofu";
+      fullName = "Kazumasa Shimofuruta";
+      shell = "zsh";
+      sshKeys = [
+        ../homes/kshimofu/id_ed25519.pub
+      ];
+      homeModules = {
+        oppy = [
+          ../homes/kshimofu/machines/oppy.nix
+        ];
+      };
+    }
   ];
 
   # Locked users - accounts exist but cannot login, data preserved
