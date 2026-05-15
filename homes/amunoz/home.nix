@@ -4,6 +4,8 @@
     ./configs/opencode.nix
   ];
 
+  nixpkgs.config.allowUnfree = true;
+
   home = {
     username = "amunoz";
     homeDirectory = "/home/amunoz";

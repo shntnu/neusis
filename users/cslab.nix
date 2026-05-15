@@ -45,6 +45,19 @@
         ];
       };
     }
+    {
+      username = "jfredinh";
+      fullName = "Johan";
+      shell = "zsh";
+      sshKeys = [
+        ../homes/jfredinh/id_ed25519.pub
+      ];
+      homeModules = {
+        oppy = [
+          ../homes/jfredinh/machines/oppy.nix
+        ];
+      };
+    }
   ];
 
   regulars = [
@@ -84,19 +97,6 @@
       homeModules = {
         oppy = [
           ../homes/rshen/machines/oppy.nix
-        ];
-      };
-    }
-    {
-      username = "jfredinh";
-      fullName = "Johan";
-      shell = "zsh";
-      sshKeys = [
-        ../homes/jfredinh/id_ed25519.pub
-      ];
-      homeModules = {
-        oppy = [
-          ../homes/jfredinh/machines/oppy.nix
         ];
       };
     }
