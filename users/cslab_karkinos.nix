@@ -113,6 +113,19 @@
         ];
       };
     }
+    {
+      username = "rshen";
+      fullName = "Runxi Shen";
+      shell = "zsh";
+      sshKeys = [
+        ../homes/rshen/id_ed25519.pub
+      ];
+      homeModules = {
+        karkinos = [
+          ../homes/rshen/machines/karkinos.nix
+        ];
+      };
+    }
   ];
 
   # Locked users - accounts exist but cannot login, data preserved
