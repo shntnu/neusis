@@ -35,13 +35,19 @@ rec {
       userConfigList;
 
   # Create a Home Manager user configuration
-  mkHomeManagerUser = machineName: userConfig: {
-    home-manager.users.${userConfig.username}.imports =
-      if (builtins.hasAttr machineName userConfig.homeModules) then
-        userConfig.homeModules.${machineName}
-      else
-        [ ];
-  };
+  mkHomeManagerUser =
+    machineName: userConfig:
+    let
+      homeModules = userConfig.homeModules or { };
+      machineModules =
+        if (builtins.hasAttr machineName homeModules) then
+          homeModules.${machineName}
+        else
+          null;
+    in
+    lib.optionalAttrs (machineModules != null) {
+      home-manager.users.${userConfig.username}.imports = machineModules;
+    };
 
   # Create an admin user with elevated privileges
   mkAdmin =
@@ -247,10 +253,12 @@ rec {
       #
       userAndMachineSet' =
         user:
-        builtins.map (machine: {
-          name = user.username + "@" + machine;
-          value = user.homeModules.${machine};
-        }) (builtins.attrNames user.homeModules);
+        builtins.filter (homeConfig: homeConfig.value != null) (
+          builtins.map (machine: {
+            name = user.username + "@" + machine;
+            value = user.homeModules.${machine};
+          }) (builtins.attrNames user.homeModules)
+        );
 
       # {user@machine = moduleList;}
       userAndMachineSet = builtins.listToAttrs (

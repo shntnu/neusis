@@ -40,9 +40,10 @@
         ../homes/shsingh/id_ed25519.pub
       ];
       homeModules = {
-        karkinos = [
-          ../homes/shsingh/machines/karkinos.nix
-        ];
+        # Home Manager for this user is applied from shntnu/nixos-config.
+        # Keep the account and SSH key in neusis, but do not create a
+        # home-manager.users.shsingh profile during system rebuilds.
+        karkinos = null;
       };
     }
     {
