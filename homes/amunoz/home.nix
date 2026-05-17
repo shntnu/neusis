@@ -35,7 +35,6 @@
       fzf # fuzzy finder
       gawk # Main awk
       gemini-cli
-      gemini-cli
       git
       gnumake # Necessary for emacs' vterm
       gnumeric
@@ -68,7 +67,7 @@
       nixfmt-rfc-style # Nix formatting (for nixpkgs)
       nixfmt-tree # Format entire directories of nix
       nodePackages.bash-language-server # bash
-      opencode
+      pkgs.unstable.opencode
       pandoc # Convert between formats
       parallel # GNU parallel
       pdftk

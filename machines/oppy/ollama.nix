@@ -1,14 +1,11 @@
 { pkgs, ... }:
 {
-  # Ollama service for local LLM inference
   services.ollama = {
     enable = true;
-    package = pkgs.ollama;
+    package = pkgs.unstable.ollama-cuda;
     acceleration = "cuda";
-    environmentVariables = {
-      CUDA_VISIBLE_DEVICES = "0";
-      LD_LIBRARY_PATH = "${pkgs.cudaPackages.cudatoolkit}/lib:${pkgs.cudaPackages.cudatoolkit}/lib64";
-    };
+    host = "127.0.0.1";
+    port = 11434;
   };
 
   # Optional: Open firewall port if you want to access ollama from other machines
