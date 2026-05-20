@@ -82,9 +82,6 @@
     userConfigPath = ../../users/cslab_karkinos.nix;
     machineName = "Karkinos";
     slackWebhookSecretFile = ../../secrets/oppy/slack_webhook.age;
-    quotaCheckScript = ../../modules/nixos/cslab-scripts/check-quotas.nu;
-    # quotaLimit defaults to 100 — same as Oppy
-    # homeBaseDir defaults to "/home" — correct for Karkinos
   };
 
   neusis.zfs.autoSnapshot.enable = true;

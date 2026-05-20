@@ -1,12 +1,10 @@
 # CSLab Monitoring Module
 #
 # Implements monitoring policies for CSLab servers:
-# - Weekly quota checks (configurable schedule)
 # - Weekly group membership checks
 # - Slack webhook notifications
 #
 # References:
-# - imaging-server-maintenance/policies/data-storage.md (quota monitoring)
 # - imaging-server-maintenance/policies/user-access.md (group membership)
 #
 # Extracted from machines/oppy/cslab/monitoring.nix.
@@ -17,7 +15,6 @@
 #     userConfigPath = ../../users/cslab.nix;
 #     machineName = "Oppy";
 #     slackWebhookSecretFile = ../../secrets/oppy/slack_webhook.age;
-#     quotaCheckScript = ./cslab/scripts/check-quotas.nu;
 #   };
 
 { config, lib, pkgs, ... }:
@@ -78,7 +75,7 @@ let
 in
 {
   options.neusis.cslab.monitoring = {
-    enable = lib.mkEnableOption "CSLab monitoring (quota checks, group audits, Slack alerts)";
+    enable = lib.mkEnableOption "CSLab monitoring (group audits, Slack alerts)";
 
     userConfigPath = lib.mkOption {
       type = lib.types.path;
@@ -96,76 +93,14 @@ in
       description = "Path to the age-encrypted Slack webhook secret file";
       example = "../../secrets/oppy/slack_webhook.age";
     };
-
-    quotaCheckScript = lib.mkOption {
-      type = lib.types.path;
-      description = "Path to the check-quotas.nu nushell script";
-    };
-
-    quotaLimit = lib.mkOption {
-      type = lib.types.ints.positive;
-      default = 100;
-      description = "Quota limit in GB for home directory checks";
-    };
-
-    homeBaseDir = lib.mkOption {
-      type = lib.types.str;
-      default = "/home";
-      description = "Base directory for user home directories (for quota checks)";
-    };
   };
 
   config = lib.mkIf cfg.enable {
-    # Slack webhook secret for quota notifications
+    # Slack webhook secret for group violation alerts
     age.secrets.slack_webhook = {
       file = cfg.slackWebhookSecretFile;
       mode = "400";  # Read-only by root
       owner = "root";
-    };
-
-    # Weekly quota monitoring - Mondays at 9 AM
-    systemd.timers.cslab-check-quotas = {
-      wantedBy = [ "timers.target" ];
-      timerConfig = {
-        OnCalendar = "Mon *-*-* 09:00:00";  # Weekly on Monday morning
-        Persistent = true;  # Run on boot if missed
-        RandomizedDelaySec = "5m";  # Spread load if multiple servers
-      };
-    };
-
-    systemd.services.cslab-check-quotas = {
-      description = "CSLab Home Directory Quota Check";
-
-      # Script requires fd for file search
-      path = [ pkgs.fd ];
-
-      serviceConfig = {
-        Type = "oneshot";
-        User = "root";  # Needs root to read all user directories
-
-        # Environment variables for script configuration
-        Environment = [
-          "HOME_BASE_DIR=${cfg.homeBaseDir}"
-          "QUOTA_GB=${toString cfg.quotaLimit}"
-          "LARGE_FILE_GB=1"
-          "LOG_DIR=/var/log/lab-scripts"
-        ];
-
-        # Script exits with code 2 when users need action (by design)
-        # Treat this as success so systemd doesn't report failures
-        SuccessExitStatus = [ 0 2 ];
-      };
-
-      script = ''
-        # Create log directory
-        mkdir -p /var/log/lab-scripts
-
-        # Load Slack webhook URL from secret
-        export SLACK_WEBHOOK_URL=$(cat ${config.age.secrets.slack_webhook.path})
-
-        # Run quota check script with Slack notifications enabled
-        ${pkgs.nushell}/bin/nu ${cfg.quotaCheckScript}
-      '';
     };
 
     # Weekly group membership monitoring - Wednesdays at 9 AM
