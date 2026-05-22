@@ -1,30 +1,11 @@
+{ inputs, ... }:
 {
-  pkgs,
-  config,
-  inputs,
-  ...
-}:
-{
+  # Sourced from amunoz's own flake at
+  # /home/amunoz/.local/share/src/nixos-config (added as the
+  # `amunoz-nixos-config` input in neusis's flake.nix). That module is the
+  # single source of truth — same profile is applied on moby — so this file
+  # intentionally does not import any of neusis's common home-manager modules.
   imports = [
-    ../home.nix
-    ../../common/home_manager.nix
-    # ../../common/dev
-    # ../../common/dev/kalam.nix
-    # ../../common/themes
-    # (import ../../common/dev/editors.nix {
-    #   inherit pkgs config inputs;
-    #   enableNvim = false;
-    #   enableAstro = false;
-    # })
-    (import ../../common/dev/git.nix {
-      username = "Alán F. Muñoz";
-      userEmail = "amunozgo@broadinstitute.org";
-      id_ed25519_pub = builtins.readFile ../id_ed25519.pub;
-    })
-    ../../common/secrets
-    ../../common/browsers
-    ../../common/network
-    ../../common/misc
-    ../../common/gpu_tools.nix
+    inputs.amunoz-nixos-config.homeModules.amunoz
   ];
 }

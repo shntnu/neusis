@@ -122,6 +122,14 @@
       url = "github:sadjow/claude-code-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # amunoz's personal home-manager config. Consumed by
+    # homes/amunoz/machines/oppy.nix via `homeModules.amunoz`. Local path
+    # during development; swap to a git URL once it stabilises.
+    amunoz-nixos-config = {
+      url = "path:/home/amunoz/.local/share/src/nixos-config";
+      flake = true;
+    };
   };
 
   outputs =
