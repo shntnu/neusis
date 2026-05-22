@@ -44,7 +44,7 @@
   '';
 
   # boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.kernelParams = [ "amd_iommu=off" ];
+  boot.kernelParams = [ "amd_iommu=on" "iommu=pt" ];
   boot.kernelModules = [ "kvm-amd" ];
 
   # boot.initrd.availableKernelModules = [ "nvidia" "vfio-pci" ];
