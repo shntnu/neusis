@@ -5,6 +5,25 @@
 
 Neusis provides nixos configs.
 
+## Documentation
+
+Operational documentation for the lab fleet (Oppy, Spirit, Karkinos) lives
+in [broadinstitute/imaging-server-maintenance][ism] (Broad-internal):
+
+- [`RUNBOOK_NIX.md`][runbook-nix] — NixOS procedures, including how to add a
+  user to neusis.
+- [`policies/user-access.md`][policy-access] and
+  [`policies/user-lifecycle.md`][policy-lifecycle] — account states (active /
+  locked / removed), onboarding/offboarding policy, group memberships,
+  Tailscale ACL.
+- [`MAINTENANCE_LOG.md`][log] — chronological incident record.
+
+[ism]: https://github.com/broadinstitute/imaging-server-maintenance
+[runbook-nix]: https://github.com/broadinstitute/imaging-server-maintenance/blob/main/RUNBOOK_NIX.md
+[policy-access]: https://github.com/broadinstitute/imaging-server-maintenance/blob/main/policies/user-access.md
+[policy-lifecycle]: https://github.com/broadinstitute/imaging-server-maintenance/blob/main/policies/user-lifecycle.md
+[log]: https://github.com/broadinstitute/imaging-server-maintenance/blob/main/MAINTENANCE_LOG.md
+
 ## Getting started
 
 linux machines
