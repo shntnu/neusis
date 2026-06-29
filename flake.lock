@@ -69,8 +69,8 @@
         "systems": "systems_5"
       },
       "locked": {
-        "lastModified": 1779418254,
-        "narHash": "sha256-qEw5mEBHukSMTBbGEfOn+UDYtNoplhPnNmUGFNP+8mA=",
+        "lastModified": 1779420851,
+        "narHash": "sha256-wMZR03FFEcyoNajUoZKuKtWjQeuchmninF6BcA6d8PY=",
         "path": "/home/amunoz/.local/share/src/nixos-config",
         "type": "path"
       },
