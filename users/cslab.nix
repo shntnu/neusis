@@ -127,14 +127,10 @@
         ];
       };
     }
-  ];
-
-  # Locked users - accounts exist but cannot login, data preserved
-  locked = [
     {
       username = "ngogober";
       fullName = "Nodar";
-      shell = "bash"; # Will be overridden to nologin by mkLocked
+      shell = "bash";
       sshKeys = [
         ../homes/ngogober/id_ed25519.pub
       ];
@@ -145,6 +141,9 @@
       };
     }
   ];
+
+  # Locked users - accounts exist but cannot login, data preserved
+  locked = [ ];
 
   guests = [ ];
 
