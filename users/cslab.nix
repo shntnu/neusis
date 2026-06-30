@@ -59,6 +59,19 @@
         ];
       };
     }
+    {
+      username = "rshen";
+      fullName = "Runxi";
+      shell = "zsh";
+      sshKeys = [
+        ../homes/rshen/id_ed25519.pub
+      ];
+      homeModules = {
+        oppy = [
+          ../homes/rshen/machines/oppy.nix
+        ];
+      };
+    }
   ];
 
   regulars = [
@@ -85,19 +98,6 @@
       homeModules = {
         oppy = [
           ../homes/jewald/machines/oppy.nix
-        ];
-      };
-    }
-    {
-      username = "rshen";
-      fullName = "Runxi";
-      shell = "zsh";
-      sshKeys = [
-        ../homes/rshen/id_ed25519.pub
-      ];
-      homeModules = {
-        oppy = [
-          ../homes/rshen/machines/oppy.nix
         ];
       };
     }

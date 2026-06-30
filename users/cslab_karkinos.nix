@@ -59,9 +59,6 @@
         ];
       };
     }
-  ];
-
-  regulars = [
     {
       username = "rshen";
       fullName = "Runxi Shen";
@@ -76,6 +73,8 @@
       };
     }
   ];
+
+  regulars = [ ];
 
   # Locked users - accounts exist but cannot login, data preserved
   locked = [
