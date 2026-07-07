@@ -11,10 +11,12 @@ let
   # Machine keys
   karkinos = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINidmZsZlAone6QTsgkeRHzk3GsIMxCXI0RL53aRDMce";
   oppy = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINCW3CZ4r7VhI7+4rC+oOE4n3AMXEy3F2vm8jjHeTClR";
+  spirit = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJUYYQCN1rhnyZ8HIIy4SgF3wvoapeqiCJRhfusTDFiK";
 
   machines = [
     karkinos
     oppy
+    spirit
   ];
 in
 {
@@ -48,4 +50,12 @@ in
   # "ank/ghauth.age".publicKeys = [ ank ];
 
   "common/persistent_cslab_mesh.age".publicKeys = machines ++ users;
+
+  # Spirit
+  "spirit/tsauthkey.age".publicKeys = [
+    ank
+    shantanu
+    spirit
+    oppy
+  ];
 }

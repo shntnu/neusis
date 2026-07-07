@@ -35,6 +35,15 @@ in
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
+
+    # Let wheel-group members (admins) push closures via
+    # `nixos-rebuild --target-host user@host --use-remote-sudo` without
+    # needing store-path signatures. Without this, the target's nix-daemon
+    # rejects unsigned locally-built paths from untrusted users.
+    settings.trusted-users = [
+      "root"
+      "@wheel"
+    ];
   };
 
   # This will add each flake input as a registry

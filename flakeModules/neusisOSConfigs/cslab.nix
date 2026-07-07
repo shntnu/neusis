@@ -28,5 +28,13 @@ in
       homeManager = true;
     };
 
+    spirit = self.lib.neusisOS.mkNeusisOS {
+      machineName = "spirit";
+      userModule = ../../machines/spirit;
+      specialArgs = { inherit (self) inputs outputs; };
+      userConfig = import ../../users/cslab_spirit.nix { pkgs = machinesRegistry.spirit; };
+      homeManager = true;
+    };
+
   };
 }
