@@ -1,21 +1,21 @@
-# Current 3-Drive Configuration for Oppy
-# Adapted from disko-raidz2-future.nix to work with CURRENT hardware (3x Kioxia drives)
-# Provides /work/ directory structure and snapshot policies WITHOUT redundancy
+# Current 6-Drive Configuration for Oppy (3x Kioxia + 3x Kingston, STRIPE)
+# Reflects the live `work` pool after the 2026-07-07 non-destructive expansion:
+# the 3 original Kioxia were joined by 3 Kingston DC3000ME drives via `zpool add`.
+# The 4 temporary Intel SSDPF2KE032T1 drives were pulled first to free U.2 bays.
 #
-# BENEFITS NOW:
-# - Get /work/ directory structure (datasets, users, scratch, tools)
-# - Snapshot policies configured
-# - Dataset organization matching lab policies
-# - Practice with config before RAIDZ2 migration
+# NOTE: This file is the reinstall blueprint only — disko does NOT run on
+# `nixos-rebuild switch`. The live pool was expanded imperatively with
+# `zpool add work <3 Kingston by-id>`; this config keeps the repo in sync so a
+# future clean install reproduces the same 6-drive layout.
 #
-# MIGRATION PATH (when 6 drives arrive):
-# 1. Change mode = "" to mode = "raidz2"
-# 2. Add 3 more kioxia drives (kioxia03, kioxia04, kioxia05)
-# 3. Update serial numbers
-# 4. Reinstall via nixos-anywhere
+# WARNING: NO REDUNDANCY - stripe mode means ANY single drive failure = total
+# data loss, now across all 6 drives. Back up non-reproducible data accordingly.
 #
-# WARNING: NO REDUNDANCY - stripe mode means any drive failure = total data loss
-# This is the SAME risk as current zstore16, just with better organization
+# RAIDZ2 MIGRATION (future, now DESTRUCTIVE - pool holds ~39TB of live data):
+# Unlike the empty-pool 2025 plan, converting stripe -> raidz2 is not in-place.
+# It requires evacuating/confirming all data, then a clean reinstall with
+# mode = "raidz2" across the 6 drives (~56TB usable, 2-drive fault tolerance).
+# See imaging-server-maintenance assets/disko-raidz2-future.nix.
 
 {
   # Required for testing on virtual machines
@@ -109,15 +109,72 @@
         };
       };
 
-      # Intel drives REMOVED - they were temporary, will be replaced by 3 more Kioxia
+      # 3x Kingston DC3000ME 15.36TB drives, added 2026-07-07 via `zpool add`
+      # (non-destructive stripe expansion; joined the pool alongside the Kioxia).
+      # Live pool added these as whole disks; disko partitions them identically
+      # to the Kioxia on a fresh install — same on-disk result.
+      kingston00 = {
+        type = "disk";
+        device = "/dev/disk/by-id/nvme-KINGSTON_SEDC3000ME15T3_TW253100793";
+        imageSize = "1G";
+        content = {
+          type = "gpt";
+          partitions = {
+            zfs = {
+              size = "100%";
+              content = {
+                type = "zfs";
+                pool = "work";
+              };
+            };
+          };
+        };
+      };
+
+      kingston01 = {
+        type = "disk";
+        device = "/dev/disk/by-id/nvme-KINGSTON_SEDC3000ME15T3_TW253100851";
+        imageSize = "1G";
+        content = {
+          type = "gpt";
+          partitions = {
+            zfs = {
+              size = "100%";
+              content = {
+                type = "zfs";
+                pool = "work";
+              };
+            };
+          };
+        };
+      };
+
+      kingston02 = {
+        type = "disk";
+        device = "/dev/disk/by-id/nvme-KINGSTON_SEDC3000ME15T3_TW253101449";
+        imageSize = "1G";
+        content = {
+          type = "gpt";
+          partitions = {
+            zfs = {
+              size = "100%";
+              content = {
+                type = "zfs";
+                pool = "work";
+              };
+            };
+          };
+        };
+      };
     };
 
     # ZFS Pool Configuration
     zpool = {
       work = {
         type = "zpool";
-        mode = "";  # STRIPE mode (no redundancy) - same as current zstore16
-                    # Will change to "raidz2" when we have 6 drives
+        mode = "";  # STRIPE mode (no redundancy) across all 6 drives.
+                    # RAIDZ2 stays the eventual goal but is now a DESTRUCTIVE
+                    # rebuild (pool holds live data) - see header notes.
 
         postCreateHook = "zfs list -t snapshot -H -o name | grep -E '^work@blank$' || zfs snapshot work@blank";
 
