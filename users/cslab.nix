@@ -76,19 +76,6 @@
 
   regulars = [
     {
-      username = "spathak";
-      fullName = "Suraj";
-      shell = "zsh";
-      sshKeys = [
-        ../homes/spathak/id_ed25519.pub
-      ];
-      homeModules = {
-        oppy = [
-          ../homes/spathak/machines/oppy.nix
-        ];
-      };
-    }
-    {
       username = "jrietdij";
       fullName = "Jonne Rietdijk";
       shell = "zsh";
