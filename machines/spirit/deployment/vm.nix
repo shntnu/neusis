@@ -1,0 +1,35 @@
+{
+  lib,
+  config,
+  ...
+}:
+{
+
+  virtualisation.vmVariantWithDisko = {
+
+    # Create ephemeral tailscale connections with custom vm hostName
+    neusis.tailscale = lib.mkForce {
+      isPersistent = true;
+      hostName = "diskoTest${config.networking.hostName}";
+      persistent_authkey_file = ../../../secrets/common/persistent_cslab_mesh.age;
+      clientIdFile = ../../../secrets/common/tsclient.age;
+      clientSecretFile = ../../../secrets/common/tssecret.age;
+      disableKeyExpiry = true;
+      tailnetOrg = "shntnu.github";
+    };
+
+    virtualisation.qemu.options = [
+      "-nographic"
+      "-virtfs local,path=$TESTVM_SECRETS,mount_tag=hostSecrets,security_model=none"
+    ];
+
+    age.identityPaths = [ "/mnt/secrets/etc/ssh/ssh_host_ed25519_key" ];
+
+    boot.initrd.postMountCommands = ''
+      echo "[mountVmSecrets] Creating /mnt/secrets/"
+      mkdir -p $targetRoot/mnt/secrets
+      echo "[mountVmSecrets] Mounting virtio hostSecrets to /mnt/secrets/"
+      mount -t 9p -o trans=virtio,access=any,version=9p2000.L hostSecrets $targetRoot/mnt/secrets
+    '';
+  };
+}
