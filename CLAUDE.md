@@ -119,6 +119,7 @@ User definitions are merged from `users/*.nix` files via `mergeUserConfigs` in `
 
 ## Contributing Guidelines
 
+- **Canonical repo & PR target**: `shntnu/neusis` is the repo of record for this fleet. Open **all** PRs against `shntnu/neusis:main` — not the personal `afermg/neusis` fork, and not the `leoank/neusis` upstream that GitHub/`gh` default to (both `shntnu` and `afermg` are forks of `leoank`, so `gh pr create` will otherwise target `leoank`). After cloning, run `gh repo set-default shntnu/neusis` once so `gh` PR/issue commands resolve to the right place.
 - **No surprises**: Features must be opt-in via individual `homes/<user>/home.nix`, not forced through `homes/common/`
 - **Personal boundaries**: SSH agents, shells, and user tools belong in `homes/<user>/` configs only
 - **Cross-platform**: Don't hardcode architectures in `flake.nix` - use `machines/registry.nix` for dynamic package sets
