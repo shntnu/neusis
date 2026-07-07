@@ -39,9 +39,9 @@ in
       enable = mkEnableOption "Enable Neusis tailscale config";
 
       authkey_file = mkOption {
-        type = types.nullOr types.str;
+        type = types.nullOr types.path;
         default = null;
-        description = "Path to the age tsauthkey file.";
+        description = "Path to the age tsauthkey file. When set, overrides persistent_authkey_file / ephemeral_authkey_file.";
       };
 
       persistent_authkey_file = mkOption {

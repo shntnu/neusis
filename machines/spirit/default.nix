@@ -51,6 +51,9 @@
     isPersistent = true;
     hostName = "spirit";
     forceHostName = true;
+    # Spirit-specific auth key — rotating this file doesn't touch oppy's config.
+    # authkey_file wins over persistent_authkey_file per modules/nixos/tailscale.nix.
+    authkey_file = ../../secrets/spirit/tsauthkey.age;
     persistent_authkey_file = ../../secrets/common/persistent_cslab_mesh.age;
     clientIdFile = ../../secrets/common/tsclient.age;
     clientSecretFile = ../../secrets/common/tssecret.age;

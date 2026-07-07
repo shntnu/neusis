@@ -50,4 +50,12 @@ in
   # "ank/ghauth.age".publicKeys = [ ank ];
 
   "common/persistent_cslab_mesh.age".publicKeys = machines ++ users;
+
+  # Spirit
+  "spirit/tsauthkey.age".publicKeys = [
+    ank
+    shantanu
+    spirit
+    oppy
+  ];
 }
