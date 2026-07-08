@@ -58,7 +58,6 @@ rec {
         users.users.${adminConfig.username} = {
           isNormalUser = true;
           shell = pkgs.${adminConfig.shell};
-          hashedPasswordFile = config.age.secrets.commonInitialHashedPassword.path;
           description = adminConfig.fullName;
           extraGroups = [
             "networkmanager"
@@ -85,7 +84,6 @@ rec {
         users.users.${regularConfig.username} = {
           isNormalUser = true;
           shell = pkgs.${regularConfig.shell};
-          hashedPasswordFile = config.age.secrets.commonInitialHashedPassword.path;
           description = regularConfig.fullName;
           extraGroups = [
             "libvirtd"
@@ -109,7 +107,6 @@ rec {
         users.users.${guestConfig.username} = {
           isNormalUser = true;
           shell = pkgs.${guestConfig.shell};
-          hashedPasswordFile = config.age.secrets.commonInitialHashedPassword.path;
           description = guestConfig.fullName;
           extraGroups = [
             "input"
@@ -175,12 +172,8 @@ rec {
       specialArgs ? { },
       userConfig ? null,
       homeManager ? false,
-      initialHashedPassword ? ../secrets/common/hashedInitialPassword.age,
     }:
     let
-      ageConfig = {
-        age.secrets.commonInitialHashedPassword.file = initialHashedPassword;
-      };
       userConfigModules = lib.optionals (userConfig != null) (mkDynamicUsers {
         inherit
           machineName
@@ -200,7 +193,6 @@ rec {
     lib.nixosSystem {
       modules = [
         userModule
-        ageConfig
       ]
       ++ userConfigModules
       ++ homeManagerModules;
