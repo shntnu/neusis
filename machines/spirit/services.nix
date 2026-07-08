@@ -10,8 +10,12 @@
     inputs.nixos-generators.nixosModules.all-formats
   ];
 
-  # Enable monitoring
+  # Enable monitoring; alloy pushes to Grafana Cloud via oppy's alloy_key
+  # secret, which isn't available on spirit. Disable alloy here so spirit
+  # runs local Prometheus + Grafana only. Follow-up: mint a spirit-specific
+  # alloy_key.age (or reuse oppy's under a shared recipients list).
   neusis.services.monitoring.enable = true;
+  neusis.services.monitoring.alloy.enable = false;
 
   # Enable ZFS auto-snapshots (retention policy defined in modules/nixos/zfs.nix)
   neusis.zfs.autoSnapshot.enable = true;
