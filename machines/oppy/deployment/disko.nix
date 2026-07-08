@@ -193,13 +193,16 @@
           # sudo zfs set property=value dataset
           # Example: sudo zfs set com.sun:auto-snapshot:daily=false work/scratch
 
-          # Enable auto-snapshots by default (disable per-dataset as needed)
+          # Lean auto-snapshot policy: keep only the most recent daily +
+          # monthly (retention counts in modules/nixos/zfs.nix). Frequent /
+          # hourly / weekly are disabled at the pool level so the timers
+          # skip these datasets entirely.
           "com.sun:auto-snapshot" = "true";
-          "com.sun:auto-snapshot:frequent" = "true";  # Every 15 mins, keep 4
-          "com.sun:auto-snapshot:hourly" = "true";    # Every hour, keep 24
-          "com.sun:auto-snapshot:daily" = "true";     # Every day, keep 31
-          "com.sun:auto-snapshot:weekly" = "true";    # Every week, keep 8
-          "com.sun:auto-snapshot:monthly" = "true";   # Every month, keep 12
+          "com.sun:auto-snapshot:frequent" = "false";
+          "com.sun:auto-snapshot:hourly" = "false";
+          "com.sun:auto-snapshot:daily" = "true";
+          "com.sun:auto-snapshot:weekly" = "false";
+          "com.sun:auto-snapshot:monthly" = "true";
         };
 
         options = {
