@@ -38,22 +38,22 @@ macos machines
 darwin-rebuild switch --flake .#darwin001
 ```
 
-## External Home Manager profiles
+## Updating your own home-manager profile
 
-User accounts and SSH authorization stay in `neusis`, but a user may keep
-their actual Home Manager profile in a personal flake. For those users, set a
-machine entry in `homeModules` to `null`. `neusis` will still create the Unix
-account and authorized keys, but it will not create a `home-manager.users.<name>`
-profile or standalone `homeConfigurations.<name>@<machine>` output for that
-machine.
-
-`shsingh` uses this pattern on `oppy` and `karkinos`; the real profiles are
-built and applied from `shntnu/nixos-config`:
+You can rebuild your home-manager profile without waiting for a full
+`nixos-rebuild` — from any fleet machine:
 
 ```bash
-nix build 'github:shntnu/nixos-config#homeConfigurations."shsingh@oppy".activationPackage'
-home-manager switch --flake 'github:shntnu/nixos-config#shsingh@oppy'
+home-manager switch --flake github:shntnu/neusis#<username>@<machine>
 ```
 
-Other users' `homeModules` remain local to `neusis` unless they choose to
-extract their own configs.
+Reads your `homes/<username>/machines/<machine>.nix` entry from the
+latest neusis `main`, rebuilds the profile, and swaps it in. Useful when
+you add a package to your home config and want it live in seconds
+without a system rebuild.
+
+`shsingh` runs the same command against his personal flake instead:
+
+```bash
+home-manager switch --flake github:shntnu/nixos-config#shsingh@oppy
+```
