@@ -10,10 +10,10 @@
         ../homes/ank/id_ed25519.pub
         ../homes/ank/id2_ed25519.pub
       ];
-      # home-manager profiles for spirit will be added in follow-up PRs
-      # per user, once we validate each home config against nixpkgs 25.11.
       homeModules = {
-        spirit = null;
+        spirit = [
+          ../homes/ank/machines/spirit.nix
+        ];
       };
     }
     {
@@ -24,7 +24,9 @@
         ../homes/amunoz/id_ed25519.pub
       ];
       homeModules = {
-        spirit = null;
+        spirit = [
+          ../homes/amunoz/machines/spirit.nix
+        ];
       };
     }
     {
@@ -49,7 +51,9 @@
         ../homes/jfredinh/id_ed25519.pub
       ];
       homeModules = {
-        spirit = null;
+        spirit = [
+          ../homes/jfredinh/machines/spirit.nix
+        ];
       };
     }
     {
@@ -60,7 +64,9 @@
         ../homes/rshen/id_ed25519.pub
       ];
       homeModules = {
-        spirit = null;
+        spirit = [
+          ../homes/rshen/machines/spirit.nix
+        ];
       };
     }
   ];
@@ -74,7 +80,9 @@
         ../homes/kshimofu/id_ed25519.pub
       ];
       homeModules = {
-        spirit = null;
+        spirit = [
+          ../homes/kshimofu/machines/spirit.nix
+        ];
       };
     }
     {
@@ -85,7 +93,9 @@
         ../homes/ngogober/id_ed25519.pub
       ];
       homeModules = {
-        spirit = null;
+        spirit = [
+          ../homes/ngogober/machines/spirit.nix
+        ];
       };
     }
   ];
