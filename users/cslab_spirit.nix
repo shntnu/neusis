@@ -24,9 +24,10 @@
         ../homes/amunoz/id_ed25519.pub
       ];
       homeModules = {
-        spirit = [
-          ../homes/amunoz/machines/spirit.nix
-        ];
+        # Home Manager for this user is applied from afermg/nix-configs.
+        # Keep the account and SSH key in neusis, but do not create a
+        # home-manager.users.amunoz profile during system rebuilds.
+        spirit = null;
       };
     }
     {
