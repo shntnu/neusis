@@ -27,9 +27,10 @@
         ../homes/amunoz/id_ed25519.pub
       ];
       homeModules = {
-        karkinos = [
-          ../homes/amunoz/machines/karkinos.nix
-        ];
+        # Home Manager for this user is applied from afermg/nix-configs.
+        # Keep the account and SSH key in neusis, but do not create a
+        # home-manager.users.amunoz profile during system rebuilds.
+        karkinos = null;
       };
     }
     {
