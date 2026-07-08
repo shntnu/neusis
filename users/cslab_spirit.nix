@@ -89,7 +89,7 @@
     {
       username = "ngogober";
       fullName = "Nodar";
-      shell = "bash";
+      shell = "zsh";
       sshKeys = [
         ../homes/ngogober/id_ed25519.pub
       ];
