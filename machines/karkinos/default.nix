@@ -84,6 +84,15 @@
     slackWebhookSecretFile = ../../secrets/oppy/slack_webhook.age;
   };
 
+  # Karkinos only: it is the one machine with a display, so it is the only one
+  # that can run the GUI. The setuid helper and polkit policy have to be set
+  # here rather than in shsingh's standalone home-manager profile.
+  programs._1password.enable = true;
+  programs._1password-gui = {
+    enable = true;
+    polkitPolicyOwners = [ "shsingh" ];
+  };
+
   neusis.zfs.autoSnapshot.enable = true;
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
