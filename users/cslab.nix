@@ -115,6 +115,19 @@
         ];
       };
     }
+    {
+      username = "cruan";
+      fullName = "Cihan Ruan";
+      shell = "zsh";
+      sshKeys = [
+        ../homes/cruan/id_ed25519.pub
+      ];
+      homeModules = {
+        oppy = [
+          ../homes/cruan/machines/oppy.nix
+        ];
+      };
+    }
   ];
 
   # Locked users - accounts exist but cannot login, data preserved
