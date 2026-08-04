@@ -4,13 +4,21 @@
   services.openssh = {
     enable = true;
     settings = {
-      PermitRootLogin = "yes";
+      PermitRootLogin = "no";
+      # Password authentication is narrowed to wheel members below.
       PasswordAuthentication = true;
+      KbdInteractiveAuthentication = true;
       StreamLocalBindUnlink = "yes";
       # Allow forwarding ports to everywhere
       GatewayPorts = "clientspecified";
       X11Forwarding = true;
     };
+    extraConfig = ''
+      # Admins are wheel members. Everyone else must use an SSH key.
+      Match Group *,!wheel
+          PasswordAuthentication no
+          KbdInteractiveAuthentication no
+    '';
   };
 
   # Fleet ssh_config: forward the user's agent to any SSH destination.
