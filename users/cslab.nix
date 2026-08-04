@@ -74,6 +74,19 @@
         ];
       };
     }
+    {
+      username = "ngogober";
+      fullName = "Nodar";
+      shell = "zsh";
+      sshKeys = [
+        ../homes/ngogober/id_ed25519.pub
+      ];
+      homeModules = {
+        oppy = [
+          ../homes/ngogober/machines/oppy.nix
+        ];
+      };
+    }
   ];
 
   regulars = [
@@ -100,19 +113,6 @@
       homeModules = {
         oppy = [
           ../homes/kshimofu/machines/oppy.nix
-        ];
-      };
-    }
-    {
-      username = "ngogober";
-      fullName = "Nodar";
-      shell = "zsh";
-      sshKeys = [
-        ../homes/ngogober/id_ed25519.pub
-      ];
-      homeModules = {
-        oppy = [
-          ../homes/ngogober/machines/oppy.nix
         ];
       };
     }
