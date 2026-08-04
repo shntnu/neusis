@@ -23,6 +23,7 @@
       username = "amunoz";
       fullName = "Alan";
       shell = "fish";
+      linger = true;
       sshKeys = [
         ../homes/amunoz/id_ed25519.pub
       ];

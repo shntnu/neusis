@@ -59,6 +59,7 @@ rec {
           isNormalUser = true;
           shell = pkgs.${adminConfig.shell};
           description = adminConfig.fullName;
+          linger = adminConfig.linger or null;
           extraGroups = [
             "networkmanager"
             "wheel"

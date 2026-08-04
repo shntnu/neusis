@@ -53,6 +53,4 @@
   boot.extraModprobeConfig = ''
     options nfsd nfs4_disable_idmapping=0
   '';
-
-  services.emacs.enable = true;
 }
