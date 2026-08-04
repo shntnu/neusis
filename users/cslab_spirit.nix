@@ -74,6 +74,19 @@
 
   regulars = [
     {
+      username = "yhe";
+      fullName = "Yichun He";
+      shell = "zsh";
+      sshKeys = [
+        ../homes/yhe/id_ed25519.pub
+      ];
+      homeModules = {
+        spirit = [
+          ../homes/yhe/machines/spirit.nix
+        ];
+      };
+    }
+    {
       username = "kshimofu";
       fullName = "Kazumasa Shimofuruta";
       shell = "zsh";
