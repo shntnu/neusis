@@ -96,6 +96,7 @@
       shell = "zsh";
       sshKeys = [
         ../homes/jrietdij/id_ed25519.pub
+        ../homes/jrietdij/id_rsa.pub
       ];
       homeModules = {
         oppy = [
