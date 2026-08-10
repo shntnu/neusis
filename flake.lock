@@ -1080,6 +1080,24 @@
         "type": "github"
       }
     },
+    "marimohub-nix": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_5"
+      },
+      "locked": {
+        "lastModified": 1786336680,
+        "narHash": "sha256-YLj27L0aa0hPrp2EWB4GEUWozeIaEfWtfo3p9zKsSes=",
+        "owner": "afermg",
+        "repo": "marimohub-nix",
+        "rev": "595b24d58277ae0ab57b7bc86738b151918b91b0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "afermg",
+        "repo": "marimohub-nix",
+        "type": "github"
+      }
+    },
     "nikitabobko-cask": {
       "flake": false,
       "locked": {
@@ -1410,6 +1428,22 @@
     },
     "nixpkgs_5": {
       "locked": {
+        "lastModified": 1784497964,
+        "narHash": "sha256-vlHUuqAcbcH2RKmHbPiuQzbv1pnzzavXnI62RD0bqCU=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "241313f4e8e508cb9b13278c2b0fa25b9ca27163",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_6": {
+      "locked": {
         "lastModified": 1775305101,
         "narHash": "sha256-/74n1oQPtKG52Yw41cbToxspxHbYz6O3vi+XEw16Qe8=",
         "owner": "nixos",
@@ -1424,7 +1458,7 @@
         "type": "github"
       }
     },
-    "nixpkgs_6": {
+    "nixpkgs_7": {
       "locked": {
         "lastModified": 1682134069,
         "narHash": "sha256-TnI/ZXSmRxQDt2sjRYK/8j8iha4B4zP2cnQCZZ3vp7k=",
@@ -1531,12 +1565,13 @@
         "homebrew-core": "homebrew-core_2",
         "jail-nix": "jail-nix",
         "llm-agents": "llm-agents",
+        "marimohub-nix": "marimohub-nix",
         "nikitabobko-cask": "nikitabobko-cask_2",
         "nix-homebrew": "nix-homebrew_2",
         "nixos-generators": "nixos-generators",
         "nixos-images": "nixos-images",
         "nixos-wsl": "nixos-wsl",
-        "nixpkgs": "nixpkgs_5",
+        "nixpkgs": "nixpkgs_6",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nixvim": "nixvim",
         "stylix": "stylix",
@@ -1883,7 +1918,7 @@
     "vscode-server": {
       "inputs": {
         "flake-utils": "flake-utils_5",
-        "nixpkgs": "nixpkgs_6"
+        "nixpkgs": "nixpkgs_7"
       },
       "locked": {
         "lastModified": 1770124655,
