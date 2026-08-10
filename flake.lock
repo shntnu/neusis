@@ -1085,11 +1085,11 @@
         "nixpkgs": "nixpkgs_5"
       },
       "locked": {
-        "lastModified": 1786336680,
-        "narHash": "sha256-YLj27L0aa0hPrp2EWB4GEUWozeIaEfWtfo3p9zKsSes=",
+        "lastModified": 1786339941,
+        "narHash": "sha256-XO83OGmNk27lcEbpd3Gsw3gBLKKQ+HL/9QLfHk93EjE=",
         "owner": "afermg",
         "repo": "marimohub-nix",
-        "rev": "595b24d58277ae0ab57b7bc86738b151918b91b0",
+        "rev": "2044540ebbaccf295fcb0f4ead57203d08fb6197",
         "type": "github"
       },
       "original": {
