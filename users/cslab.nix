@@ -28,10 +28,11 @@
         ../homes/amunoz/id_ed25519.pub
       ];
       homeModules = {
-        # Home Manager for this user is applied from afermg/nix-configs.
-        # Keep the account and SSH key in neusis, but do not create a
-        # home-manager.users.amunoz profile during system rebuilds.
-        oppy = null;
+        # Apply the personal profile exported by afermg/nixos-config through
+        # homes/amunoz/machines/oppy.nix during the system rebuild.
+        oppy = [
+          ../homes/amunoz/machines/oppy.nix
+        ];
       };
     }
     {

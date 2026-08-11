@@ -125,11 +125,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # amunoz's personal home-manager config. Consumed by
-    # homes/amunoz/machines/oppy.nix via `homeModules.amunoz`. Local path
-    # during development; swap to a git URL once it stabilises.
+    # amunoz's personal Home Manager config. Consumed by
+    # homes/amunoz/machines/oppy.nix via `homeModules.amunoz`.
     amunoz-nixos-config = {
-      url = "path:/home/amunoz/.local/share/src/nixos-config";
+      url = "github:afermg/nixos-config";
       flake = true;
     };
   };
