@@ -19,6 +19,7 @@
     ./packages.nix
     ./services.nix
     ./ollama.nix
+    ./marimohub.nix
 
     # Deployment configs
     inputs.disko.nixosModules.disko

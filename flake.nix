@@ -112,6 +112,8 @@
     agenix.url = "github:ryantm/agenix";
     agenix.inputs.nixpkgs.follows = "nixpkgs";
 
+    marimohub-nix.url = "github:afermg/marimohub-nix";
+
     hardware.url = "github:nixos/nixos-hardware";
 
     jail-nix.url = "sourcehut:~alexdavid/jail.nix";

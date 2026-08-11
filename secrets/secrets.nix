@@ -2,6 +2,7 @@ let
   # User keys
   ank = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFH40XzfXPtcTwJ8FHxHXCaEteylFOwtuw5TaY5CZ5NS ank@leoank.me";
   shantanu = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB/6FQiQUwpJ6TJyPolx+B4oB/b8wBvLQ08Bgm4VUAKs shsingh@broadinstitute.org";
+  amunoz = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAKdcdlNS1SO+rJHjRQWd33qvqBEZcZR8ypTQUeC9LZ4 alan@quasimorphic.com";
 
   users = [
     ank
@@ -45,7 +46,12 @@ in
     oppy
     karkinos
   ];
-
+  "oppy/marimohub.env.age".publicKeys = [
+    ank
+    shantanu
+    amunoz
+    oppy
+  ];
   # # ank
   # "ank/ghauth.age".publicKeys = [ ank ];
 
