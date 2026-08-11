@@ -1,10 +1,10 @@
 { inputs, ... }:
 {
   # Sourced from afermg/nixos-config through the `amunoz-nixos-config` input.
-  # That module is the single source of truth — the same profile is applied on
-  # moby — so this file intentionally does not import any of neusis's common
-  # Home Manager modules.
+  # The exported Oppy profile includes the shared personal configuration plus
+  # host-specific secrets and services such as Pi-msg, so this file intentionally
+  # does not duplicate that wiring or import Neusis's common Home Manager modules.
   imports = [
-    inputs.amunoz-nixos-config.homeModules.amunoz
+    inputs.amunoz-nixos-config.homeModules."amunoz-oppy"
   ];
 }

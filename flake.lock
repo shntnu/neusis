@@ -68,11 +68,11 @@
         "systems": "systems_5"
       },
       "locked": {
-        "lastModified": 1786486044,
-        "narHash": "sha256-mnJz8IzIyQJU9crbVUG4+YyQrv2Rm7qSkttMJd0gG4w=",
+        "lastModified": 1786490688,
+        "narHash": "sha256-YkZxgfAE4BHOqX5iiLkCqCCvgmNKz0NsiXzuoW84API=",
         "owner": "afermg",
         "repo": "nixos-config",
-        "rev": "9aa5c93674efa568f223d0546648198213a4aa08",
+        "rev": "04b0ea76983438f43ddf57a95b15839a9e22faa5",
         "type": "github"
       },
       "original": {
