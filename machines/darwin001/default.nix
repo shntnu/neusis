@@ -16,7 +16,7 @@ in
   imports = [
     inputs.home-manager.darwinModules.home-manager
     inputs.nix-homebrew.darwinModules.nix-homebrew
-    #../common/darwin_home_manager.nix
+    ../common/darwin_home_manager.nix
     (import ../common/nix-homebrew.nix {
       inherit inputs;
       user = "kumarank";
@@ -109,19 +109,6 @@ in
       cleanup = "uninstall";
       autoUpdate = true;
       upgrade = true;
-    };
-  };
-
-  # Configure home manager
-  home-manager = {
-    useGlobalPkgs = lib.mkForce false;
-    # Look into why enabling this break shell for starship
-    #useUserPackages = true;
-    extraSpecialArgs = { inherit inputs outputs; };
-    users.kumarank = {
-      imports = [
-        ../../homes/ank/machines/darwin001.nix
-      ];
     };
   };
 
