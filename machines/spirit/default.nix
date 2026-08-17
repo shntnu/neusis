@@ -61,6 +61,8 @@
     tailnetOrg = "shntnu.github";
   };
 
+  services.tailscale.extraUpFlags = [ "--advertise-tags=tag:server" ];
+
   neusis.cslab.infrastructure = {
     enable = true;
     userConfigPath = ../../users/cslab_spirit.nix;
