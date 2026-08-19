@@ -128,6 +128,9 @@ in
         chmod 770 ${cfg.dataRoot}/datasets ${cfg.dataRoot}/tools
         chmod 750 ${cfg.dataRoot}/users/_archive
 
+        # XDG volume trash, usable from any shell without cross-filesystem moves.
+        install -d -m 1777 -o root -g root ${cfg.dataRoot}/{datasets,users,scratch,tools,users/_archive}/.Trash
+
         # Create user-specific directories
         ${lib.concatMapStringsSep "\n" (user: ''
           # ${cfg.dataRoot}/users/<username> - project workspace
