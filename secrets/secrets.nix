@@ -55,6 +55,14 @@ in
   # # ank
   # "ank/ghauth.age".publicKeys = [ ank ];
 
+  # Karkinos hosts the public connector while Oppy holds Overleaf state.
+  "karkinos/cloudflared-overleaf.age".publicKeys = [
+    ank
+    shantanu
+    amunoz
+    karkinos
+  ];
+
   "common/persistent_cslab_mesh.age".publicKeys = machines ++ users;
 
   # Spirit

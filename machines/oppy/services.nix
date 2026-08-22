@@ -13,6 +13,11 @@
   # Enable monitoring
   neusis.services.monitoring.enable = true;
 
+  # Overleaf Server-CE's web process is hardwired to 127.0.0.1:3000 in
+  # overleaf-nix's internal service topology. Keep Grafana off that port so
+  # the Overleaf nginx vhost proxies to Overleaf rather than Grafana.
+  neusis.services.monitoring.grafana.port = 3300;
+
   # Enable ZFS auto-snapshots (retention policy defined in modules/nixos/zfs.nix)
   neusis.zfs.autoSnapshot.enable = true;
 

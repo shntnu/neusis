@@ -20,6 +20,7 @@
     ./services.nix
     ./ollama.nix
     ./marimohub.nix
+    ./overleaf.nix
 
     # Deployment configs
     inputs.disko.nixosModules.disko
