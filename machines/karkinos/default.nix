@@ -32,6 +32,9 @@
     # karinos misc
     ./misc.nix
 
+    # Public Overleaf connector; the application and state remain on Oppy.
+    ./overleaf-ingress.nix
+
     # vm related
     ./vm.nix
 
