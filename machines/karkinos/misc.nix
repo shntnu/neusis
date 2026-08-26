@@ -15,6 +15,13 @@
   # Prevent GNOME from attempting idle suspend on a shared server
   # (nosleep.nix masks the systemd targets, but gsd-power still sends a
   # misleading "The system will suspend now!" broadcast before logind refuses)
+  #
+  # nixos-gsettings-overrides only compiles schemas from the packages listed in
+  # extraGSettingsOverridePackages (plus gsettings-desktop-schemas and
+  # gnome-shell). Without gnome-settings-daemon here, glib-compile-schemas has
+  # no org.gnome.settings-daemon.plugins.power schema to apply the override to
+  # and drops it silently, leaving sleep-inactive-ac-type at 'suspend'.
+  services.desktopManager.gnome.extraGSettingsOverridePackages = [ pkgs.gnome-settings-daemon ];
   services.desktopManager.gnome.extraGSettingsOverrides = ''
     [org.gnome.settings-daemon.plugins.power]
     sleep-inactive-ac-type='nothing'
