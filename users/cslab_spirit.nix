@@ -37,6 +37,7 @@
       shell = "zsh";
       sshKeys = [
         ../homes/shsingh/id_ed25519.pub
+        ../homes/shsingh/id_ed25519_codex_iphone.pub
       ];
       homeModules = {
         # Home Manager for this user is applied from shntnu/nixos-config.
