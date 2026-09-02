@@ -137,6 +137,7 @@
     # karkinos and spirit inherit it through oppy.nix.
     rshen-nixos-config = {
       url = "github:runxi-shen/nixos-config";
+      flake = true;
     };
 
     # amunoz's personal Home Manager config. Consumed by
