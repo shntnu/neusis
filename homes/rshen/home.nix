@@ -24,7 +24,6 @@
         pixi # package manager
 
         # dev tooling
-        inputs.claude-code-rshen.packages.${pkgs.stdenv.hostPlatform.system}.claude-code
         gitleaks # secret scanner for local pre-commit/pre-push hooks
       ];
     };
