@@ -132,13 +132,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # rshen's personal claude-code pin. Deliberately separate from
-    # `claude-code-nix`, which feeds the fleet-wide `pkgs.claude-code` overlay
-    # consumed by jfredinh and amunoz — bumping this cannot move theirs.
-    # Mirrors the `claude-code` input in runxi-shen/nixos-config (the Mac).
-    claude-code-rshen = {
-      url = "github:sadjow/claude-code-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
+    # rshen's personal Home Manager config. Consumed by
+    # homes/rshen/machines/oppy.nix via `homeModules.rshen-agents`;
+    # karkinos and spirit inherit it through oppy.nix.
+    rshen-nixos-config = {
+      url = "github:runxi-shen/nixos-config";
+      flake = true;
     };
 
     # amunoz's personal Home Manager config. Consumed by

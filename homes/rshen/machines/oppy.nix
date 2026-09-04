@@ -26,5 +26,6 @@
     ../../common/network
     ../../common/misc
     ../../common/gpu_tools.nix
+    inputs.rshen-nixos-config.homeModules.rshen-agents
   ];
 }
