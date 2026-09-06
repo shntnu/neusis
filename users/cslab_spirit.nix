@@ -64,6 +64,7 @@
       shell = "zsh";
       sshKeys = [
         ../homes/rshen/id_ed25519.pub
+        ../homes/rshen/id_ed25519_mbp_purdue.pub
       ];
       homeModules = {
         spirit = [
