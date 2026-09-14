@@ -1,7 +1,22 @@
 {
   pkgs,
+  inputs,
   ...
 }:
+let
+  # Ollama from a newer nixpkgs than pkgs.unstable (flake input `nixpkgs-ollama`), because
+  # Qwen3.8 needs ollama >= 0.32.12. CUDA packages are unfree and not in the binary cache,
+  # so this builds locally; restricting CUDA to this machine's RTX 6000 Ada (compute
+  # capability 8.9) keeps that build short.
+  ollamaPkgs = import inputs.nixpkgs-ollama {
+    system = pkgs.stdenv.hostPlatform.system;
+    config = {
+      allowUnfree = true;
+      cudaSupport = true;
+      cudaCapabilities = [ "8.9" ];
+    };
+  };
+in
 {
 
   # Enable the X11 windowing system.
@@ -39,7 +54,7 @@
   # enable ollama
   services.ollama = {
     enable = true;
-    package = pkgs.unstable.ollama;
+    package = ollamaPkgs.ollama-cuda;
     acceleration = "cuda";
     models = "/work/tools/ollama";
     host = "0.0.0.0";
@@ -52,13 +67,15 @@
   nixpkgs.config.sunshine.cudaSupport = true;
 
   # Karkinos-specific packages (base packages in common/system.nix)
-  environment.systemPackages = with pkgs; [
-    unstable.ollama
+  environment.systemPackages = [
+    ollamaPkgs.ollama-cuda
+  ]
+  ++ (with pkgs; [
     gnomeExtensions.forge
     gnomeExtensions.blur-my-shell
     gnomeExtensions.burn-my-windows
     gnomeExtensions.appindicator
     gnomeExtensions.unite
-  ];
+  ]);
 
 }
