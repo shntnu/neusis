@@ -37,6 +37,14 @@
     };
   };
 
+  # libvirt-guests ships TimeoutStopSec=infinity. If libvirtd is not running
+  # when the unit is stopped, `virsh connect` socket-activates it -- but that
+  # start job is ordered behind the very stop job waiting on it, so the unit
+  # hangs forever and wedges the whole switch-to-configuration transaction.
+  # Cost us a 48 h outage on oppy with zero VMs running; see
+  # machines/oppy/INCIDENT-2026-09-18-wedged-switch.md
+  systemd.services.libvirt-guests.serviceConfig.TimeoutStopSec = 300;
+
   environment.extraInit = ''
     if [ -z "$DOCKER_HOST" -a -n "$XDG_RUNTIME_DIR" ]; then
       export DOCKER_HOST="unix://$XDG_RUNTIME_DIR/podman/podman.sock"
