@@ -1,6 +1,6 @@
 # Incident — 2026-09-18: wrong-host rebuild wedges oppy for 2 days
 
-**Status:** open; still degraded at the 2026-09-21 follow-up inspection (no recovery performed by this PR)
+**Status:** recovered 2026-09-21; safeguards deployed in generation 77 (temporary timeout drop-in cleanup pending)
 **Detected:** 2026-09-20 20:12 UTC, via `502 Bad Gateway` from Cloudflare on the Overleaf hostname
 **Started:** 2026-09-18 19:25:52 EDT
 **Blast radius:** all of oppy's declarative services — not just Overleaf
@@ -12,8 +12,9 @@ was run locally on `oppy`. Activation reached the stop phase, tore down every
 service whose store path differed between the two closures, then **deadlocked
 inside `libvirt-guests.service` and never reached the start phase.**
 
-`switch-to-configuration` has been sleeping for ~2 days. Nothing was ever
-restarted. The Cloudflare 502 is the most visible symptom, not the fault.
+At detection, `switch-to-configuration` had been sleeping for ~2 days and the
+stopped services had not restarted. The Cloudflare 502 was the most visible
+symptom, not the fault. Recovery was completed on September 21; see below.
 
 ## Timeline (EDT)
 
@@ -25,6 +26,7 @@ restarted. The Cloudflare 502 is the most visible symptom, not the fault.
 | Sep 18 19:26:14 | `mongodb`, `redis-overleaf`, `promtail` stopped |
 | Sep 18 19:26:15 | Last activity. Activation blocked; start phase never runs |
 | Sep 20 20:12 | Cloudflare 502 reported |
+| Sep 21 | Original activation stopped; libvirt unblocked with a runtime timeout; generation 74 reactivated; wrong-host generation 75 removed; safeguards deployed as generation 77 |
 
 ## Root cause
 
@@ -130,10 +132,40 @@ Read-only checks on oppy confirmed:
 These observations are not a recovery claim. No service or profile changes were
 made during this inspection.
 
+## Recovery completed — 2026-09-21
+
+The operator ran the recovery in stages, verifying the old activation was gone
+before killing the stuck libvirt stop process. The firewall was restored before
+application services. Generation 74 was reactivated with `test`, wrong-host
+generation 75 was removed, and the full configuration from PR #40 (commit
+`a3874af`) was then built and switched successfully.
+
+Verified after deployment:
+
+- `/run/current-system` and `/nix/var/nix/profiles/system` both resolve to
+  `/nix/store/3vysg51jj8qrkbbns5kxa4qrsay0pdyv-nixos-system-oppy-25.11.20260404.36a6011`.
+- No failed units or pending systemd jobs; the original activation is gone.
+- `nftables`, NFS, Grafana, Prometheus, Loki, Promtail, marimohub, ollama,
+  `overleaf-web`, and `overleaf-private-origin.socket` are active.
+- The Overleaf origin's Karkinos-only accept rule and catch-all drop rule are
+  restored. Loopback and public Overleaf HTTP checks both return **302**, not 502.
+- Generation 75 is absent. Boot entries 73, 74, 76 and 77 all reference oppy
+  closures, with generation **77** selected by default.
+- The installed Nix-generated libvirt override contains `TimeoutStopSec=300`;
+  systemd reports `TimeoutStopUSec=5min`.
+
+The recovery's temporary
+`/run/systemd/system/libvirt-guests.service.d/90-incident-timeout.conf` was still
+present at final inspection. Remove that file, reload systemd and confirm the
+permanent timeout remains 5 minutes; no service restart or reboot is needed.
+NFS client I/O, monitoring ingestion and a full authenticated Overleaf
+edit/compile workflow were not tested by these checks.
+
 ## Recovery plan
 
-Run in an approved maintenance window. Re-inspect live state first: generation
-numbers, processes and VM activity may have changed since the incident.
+Retained for reference; recovery above is complete. Run in an approved
+maintenance window. Re-inspect live state first: generation numbers, processes
+and VM activity may have changed since the incident.
 Do not run a second rebuild while the original switch is still alive.
 The ordering below prevents resuming activation of the wrong config.
 
@@ -201,16 +233,20 @@ the wrong-host generation that was absent from `/boot` during inspection.
 ```bash
 systemctl list-jobs                                    # expect: No jobs running.
 readlink -f /run/current-system                        # expect: …-oppy-25.11…
-curl -sS -o /dev/null -w '%{http_code}\n' http://100.79.40.39:18080/
+curl --max-time 15 -sS -o /dev/null -w '%{http_code}\n' http://127.0.0.1:18080/
+curl --max-time 20 -sS -o /dev/null -w '%{http_code}\n' https://overleaf.quasimorphic.com/
 sudo nft list ruleset                                 # inspect BOTH accept/drop rules for 18080
 systemctl is-active nftables nfs-server grafana prometheus loki promtail \
   marimohub ollama overleaf-web overleaf-private-origin.socket
 systemctl --failed
 ```
 
-Also check the public Overleaf URL through Cloudflare (not just the private
-origin), NFS exports, and monitoring ingestion. An HTTP response alone does not
-prove every service or the firewall recovered.
+The private Tailscale origin (`100.79.40.39:18080`) accepts connections only
+from Karkinos (`100.69.243.77`) on `tailscale0`. Do not test it directly from
+oppy: the restored firewall intentionally drops that traffic. On oppy, use the
+loopback endpoint and public Cloudflare URL above. Also check NFS exports and
+monitoring ingestion: an HTTP response alone does not prove every service or
+the firewall recovered.
 
 Inspect **`/boot` as root**. `NIXOS_INSTALL_BOOTLOADER` was set in the rebuild's
 environment; do not infer bootloader safety from the activation phase. Verify
