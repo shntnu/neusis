@@ -38,6 +38,43 @@ macos machines
 darwin-rebuild switch --flake .#darwin001
 ```
 
+## Deployment safeguards
+
+Oppy, Karkinos and Spirit reject an incoming configuration whose hostname differs
+from the live kernel hostname. This uses `system.preSwitchChecks`, **before**
+services stop or the bootloader is updated; ordinary activation scripts are too
+late. Use the correct flake output and `--target-host` for remote deployments.
+
+For a deliberate rename or first activation on an installer, set
+`NEUSIS_ALLOW_HOSTNAME_CHANGE=1` in the **target's** activation environment, e.g.
+`sudo env NEUSIS_ALLOW_HOSTNAME_CHANGE=1 /path/to/new-system/bin/switch-to-configuration test`.
+Do not set this globally. `NIXOS_NO_CHECK=1` bypasses all NixOS pre-switch checks,
+including this guard.
+
+The check belongs to the **incoming closure**. It does not protect against older
+unguarded generations or other flakes. External configurations (including
+personal machine flakes) can opt in with:
+
+```nix
+imports = [ inputs.neusis.nixosModules.safe-switch ];
+neusis.safeSwitch.enable = true;
+```
+
+A rejected rebuild may already have changed `/nix/var/nix/profiles/system`.
+Inspect it and restore the known-good generation before rebooting; this guard
+does not undo profile changes or remove bad generations from history.
+
+The shared libvirt configuration also bounds guest-service stops to 300 seconds
+instead of infinity. This is a total budget; machines with many/slow guests can
+set a larger finite `systemd.services.libvirt-guests.serviceConfig.TimeoutStopSec`.
+See the [Oppy incident and recovery runbook](machines/oppy/INCIDENT-2026-09-18-wedged-switch.md).
+
+Run the focused regression checks without activating a system:
+
+```bash
+nix build .#checks.x86_64-linux.switch-safety --no-link
+```
+
 ## Updating your own home-manager profile
 
 You can rebuild your home-manager profile without waiting for a full

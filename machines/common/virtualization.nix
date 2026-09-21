@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
     looking-glass-client
@@ -36,6 +36,15 @@
       defaultNetwork.settings.dns_enabled = true;
     };
   };
+
+  # libvirt-guests ships TimeoutStopSec=infinity. If libvirtd is not running
+  # when the unit is stopped, `virsh connect` socket-activates it -- but that
+  # start job is ordered behind the very stop job waiting on it, so the unit
+  # hangs forever and wedges the whole switch-to-configuration transaction.
+  # shutdownTimeout only bounds guest shutdown after connecting, not this call.
+  # This is a total stop budget; hosts with many/slow guests can raise it.
+  # See machines/oppy/INCIDENT-2026-09-18-wedged-switch.md.
+  systemd.services.libvirt-guests.serviceConfig.TimeoutStopSec = lib.mkDefault 300;
 
   environment.extraInit = ''
     if [ -z "$DOCKER_HOST" -a -n "$XDG_RUNTIME_DIR" ]; then

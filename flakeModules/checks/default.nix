@@ -2,5 +2,8 @@
   ...
 }:
 {
-  imports = [ ./machines ];
+  imports = [
+    ./machines
+    ./switch-safety.nix
+  ];
 }
