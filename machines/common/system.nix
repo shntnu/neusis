@@ -5,6 +5,9 @@
   ...
 }:
 {
+  imports = [ ../../modules/nixos/safe-switch.nix ];
+  neusis.safeSwitch.enable = true;
+
   # FHS compatibility
   programs.nix-ld.enable = true;
 

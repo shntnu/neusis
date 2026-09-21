@@ -1,6 +1,6 @@
 # Incident — 2026-09-18: wrong-host rebuild wedges oppy for 2 days
 
-**Status:** open, oppy still degraded at time of writing
+**Status:** open; still degraded at the 2026-09-21 follow-up inspection (no recovery performed by this PR)
 **Detected:** 2026-09-20 20:12 UTC, via `502 Bad Gateway` from Cloudflare on the Overleaf hostname
 **Started:** 2026-09-18 19:25:52 EDT
 **Blast radius:** all of oppy's declarative services — not just Overleaf
@@ -69,10 +69,11 @@ $ ps -o pid,etime,args -p 2661370
 deadlock protected nothing.
 
 `TimeoutStopUSec=infinity` comes from `virtualisation.libvirtd` in
-`machines/common/virtualization.nix`, which every machine imports — so this is a
-fleet-wide trap, not an oppy quirk.
+`machines/common/virtualization.nix`, imported by oppy, karkinos and spirit — so
+this is a shared Linux fleet trap, not an oppy quirk. `shutdownTimeout = 300`
+already limits individual guest shutdowns, but does not bound `virsh connect`.
 
-## Current state — half-switched
+## State at initial report — half-switched
 
 | | points at |
 |---|---|
@@ -110,35 +111,90 @@ No data loss observed anywhere. Oneshots that were "stopped"
 (`suid-sgid-wrappers`, `linger-users`, `home-manager-*`, …) had already applied
 their effects; `/run/wrappers` and `sudo` are intact.
 
+## Follow-up inspection — 2026-09-21
+
+Read-only checks on oppy confirmed:
+
+- The original wrong-host activation (PID 2660298) and four libvirt jobs are
+  still present; `libvirt-guests` still has `TimeoutStopUSec=infinity`.
+- The system profile now points to **generation 76, an oppy configuration**;
+  `/run/current-system` still points to generation 74. Changing the profile
+  alone did **not** stop the original wrong-host activation or restore services.
+- Overleaf's private origin still refuses connections. `nftables`, NFS,
+  Grafana, Prometheus, Loki, marimohub and ollama remain inactive.
+- Privileged inspection of `/boot/loader/entries` found only generations 73
+  and 74, with generation 74 the default. No wrong-host entry was present.
+  Generation 75 remains in the system profile history: a future bootloader
+  refresh must not turn it into a boot entry.
+
+These observations are not a recovery claim. No service or profile changes were
+made during this inspection.
+
 ## Recovery plan
 
-Ordered to avoid resuming activation of the wrong config.
+Run in an approved maintenance window. Re-inspect live state first: generation
+numbers, processes and VM activity may have changed since the incident.
+Do not run a second rebuild while the original switch is still alive.
+The ordering below prevents resuming activation of the wrong config.
 
 ```bash
-# 1. Kill the rebuild FIRST. Unblocking libvirt before this lets
+# 1. Stop the rebuild FIRST. Unblocking libvirt before this lets
 #    switch-to-configuration resume and finish applying moby's config to oppy.
 sudo systemctl stop nixos-rebuild-switch-to-configuration.service
+systemctl show nixos-rebuild-switch-to-configuration.service -p MainPID -p ActiveState
+pgrep -af '[/]bin/switch-to-configuration (switch|test|boot)'
+# STOP if any activation process remains (pgrep should find none).
 
-# 2. Break the deadlock. 0 VMs running, so nothing to preserve.
-sudo systemctl kill -s KILL libvirt-guests.service
+# 2. Recheck for VMs WITHOUT virsh (connecting is what deadlocked).
+pgrep -af '[q]emu-system|[q]emu-kvm'
+# STOP if guests are running; arrange their shutdown with their owners first.
+
+# 3. Bound stops in the currently loaded configuration BEFORE reactivation.
+#    Merely merging this PR cannot change a running unit's infinite timeout.
+sudo install -d /run/systemd/system/libvirt-guests.service.d
+printf '[Service]\nTimeoutStopSec=300\n' | sudo tee \
+  /run/systemd/system/libvirt-guests.service.d/90-incident-timeout.conf
+sudo systemctl daemon-reload
+systemctl show libvirt-guests.service -p TimeoutStopUSec  # expect: 5min
+
+# 4. Break the old stop job only after verifying the rebuild is gone.
+sudo systemctl kill --kill-whom=all --signal=KILL libvirt-guests.service
 sudo systemctl reset-failed libvirt-guests.service
+systemctl list-jobs  # wait for the libvirt queue to clear before proceeding
 
-# 3. Point the profile back at the real oppy generation.
-sudo nix-env -p /nix/var/nix/profiles/system --switch-generation 74
+# 5. Restore the known-good active closure, not whatever the profile now holds.
+known_good=$(readlink -f /run/current-system)
+case "$known_good" in
+  /nix/store/*-nixos-system-oppy-*) ;;
+  *) echo 'Unexpected active system; stop and investigate'; exit 1 ;;
+esac
+sudo nix-env -p /nix/var/nix/profiles/system --set "$known_good"
 
-# 4. Re-activate. Identical to /run/current-system, so the diff is ~empty;
-#    its job is to start everything the stop phase killed.
-sudo /nix/var/nix/profiles/system/bin/switch-to-configuration switch
+# 6. Restore the firewall before bringing application listeners back.
+sudo systemctl start nftables.service
+sudo nft list ruleset  # confirm the 18080 fence below before proceeding
+
+# 7. Re-activate the same closure, consuming the pending /run/nixos/*-list
+#    restart bookkeeping. Use test to leave /boot untouched for now.
+sudo "$known_good/bin/switch-to-configuration" test
 ```
 
-Step 4 can re-enter the same deadlock, because `libvirtd.socket` is active again
-and `libvirt-guests` is still `TimeoutStopSec=infinity`. Either land the
-mitigation in this PR first, or mask the unit for the duration:
+Do not clear `/run/nixos/start-list`, `restart-list` or `reload-list` manually:
+the interrupted switch left the services that need recovery in those files.
+The temporary timeout survives daemon reloads but not a reboot. After a correct
+oppy configuration containing the declarative timeout is deployed, remove only
+`/run/systemd/system/libvirt-guests.service.d/90-incident-timeout.conf`, reload
+systemd, and verify the effective timeout is still 5 minutes.
 
-```bash
-sudo systemctl mask libvirt-guests.service    # before step 4
-sudo systemctl unmask libvirt-guests.service  # after
-```
+Before any `switch`/`boot` action or reboot, inspect **all** system profile
+generations as well as `/boot`. After confirming generation 75 is still the
+wrong-host closure and is not selected, preserve an explicit GC root for forensic
+inspection if needed, then remove that generation with
+`sudo nix-env -p /nix/var/nix/profiles/system --delete-generations 75`.
+Do not blindly delete that number on another host or after history changes.
+Only then refresh the bootloader from the known-good oppy closure and verify its
+entries/default again. This prevents a later bootloader refresh from exposing
+the wrong-host generation that was absent from `/boot` during inspection.
 
 ### Verify
 
@@ -146,23 +202,34 @@ sudo systemctl unmask libvirt-guests.service  # after
 systemctl list-jobs                                    # expect: No jobs running.
 readlink -f /run/current-system                        # expect: …-oppy-25.11…
 curl -sS -o /dev/null -w '%{http_code}\n' http://100.79.40.39:18080/
-sudo nft list ruleset | grep 18080                     # firewall fence restored
+sudo nft list ruleset                                 # inspect BOTH accept/drop rules for 18080
+systemctl is-active nftables nfs-server grafana prometheus loki promtail \
+  marimohub ollama overleaf-web overleaf-private-origin.socket
 systemctl --failed
 ```
 
-Also check as root, which an unprivileged account cannot: **`/boot`**.
-`NIXOS_INSTALL_BOOTLOADER` was set in the rebuild's environment. Activation
-appears to have wedged before the bootloader step, but confirm no `gpa85-cad`
-entries were written before anyone reboots oppy.
+Also check the public Overleaf URL through Cloudflare (not just the private
+origin), NFS exports, and monitoring ingestion. An HTTP response alone does not
+prove every service or the firewall recovered.
+
+Inspect **`/boot` as root**. `NIXOS_INSTALL_BOOTLOADER` was set in the rebuild's
+environment; do not infer bootloader safety from the activation phase. Verify
+the `init=` closure in every boot entry and the selected default before reboot.
 
 ## Follow-ups
 
-1. **Bound the libvirt-guests stop timeout** — proposed in this PR. A finite
-   timeout turns a permanent fleet-wide wedge into a 5-minute delay.
-2. **Guard against wrong-host activation.** A config for host *X* should refuse
-   to activate on host *Y*. An assertion comparing `networking.hostName` against
-   the live hostname at activation time would have made this a loud no-op.
-   Related: #30 — same class of failure, different mechanism.
+1. **Bound the libvirt-guests stop timeout** — implemented as a 300-second
+   default. This bounds the stuck stop job, not the entire rebuild, and a timed-out
+   stop can still report a failed unit. It is a total stop budget, not per guest;
+   hosts with many/slow guests can override it with a larger finite value.
+2. **Guard against wrong-host activation** — enabled for oppy, karkinos and
+   spirit using `system.preSwitchChecks`, before service stops and bootloader
+   writes. An activation script would run too late. The reusable
+   `nixosModules.safe-switch` module must also be enabled in external flakes
+   such as the personal `#moby` configuration: a guard in neusis cannot stop an
+   unguarded incoming closure. Older generations are unguarded too. See the
+   [deployment safeguards](../../README.md#deployment-safeguards) for intentional
+   renames and profile rollback caveats. Related: #30.
 3. **Monitoring cannot live only on the host it monitors.** Prometheus, Grafana,
    Loki and Promtail all being on oppy meant a 48-hour outage was found by a
    human hitting a 502, not by an alert.
