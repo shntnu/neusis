@@ -5,6 +5,9 @@
     # Nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    # A newer nixos-unstable used only for karkinos's and spirit's ollama: Qwen3.8 needs ollama >= 0.32.12,
+    # and nixpkgs-unstable is locked at 0.20.2. Drop this once nixpkgs-unstable moves past it.
+    nixpkgs-ollama.url = "github:nixos/nixpkgs/nixos-unstable";
 
     # flake-parts
     flake-parts = {
