@@ -108,6 +108,7 @@
       shell = "zsh";
       sshKeys = [
         ../homes/kshimofu/id_ed25519.pub
+        ../homes/kshimofu/id_ed25519_macbook_pro.pub
       ];
       homeModules = {
         spirit = [
