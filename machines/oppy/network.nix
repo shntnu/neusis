@@ -22,6 +22,17 @@ in
     "0xa088c2030088a314"
   ];
 
+  # NetworkManager is enabled globally, but this host's static server links are
+  # owned by systemd-networkd below. Keep NM from autoconnecting/generated
+  # profiles for the same devices and fighting networkd over bond001.
+  networking.networkmanager.unmanaged = [
+    "interface-name:bond001"
+    "interface-name:enp206s0f0np0"
+    "interface-name:enp206s0f1np1"
+    "interface-name:ibp69s0"
+    "interface-name:eno1"
+  ];
+
   systemd.network.wait-online.enable = false;
   systemd.services."systemd-networkd".environment.SYSTEMD_LOG_LEVEL = "debug";
   systemd.network = {
