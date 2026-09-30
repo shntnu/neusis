@@ -93,19 +93,6 @@
 
   regulars = [
     {
-      username = "kazumasa";
-      fullName = "Kazumasa Shimofuruta";
-      shell = "zsh";
-      sshKeys = [
-        ../homes/kazumasa/id_ed25519.pub
-      ];
-      homeModules = {
-        oppy = [
-          ../homes/kazumasa/machines/oppy.nix
-        ];
-      };
-    }
-    {
       username = "jrietdij";
       fullName = "Jonne Rietdijk";
       shell = "zsh";
@@ -125,6 +112,7 @@
       shell = "zsh";
       sshKeys = [
         ../homes/kshimofu/id_ed25519.pub
+        ../homes/kshimofu/id_ed25519_macbook_pro.pub
       ];
       homeModules = {
         oppy = [
