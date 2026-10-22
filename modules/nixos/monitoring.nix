@@ -8,35 +8,11 @@ with lib;
 let
   cfg = config.neusis.services.monitoring;
 
-  mkAlloyConfig =
-    prometheusPort: secret:
-    pkgs.writeText "config.alloy" ''
-          prometheus.scrape "metrics_hosted_prometheus_node" {
-        targets = [{
-          __address__ = "localhost:${toString prometheusPort}",
-        }]
-        forward_to = [prometheus.remote_write.metrics_hosted_prometheus.receiver]
-        job_name   = "node"
-      }
-
-      local.file "alloy_prometheus_password" {
-        filename = "${secret.path}"
-        is_secret = true
-      }
-
-      prometheus.remote_write "metrics_hosted_prometheus" {
-         endpoint {
-            name = "hosted-prometheus"
-            url  = "https://prometheus-prod-56-prod-us-east-2.grafana.net/api/prom/push"
-          
-            basic_auth {
-              username = "2660759"
-              password = local.file.alloy_prometheus_password.content
-            }
-         }
-      }
-
-    '';
+  journalConfig = import ../../lib/alloy-journal.nix {
+    inherit lib;
+    hostName = config.networking.hostName;
+    lokiPort = cfg.loki.port;
+  };
   grafanaDashboardSource = pkgs.fetchFromGitHub {
     owner = "rfrail3";
     repo = "grafana-dashboards";
@@ -79,6 +55,20 @@ let
   '';
 in
 {
+  imports = [
+    (mkRenamedOptionModule
+      [ "neusis" "services" "monitoring" "promtail" "enable" ]
+      [ "neusis" "services" "monitoring" "journal" "enable" ])
+    (mkRenamedOptionModule
+      [ "neusis" "services" "monitoring" "promtail" "port" ]
+      [ "neusis" "services" "monitoring" "journal" "port" ])
+    (mkRemovedOptionModule [ "neusis" "services" "monitoring" "promtail" "grpc_port" ]
+      "Journal collection now uses Alloy, which has no gRPC listener.")
+    (mkRenamedOptionModule
+      [ "neusis" "services" "monitoring" "alloy" "port" ]
+      [ "neusis" "services" "monitoring" "journal" "port" ])
+  ];
+
   options = {
     neusis.services.monitoring = {
       enable = mkEnableOption "monitoring stack";
@@ -118,17 +108,21 @@ in
           default = "grafana.${toString config.networking.hostName}";
           description = "Domain for Grafana (optional)";
         };
+        secretKeyFile = mkOption {
+          type = types.str;
+          default = "/var/lib/grafana-secrets/secret-key";
+          description = ''
+            Root-owned runtime encryption key, passed through systemd credentials.
+            Existing installations MUST back up and migrate encrypted database
+            contents before changing this key. Never generate it on each start.
+          '';
+        };
       };
 
-      alloy = {
-        enable = mkEnableOption "Grafana Alloy" // {
-          default = true;
-        };
-        port = mkOption {
-          type = types.port;
-          default = 9300;
-          description = "Port for Grafana Alloy";
-        };
+      # Historical option name: this controls Prometheus's existing remote write,
+      # independently of the local Alloy journal collector.
+      alloy.enable = mkEnableOption "Grafana Cloud metrics remote write" // {
+        default = true;
       };
 
       nodeExporter = {
@@ -192,6 +186,18 @@ in
       };
 
       nginx = {
+        grafanaAllowedAddresses = mkOption {
+          type = types.listOf types.str;
+          default = [
+            "127.0.0.1"
+            "::1"
+          ];
+          description = ''
+            Client addresses/CIDRs allowed to reach Grafana through nginx.
+            This supplements Grafana authentication. Prometheus's nginx proxy
+            is always loopback-only; use SSH forwarding for its raw API/UI.
+          '';
+        };
         enable = mkEnableOption "nginx reverse proxy for Grafana" // {
           default = true;
         };
@@ -215,20 +221,14 @@ in
         };
       };
 
-      promtail = {
-        enable = mkEnableOption "Promtail" // {
+      journal = {
+        enable = mkEnableOption "systemd journal collection through Alloy" // {
           default = true;
         };
         port = mkOption {
           type = types.port;
           default = 9196;
-          description = "Port for Promtail";
-        };
-
-        grpc_port = mkOption {
-          type = types.port;
-          default = 9197;
-          description = "GRPC ort for Promatail";
+          description = "Loopback-only Alloy diagnostic HTTP port";
         };
       };
 
@@ -255,6 +255,9 @@ in
 
     services.prometheus = mkIf cfg.enable {
       enable = true;
+      # These APIs have no application authentication. The general host
+      # firewall is disabled on this fleet, so bind them explicitly.
+      listenAddress = "127.0.0.1";
       port = cfg.prometheus.port;
       retentionTime = cfg.prometheus.retention;
       remoteWrite = mkIf cfg.alloy.enable [
@@ -347,6 +350,7 @@ in
       exporters.node = mkIf cfg.nodeExporter.enable {
         enable = true;
         port = cfg.nodeExporter.port;
+        listenAddress = "127.0.0.1";
         enabledCollectors = [
           "systemd"
           "processes"
@@ -366,16 +370,19 @@ in
       exporters.nvidia-gpu = mkIf cfg.nvidiaExporter.enable {
         enable = true;
         port = cfg.nvidiaExporter.port;
+        listenAddress = "127.0.0.1";
       };
 
       exporters.zfs = mkIf cfg.zfsExporter.enable {
         enable = true;
         port = cfg.zfsExporter.port;
+        listenAddress = "127.0.0.1";
       };
 
       exporters.ipmi = mkIf cfg.ipmiExporter.enable {
         enable = true;
         port = cfg.ipmiExporter.port;
+        listenAddress = "127.0.0.1";
         extraFlags = [ "--native-ipmi" ];
         #configFile = ipmiExporterYAMLConfig;
       };
@@ -383,6 +390,7 @@ in
       alertmanager = mkIf cfg.alerts.enable {
         enable = true;
         port = cfg.alerts.port;
+        listenAddress = "127.0.0.1";
         configuration = {
           global = {
             smtp_smarthost = "localhost:587";
@@ -409,16 +417,14 @@ in
       };
     };
 
-    systemd.services.alloy.serviceConfig = mkIf cfg.alloy.enable {
-      User = "ank";
-      Group = "users";
-    };
-
-    services.alloy = mkIf cfg.alloy.enable {
-      enable = false;
-      configPath = (mkAlloyConfig cfg.prometheus.port config.age.secrets.alloy_key);
+    # NixOS supplies a dedicated DynamicUser, systemd-journal membership and a
+    # persistent StateDirectory. Do not run the collector as a personal user.
+    services.alloy = mkIf cfg.journal.enable {
+      enable = true;
       extraFlags = [
-        "--server.http.listen-addr=127.0.0.1:${toString cfg.alloy.port}"
+        "--server.http.listen-addr=127.0.0.1:${toString cfg.journal.port}"
+        "--storage.path=/var/lib/alloy"
+        "--disable-reporting"
       ];
     };
 
@@ -426,10 +432,21 @@ in
       enable = true;
       configuration = {
         server = {
+          http_listen_address = "127.0.0.1";
           http_listen_port = cfg.loki.port;
+          grpc_listen_address = "127.0.0.1";
           grpc_listen_port = cfg.loki.grpc_port;
         };
         auth_enabled = false;
+        # Single-process Loki still uses internal gRPC callbacks. Advertising
+        # a LAN address while listening only on loopback breaks log queries.
+        common = {
+          instance_addr = "127.0.0.1";
+          # Setting instance_addr enables common-ring inheritance in Loki.
+          # Keep every ring in-process rather than inheriting the Consul default.
+          ring.kvstore.store = "inmemory";
+        };
+        frontend.address = "127.0.0.1";
         ingester = {
           lifecycler = {
             address = "127.0.0.1";
@@ -483,53 +500,23 @@ in
       };
     };
 
-    services.promtail = mkIf cfg.promtail.enable {
-      enable = true;
-      configuration = {
-        server = {
-          http_listen_port = cfg.promtail.port;
-          grpc_listen_port = cfg.promtail.grpc_port;
-        };
-        positions = {
-          filename = "/tmp/positions.yaml";
-        };
-        clients = [
-          {
-            url = "http://127.0.0.1:${toString config.services.loki.configuration.server.http_listen_port}/loki/api/v1/push";
-          }
-        ];
-        scrape_configs = [
-          {
-            job_name = "journal";
-            journal = {
-              max_age = "12h";
-              labels = {
-                job = "systemd-journal";
-                host = config.networking.hostName;
-              };
-            };
-            relabel_configs = [
-              {
-                source_labels = [ "__journal__systemd_unit" ];
-                target_label = "unit";
-              }
-            ];
-          }
-
-        ];
-      };
-
-    };
+    # Require an explicit runtime key; preserve the existing key for OS upgrades.
+    # Rotate it separately. Systemd reads it outside the world-readable store.
+    systemd.services.grafana.serviceConfig.LoadCredential = mkIf cfg.grafana.enable [
+      "secret-key:${cfg.grafana.secretKeyFile}"
+    ];
 
     services.grafana = mkIf cfg.grafana.enable {
       enable = true;
       settings = {
         server = {
+          http_addr = "127.0.0.1";
           http_port = cfg.grafana.port;
           domain = mkIf (cfg.grafana.domain != null) cfg.grafana.domain;
         };
         security = {
           admin_user = "admin";
+          secret_key = "$__file{/run/credentials/grafana.service/secret-key}";
           admin_password = "$__file{${pkgs.writeText "grafana-password" "admin"}}";
         };
       };
@@ -569,6 +556,11 @@ in
     services.nginx = mkIf cfg.nginx.enable {
       enable = true;
       virtualHosts."${cfg.nginx.serverName}" = {
+        # nginx checks the actual peer address, not X-Forwarded-For. Keep
+        # dashboard access on the explicitly allowed private network only.
+        extraConfig =
+          concatMapStringsSep "\n" (address: "allow ${address};") cfg.nginx.grafanaAllowedAddresses
+          + "\ndeny all;";
         serverAliases = [
           "${cfg.grafana.domain}"
           "grafana.localhost"
@@ -604,6 +596,13 @@ in
       };
 
       virtualHosts."${cfg.prometheus.domain}" = {
+        # Binding Prometheus itself is insufficient: this proxy would otherwise
+        # re-expose the unauthenticated API on port 80 (and optional TLS).
+        extraConfig = ''
+          allow 127.0.0.1;
+          allow ::1;
+          deny all;
+        '';
         serverAliases = [
           "prometheus.localhost"
         ];
@@ -639,13 +638,17 @@ in
 
     # System dashboards
 
-    environment.etc = mkIf cfg.grafana.enable {
-      "grafana/dashboards/node-exporter.json".source =
-        "${grafanaDashboardSource}/prometheus/node-exporter-full.json";
-
-      "grafana/dashboards/nvidia-exporter.json".source =
-        "${nvidiaDashboardSource}/grafana/dashboard.json";
-    };
+    environment.etc = mkMerge [
+      (mkIf cfg.journal.enable {
+        "alloy/config.alloy".text = journalConfig;
+      })
+      (mkIf cfg.grafana.enable {
+        "grafana/dashboards/node-exporter.json".source =
+          "${grafanaDashboardSource}/prometheus/node-exporter-full.json";
+        "grafana/dashboards/nvidia-exporter.json".source =
+          "${nvidiaDashboardSource}/grafana/dashboard.json";
+      })
+    ];
 
     # Firewall configuration
     # networking.firewall.allowedTCPPorts = mkMerge [

@@ -16,6 +16,13 @@
   # alloy_key.age (or reuse oppy's under a shared recipients list).
   neusis.services.monitoring.enable = true;
   neusis.services.monitoring.alloy.enable = false;
+  # Dashboards remain reachable over Tailscale, not the Broad LAN.
+  neusis.services.monitoring.nginx.grafanaAllowedAddresses = [
+    "127.0.0.1"
+    "::1"
+    "100.64.0.0/10"
+    "fd7a:115c:a1e0::/48"
+  ];
 
   # Enable ZFS auto-snapshots (retention policy defined in modules/nixos/zfs.nix)
   neusis.zfs.autoSnapshot.enable = true;

@@ -71,6 +71,13 @@
   neusis.services.monitoring = {
     enable = true;
     alloy.enable = false;
+    # Dashboards remain reachable over Tailscale, not the Broad LAN.
+    nginx.grafanaAllowedAddresses = [
+      "127.0.0.1"
+      "::1"
+      "100.64.0.0/10"
+      "fd7a:115c:a1e0::/48"
+    ];
   };
 
   neusis.cslab.infrastructure = {
