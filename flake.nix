@@ -5,8 +5,9 @@
     # Nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-    # A newer nixos-unstable used only for karkinos's and spirit's ollama: Qwen3.8 needs ollama >= 0.32.12,
-    # and nixpkgs-unstable is locked at 0.20.2. Drop this once nixpkgs-unstable moves past it.
+    # Newer packages for karkinos/spirit's Ollama and amunoz's Atuin on Oppy.
+    # Qwen3.8 needs ollama >= 0.32.12; Atuin must understand the existing history DB.
+    # Drop this input once the regular package sets support both requirements.
     nixpkgs-ollama.url = "github:nixos/nixpkgs/nixos-unstable";
 
     # flake-parts
