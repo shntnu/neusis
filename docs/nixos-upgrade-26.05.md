@@ -273,7 +273,8 @@ the operator recovery recipient, without copying an SSH private key to Spirit.
 
 The original NixOS upgrade is already merged in canonical `shntnu/neusis` PR
 [#45](https://github.com/shntnu/neusis/pull/45), commit `b6802c7`. The follow-up
-source repair and this log are being published separately against that main.
+source repair and this log are published separately in
+[#46](https://github.com/shntnu/neusis/pull/46) against that main.
 
 A fresh canonical-main-based Spirit system candidate built successfully:
 `/nix/store/mpv5gqkyjy29bfns1vi8dlz197czfr08-nixos-system-spirit-26.05.20261020.cd4ea8d`.
