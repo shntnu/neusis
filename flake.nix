@@ -3,7 +3,7 @@
 
   inputs = {
     # Nixpkgs
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     # A newer nixos-unstable used only for karkinos's and spirit's ollama: Qwen3.8 needs ollama >= 0.32.12,
     # and nixpkgs-unstable is locked at 0.20.2. Drop this once nixpkgs-unstable moves past it.
@@ -39,22 +39,22 @@
     #------------------------------------------------------------
     # nixvim
     nixvim = {
-      url = "github:nix-community/nixvim/nixos-25.11";
+      url = "github:nix-community/nixvim/nixos-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    stylix.url = "github:danth/stylix/release-25.11";
+    stylix.url = "github:danth/stylix/release-26.05";
     stylix.inputs.nixpkgs.follows = "nixpkgs";
 
     #------------------------------------------------------------
 
     # wsl
-    nixos-wsl.url = "github:nix-community/NixOS-WSL/release-25.11";
+    nixos-wsl.url = "github:nix-community/NixOS-WSL/release-26.05";
     nixos-wsl.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
     # darwin inputs
     darwin = {
-      url = "github:LnL7/nix-darwin/nix-darwin-25.11";
+      url = "github:LnL7/nix-darwin/nix-darwin-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-homebrew = {
@@ -108,7 +108,7 @@
 
     # Home manager
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.11";
+      url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

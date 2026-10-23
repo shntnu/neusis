@@ -12,6 +12,13 @@
 
   # Enable monitoring
   neusis.services.monitoring.enable = true;
+  # Dashboards remain reachable over Tailscale, not the Broad LAN.
+  neusis.services.monitoring.nginx.grafanaAllowedAddresses = [
+    "127.0.0.1"
+    "::1"
+    "100.64.0.0/10"
+    "fd7a:115c:a1e0::/48"
+  ];
 
   # Overleaf Server-CE's web process is hardwired to 127.0.0.1:3000 in
   # overleaf-nix's internal service topology. Keep Grafana off that port so

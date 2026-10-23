@@ -17,7 +17,6 @@ in
   services.ollama = {
     enable = true;
     package = ollamaPkgs.ollama-cuda;
-    acceleration = "cuda";
     host = "127.0.0.1";
     port = 11434;
     # Pulled by ollama-model-loader.service once ollama.service is up (~16.5 GB).

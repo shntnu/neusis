@@ -15,6 +15,10 @@ let
     config.allowUnfree = true;
   };
   overleafCfg = config.services.overleaf;
+  historyV1 = runtimePkgs.callPackage ./overleaf-history-v1.nix {
+    overleaf = overleafCfg.package;
+    nodejs = runtimePkgs.nodejs_24;
+  };
   runtimeTexlive = runtimePkgs.texliveSmall.withPackages (
     tl:
     let
@@ -98,6 +102,8 @@ in
       content = ''
         chain input {
           type filter hook input priority filter; policy accept;
+          # Defense in depth for the internal history API, including IPv6.
+          iifname != "lo" tcp dport 3100 drop
           iifname "tailscale0" ip daddr ${privateOriginAddress} tcp dport 18080 ip saddr ${karkinosAddress} accept
           ip daddr ${privateOriginAddress} tcp dport 18080 drop
         }
@@ -117,8 +123,11 @@ in
   # Keep Node, TeX, PDF, and shell tools on the pinned Overleaf package set
   # instead of mixing them with Oppy's nixos-25.11 packages.
   systemd.services =
-    (lib.genAttrs applicationUnits (_: {
+    (lib.genAttrs applicationUnits (name: {
       path = lib.mkForce overleafRuntimePath;
+      serviceConfig = lib.optionalAttrs (name == "overleaf-history-v1") {
+        ExecStart = lib.mkForce "${historyV1}/bin/overleaf-history-v1";
+      };
     }))
     // {
       overleaf-migrations.path = lib.mkForce [

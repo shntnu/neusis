@@ -66,7 +66,7 @@
       nix-search-cli # find nix packages
       nixfmt-rfc-style # Nix formatting (for nixpkgs)
       nixfmt-tree # Format entire directories of nix
-      nodePackages.bash-language-server # bash
+      bash-language-server # bash
       pkgs.unstable.opencode
       pandoc # Convert between formats
       parallel # GNU parallel

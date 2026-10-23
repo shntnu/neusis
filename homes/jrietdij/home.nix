@@ -59,7 +59,7 @@ in
       docker-compose
       rclone
       s5cmd
-      nodePackages.aws-cdk # AWS CDK CLI
+      aws-cdk-cli # AWS CDK CLI
 
       # File management
       tree
