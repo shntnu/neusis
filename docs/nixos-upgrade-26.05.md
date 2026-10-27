@@ -3,9 +3,11 @@
 Oppy was upgraded and rebooted first. Fresh authenticated SSH to Oppy's
 Tailscale address through Spirit succeeded before Spirit was changed.
 Spirit was then upgraded and rebooted. Both active systems match their system
-profiles and both are reachable through Tailscale.
+profiles and both are reachable through Tailscale. The initial post-reboot
+systems were as follows; Spirit's later generation-17 live refresh is recorded
+at the end of this log.
 
-| Host | Generation | Running system |
+| Host | Generation | Running system after initial upgrade |
 | --- | --- | --- |
 | Oppy | 84 | `/nix/store/9n6g2n4k6qcsn2j201w3yk30dfm8i8a4-nixos-system-oppy-26.05.20261020.cd4ea8d` |
 | Spirit | 16 | `/nix/store/iww1svbi5pk092449h2yjpnj3bgwhm6c-nixos-system-spirit-26.05.20261020.cd4ea8d` |
@@ -26,10 +28,11 @@ No extended post-upgrade test suite was run, as requested by the operator.
 - NVIDIA uses the native headless module with matching driver/GSP/persistenced.
   No custom driver patch, firmware override or kernel downgrade is used.
 - The earlier monitoring/history-v1 hardening remains in place.
-- Spirit's build retained its deployed `machines/spirit/network.nix` and
-  `users/cslab_spirit.nix`: the unrelated NetworkManager unmanaged-interface
-  change and additional kshimofu MacBook SSH key were not deployed. Those
-  preexisting source changes were not reverted in this branch.
+- Spirit's initial upgrade build retained its deployed
+  `machines/spirit/network.nix` and `users/cslab_spirit.nix`: the unrelated
+  NetworkManager unmanaged-interface change and additional kshimofu MacBook
+  SSH key were held out. They were later applied in the separately authorized
+  generation-17 refresh below.
 - Karkinos was not contacted or deployed. Shared version/GPU changes affect
   it only when it is subsequently rebuilt; this is not runtime acceptance
   for Karkinos or a claim of NVIDIA platform certification.
@@ -241,11 +244,16 @@ source exports `homeModules.spirit-agenix` and builds only the two drop-ins.
 Integrate/reconcile that module when making future full secret-management
 changes; do not revert to the missing SSH identity or the mismatching shared
 ciphertext. The package-only bridge remains unchanged; its old service snapshot
-is historical. Current verification:
+is historical. Original verification at repair completion:
 
 ```sh
 fish -l -c 'bash ~/.local/share/home-manager/spirit-agenix-20261023/verify.sh'
 ```
+
+That script also asserts the then-current generation-16 system path. After the
+separately authorized generation-17 refresh below, that historical guard
+intentionally no longer matches. Keep its rollback baseline intact; the refresh
+receipts validate the new system alongside the unchanged user repairs.
 
 A protected **Spirit-local-only** rollback key is retained in
 `rollback/atuin.key.before` (0600 inside 0700). Never publish/copy that directory
@@ -266,27 +274,59 @@ the operator recovery recipient, without copying an SSH private key to Spirit.
 - **Spirit secrets:** fixed agenix with a dedicated local age identity, preserved
   the working Atuin key and added correct service startup ordering. No failed
   user or system units remain on Spirit.
-- These follow-ups required no reboot or system rebuild and did not change other
-  users' accounts.
+- These user-level repairs required no reboot or system rebuild and did not
+  change other users' accounts. The separate system refresh is recorded below.
 
-### Requested Spirit system refresh — prepared, activation pending
+### Requested Spirit system refresh — activated 2026-10-26 EDT
 
 The original NixOS upgrade is already merged in canonical `shntnu/neusis` PR
 [#45](https://github.com/shntnu/neusis/pull/45), commit `b6802c7`. The follow-up
-source repair and this log are published separately in
-[#46](https://github.com/shntnu/neusis/pull/46) against that main.
+source repair and preparation log were merged in
+[#46](https://github.com/shntnu/neusis/pull/46), commit `d5af79a`.
 
 A fresh canonical-main-based Spirit system candidate built successfully:
 `/nix/store/mpv5gqkyjy29bfns1vi8dlz197czfr08-nixos-system-spirit-26.05.20261020.cd4ea8d`.
-Its kernel, kernel modules and system package tree are identical to the running
-system. The only generated `/etc` content differences are NetworkManager's
+Its kernel, kernel modules and system package tree are identical to the previous
+generation. The only generated `/etc` content differences are NetworkManager's
 unmanaged-interface configuration, its two service restart-trigger overrides,
 and the previously merged additional kshimofu SSH public key. These changes
 were intentionally held out of the initial upgrade and are not new Atuin changes.
 The separate amunoz package/agenix repairs are already live and preserved.
 
-System activation has **not** occurred: `sudo -n true` on Spirit requires a
-password. The operator was asked to authorize sudo interactively; no credentials
-were requested in chat and no privilege or host-verification bypass was used.
-The existing Spirit system remains selected until that authorization and an
-activation-plan/access check complete.
+Activation was initially withheld for interactive sudo authorization. After the
+operator supplied it, a fresh dry run and strict-host SSH checks over both LAN
+and Tailscale passed. No credentials were requested in chat or host verification
+bypassed.
+
+- Selected **Spirit generation 17** and activated the exact candidate above
+  through an SSH-independent transient system service. Activation completed
+  successfully in 6.8 seconds; both `/run/current-system` and the system profile
+  now resolve to that candidate. **No reboot** was performed: the boot time
+  remains 2026-10-22 19:35:28 UTC and the loaded kernel remains 6.18.57.
+- Armed a five-minute automatic rollback before switching. Fresh LAN and
+  Tailscale connections and post-switch checks passed; the timer was disarmed
+  and unloaded without firing. Generation 16 remains available for rollback.
+- NetworkManager restarted as planned. All five server interfaces are now
+  unmanaged by NetworkManager, while networkd's bond remains routable with
+  `10.192.6.24/24` and the original default gateway. The deployed kshimofu
+  public-key file matches the candidate.
+- Standard NixOS activation also refreshed system secrets, reexecuted systemd,
+  reloaded user managers and started enabled ancillary units, including libvirtd
+  and the Ollama model loader. SSH, Tailscale, networkd, Grafana, Prometheus,
+  Alloy, Loki and Ollama retained their prior PIDs and invocation IDs.
+- All four H100 NVL GPUs still report driver 580.159.03. Grafana's database
+  health and Prometheus, Loki and Alloy readiness checks passed. There are
+  **zero failed system units and zero failed amunoz user units**.
+- User/HM profiles, all **642 managed-file links**, session variables and the
+  separate Emacs package remain preserved. A fresh Fish-login audit again
+  passed for all **118 outputs / 519 executable entries**, with zero missing,
+  target or PATH mismatches. Agenix remains successful; Atuin remains running
+  with PID 9952 and zero restarts. Its regular mode-0400 key still matches the
+  Spirit-local pre-repair backup byte-for-byte; the dedicated identity and
+  parent permissions remain 0600/0700. No full personal HM switch was run.
+
+Private preparation and post-activation receipts are under
+`~/.local/state/neusis/merge-followups-20261023/` on Spirit and Oppy; the date
+labels preparation, not activation. Root-owned activation/rollback scripts and
+logs are under `/var/lib/neusis-upgrade-backups/20261023/spirit-refresh/` on
+Spirit. No private identity or plaintext key was copied or published.
