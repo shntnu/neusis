@@ -15,6 +15,7 @@ let
     config.allowUnfree = true;
   };
   overleafCfg = config.services.overleaf;
+  linenoFix = runtimePkgs.callPackage ./overleaf-lineno.nix { };
   historyV1 = runtimePkgs.callPackage ./overleaf-history-v1.nix {
     overleaf = overleafCfg.package;
     nodejs = runtimePkgs.nodejs_24;
@@ -125,6 +126,11 @@ in
   systemd.services =
     (lib.genAttrs applicationUnits (name: {
       path = lib.mkForce overleafRuntimePath;
+      # Project-local packages retain precedence. The trailing empty entry
+      # preserves TeX's normal search path for every other package.
+      environment = lib.optionalAttrs (name == "overleaf-clsi") {
+        TEXINPUTS = ".:${linenoFix}/share/texmf/tex/latex//:";
+      };
       serviceConfig = lib.optionalAttrs (name == "overleaf-history-v1") {
         ExecStart = lib.mkForce "${historyV1}/bin/overleaf-history-v1";
       };
