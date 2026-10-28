@@ -39,7 +39,12 @@ The declarative module provides persistence on future NixOS rebuilds. Do not
 run a broad system switch merely to deploy this fix on a shared compute host.
 An administrator can deploy the exact evaluated `TEXINPUTS` as a persistent
 CLSI systemd drop-in, GC-root the pinned package, reload systemd and restart
-**only** `overleaf-clsi.service` during an agreed idle compile window. Do not
+**only** `overleaf-clsi.service` during an agreed idle compile window. On NixOS,
+`/etc/systemd/system` points into the immutable store. The live override is
+`/etc/systemd/system.control/overleaf-clsi.service.d/50-lineno.conf`, in systemd's
+supported persistent higher-priority search directory. Keep it until a normal
+NixOS deployment includes the matching declarative setting; only then remove
+the override after verifying that the generated unit resolves the same package. Do not
 restart other Overleaf services or any compute jobs. Do not overwrite an
 existing different TEXINPUTS override without inspecting it.
 
@@ -52,5 +57,10 @@ pane. Command-line tests do not prove that the browser has refreshed its PDF.
 On 2026-10-28, local tests passed with 376 outer numbers across four generic
 pages and 1,299 outer numbers across the actual 33-page working JUMP-lite review
 PDF. Its 32-page camera-ready root contained no line numbers. The Nix expression
-evaluated successfully. Activation was still blocked on sudo authentication at
-the time these source changes were prepared; no live-fix claim is made here.
+evaluated successfully. The owner-authorized root terminal activated the fix
+at 17:51 UTC on October 28. The live CLSI service then compiled an unchanged
+WACV fixture with lineno 5.9: all 352 numbers were in outer margins, PDF/log
+fetches returned HTTP 200, byte-range fetch returned 206, and QPDF passed.
+Only the CLSI PID changed; production-job and other Overleaf service PIDs did
+not. The open user's editor still requires a fresh compile and visual
+confirmation; the direct CLSI test is not proof of that browser handoff.
