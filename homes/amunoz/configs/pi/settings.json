@@ -1,0 +1,27 @@
+{
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-5.6-sol",
+  "defaultThinkingLevel": "high",
+  "enabledModels": [
+    "openai-codex/gpt-5.6-sol",
+    "openai-codex/gpt-6-astra"
+  ],
+  "extensions": [
+    "model-allowlist.ts",
+    "reliable-compaction.ts"
+  ],
+  "packages": [
+    "git:github.com/afermg/marimo-pair",
+    "git:github.com/afermg/emacs-pair",
+    "https://github.com/nicobailon/pi-subagents",
+    {
+      "source": "npm:@maheidem/pi-slack@0.2.1",
+      "skills": [],
+      "prompts": []
+    },
+    "git:github.com/davebcn87/pi-autoresearch@04b8a50dac7efe80ffc91648bd00ed9b022e24c2"
+  ],
+  "theme": "dark",
+  "lastChangelogVersion": "0.87.1",
+  "hideThinkingBlock": false
+}

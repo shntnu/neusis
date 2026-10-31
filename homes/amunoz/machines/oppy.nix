@@ -12,6 +12,7 @@
   # does not duplicate that wiring or import Neusis's common Home Manager modules.
   imports = [
     inputs.amunoz-nixos-config.homeModules."amunoz-oppy"
+    ../configs/pi
   ];
 
   # Reuse the personal configuration, but select Atuin from Neusis's newer
