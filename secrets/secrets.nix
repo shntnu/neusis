@@ -65,6 +65,15 @@ in
 
   "common/persistent_cslab_mesh.age".publicKeys = machines ++ users;
 
+  # Destination enrollment is isolated to Spirit; retain the old key for recovery.
+  # Same recipients as Spirit's existing enrollment secret; no access expansion.
+  "runxi-tailnet/spirit-authkey.age".publicKeys = [
+    ank
+    shantanu
+    spirit
+    oppy
+  ];
+
   # Spirit
   "spirit/tsauthkey.age".publicKeys = [
     ank

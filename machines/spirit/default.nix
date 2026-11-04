@@ -50,15 +50,23 @@
     enable = true;
     isPersistent = true;
     hostName = "spirit";
-    forceHostName = true;
-    # Spirit-specific auth key — rotating this file doesn't touch oppy's config.
-    # authkey_file wins over persistent_authkey_file per modules/nixos/tailscale.nix.
-    authkey_file = ../../secrets/spirit/tsauthkey.age;
-    persistent_authkey_file = ../../secrets/common/persistent_cslab_mesh.age;
-    clientIdFile = ../../secrets/common/tsclient.age;
-    clientSecretFile = ../../secrets/common/tssecret.age;
-    disableKeyExpiry = true;
-    tailnetOrg = "shntnu.github";
+    # Names and device-key expiry are managed in Runxi's destination console.
+    # Do not run old-tailnet OAuth helpers against the migrated device.
+    forceHostName = false;
+    authkey_file = ../../secrets/runxi-tailnet/spirit-authkey.age;
+    clientIdFile = null;
+    clientSecretFile = null;
+    disableKeyExpiry = false;
+    tailnetOrg = "ToFdp7kzyV11CNTRL";
+  };
+
+  services.tailscale = {
+    # Up flags apply at enrollment, not to an already authenticated daemon.
+    extraUpFlags = [
+      "--advertise-tags=tag:cslab-servers"
+      "--ssh=false"
+    ];
+    extraSetFlags = [ "--ssh=false" ];
   };
 
   neusis.cslab.infrastructure = {

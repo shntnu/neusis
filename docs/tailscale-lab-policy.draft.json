@@ -1,0 +1,56 @@
+{
+  "grants": [
+    {
+      "src": ["shntnu@github", "runxi-shen@github", "afermg@github"],
+      "dst": ["*"],
+      "ip": ["*"]
+    },
+    {
+      "src": ["group:cs-lab"],
+      "dst": ["tag:cslab-servers"],
+      "ip": ["*"]
+    },
+    {
+      "src": ["autogroup:member"],
+      "dst": ["autogroup:self"],
+      "ip": ["*"]
+    },
+    {
+      "src": ["tag:cslab-servers"],
+      "dst": ["tag:cslab-servers"],
+      "ip": ["*"]
+    }
+  ],
+  "groups": {
+    "group:cs-lab": [
+      "runxi-shen@github",
+      "leoank@github",
+      "jfredinh@github",
+      "afermg@github",
+      "jonrie@github",
+      "gnodar01@github",
+      "cruan1991@github",
+      "Kazumasa-Shimo@github"
+    ]
+  },
+  "tagOwners": {
+    "tag:cslab-servers": ["runxi-shen@github"]
+  },
+  "ssh": [
+    {
+      "action": "check",
+      "src": ["autogroup:member"],
+      "dst": ["autogroup:self"],
+      "users": ["autogroup:nonroot", "root"]
+    }
+  ],
+  "nodeAttrs": [
+    {
+      "target": ["autogroup:member"],
+      "attr": ["funnel"]
+    }
+  ],
+  "autoApprovers": {
+    "exitNode": []
+  }
+}
