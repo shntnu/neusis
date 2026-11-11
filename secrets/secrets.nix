@@ -67,6 +67,13 @@ in
   "common/persistent_cslab_mesh.age".publicKeys = machines ++ users;
 
   # Spirit
+  "runxi-tailnet/spirit-authkey.age".publicKeys = [
+    ank
+    shantanu
+    spirit
+    oppy
+  ];
+
   "spirit/tsauthkey.age".publicKeys = [
     ank
     shantanu

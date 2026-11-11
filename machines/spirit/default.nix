@@ -50,16 +50,21 @@
     enable = true;
     isPersistent = true;
     hostName = "spirit";
-    forceHostName = true;
+    forceHostName = false;
     # Spirit-specific auth key — rotating this file doesn't touch oppy's config.
     # authkey_file wins over persistent_authkey_file per modules/nixos/tailscale.nix.
-    authkey_file = ../../secrets/spirit/tsauthkey.age;
-    persistent_authkey_file = ../../secrets/common/persistent_cslab_mesh.age;
-    clientIdFile = ../../secrets/common/tsclient.age;
-    clientSecretFile = ../../secrets/common/tssecret.age;
-    disableKeyExpiry = true;
-    tailnetOrg = "shntnu.github";
+    authkey_file = ../../secrets/runxi-tailnet/spirit-authkey.age;
+    clientIdFile = null;
+    clientSecretFile = null;
+    disableKeyExpiry = false;
+    tailnetOrg = "ToFdp7kzyV11CNTRL";
   };
+
+  services.tailscale.extraUpFlags = [
+    "--advertise-tags=tag:cslab-servers"
+    "--ssh=false"
+  ];
+  services.tailscale.extraSetFlags = [ "--ssh=false" ];
 
   neusis.cslab.infrastructure = {
     enable = true;

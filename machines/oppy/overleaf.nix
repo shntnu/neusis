@@ -8,8 +8,8 @@
 
 let
   hostSystem = pkgs.stdenv.hostPlatform.system;
-  privateOriginAddress = "100.79.40.39";
-  karkinosAddress = "100.69.243.77";
+  privateOriginAddress = "100.93.122.65";
+  karkinosAddress = "100.117.220.62";
   runtimePkgs = import inputs.overleaf-runtime-nixpkgs {
     system = hostSystem;
     config.allowUnfree = true;

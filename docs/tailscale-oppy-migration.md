@@ -1,5 +1,17 @@
 # Oppy lab-tailnet migration — November 11, 2026
 
+## November 11 fleet follow-up
+
+Karkinos's manual recovery and the Overleaf connector migration are now accepted.
+PR #51 includes the final three-server configuration and supersedes its earlier
+Oppy-only scope. See [the fleet acceptance record](tailscale-lab-migration.md)
+for verified SSH, public HTTPS, authenticated Git access, the Karkinos-only origin
+firewall, and persistent runtime overrides pending reviewed Nix activation.
+Moby and its Marimohub/Dex ingress remain deferred. The earlier Oppy cutover
+record below is retained; its deferred Overleaf statements are superseded.
+
+## Historical Oppy-only cutover
+
 This change is scoped to Oppy. Spirit is covered by PR #50; Karkinos waits for
 Runxi and Moby is explicitly deferred. Preserve existing lab profiles and do not
 automatically switch any machine back to its old tailnet.
