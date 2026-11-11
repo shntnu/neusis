@@ -33,16 +33,44 @@ Marimohub/Dex ingress through deferred Moby also remains a follow-up.
 
 ## Deployment status
 
-Destination Nix configuration and encrypted key are prepared and evaluated.
-Runtime cutover is pending. No full NixOS activation or reboot is part of this
-step; the running OS and application workloads must remain unchanged.
+Runtime cutover completed successfully at **2026-11-11 14:11:14 UTC**. Oppy is
+online in `runxi-shen.github` / `tail27b080.ts.net`:
 
-Before enrollment, guard the installed old enrollment, hostname-claim, and
-key-expiry units using root-owned persistent systemd drop-ins. Launch a bounded,
-root-owned local job, read the key from a root-only file, and retain old profile
-`85df` without selecting it again. Verify destination suffix `tail27b080.ts.net`,
-hostname `oppy`, tag, unchanged route/DNS/SSH preferences, and independent SSH.
-Leave old-enrollment guards in place until reviewed destination activation.
+- Selected profile `3875` (`runxi-lab`); old profile `85df` retained, not selected.
+- Node `nMSkAdN8Uu11CNTRL`, DNS `oppy.tail27b080.ts.net`.
+- IPv4 `100.93.122.65`, IPv6 `fd7a:115c:a1e0::d332:7a42`.
+- Tag `tag:cslab-servers`; health warnings empty.
+- Fresh strict-host-key SSH through Spirit succeeded to both the new lab IPv4
+  and DNS name. A separate SSH connection to Oppy's LAN address also passed.
+- All three baseline loopback HTTP endpoints still return 200.
+- No reboot, full NixOS activation, application restart, or automatic rollback.
+  Only tailscaled restarted after enrollment; route/DNS/SSH preferences and the
+  running closure/boot ID matched their captured pre-cutover values.
+- The existing failed `user@991.service` is unchanged, not a new migration failure.
+
+The MBP's earlier outbound access gate remains the recorded client evidence.
+Oppy-initiated SSH to the MBP's new address timed out after cutover; this does not
+establish a failure of MBP-to-Oppy access and no ACLs were changed to permit it.
+For a fresh direct test from the MBP, retaining strict existing host-key checks:
+
+```sh
+ssh -o HostKeyAlias=oppy -o StrictHostKeyChecking=yes amunoz@100.93.122.65
+```
+
+Root-owned job/evidence: `/var/lib/neusis-tailscale-transition/20261111T140654Z/`.
+Filtered receipts: `/run/neusis-oppy-transition-20261111T140654Z.{result,status,profiles,accepted}.json`.
+The decrypted root staging key was removed on completion. The original user
+file remains mode 0600; no plaintext key was committed or printed.
+
+Destination Nix configuration evaluates successfully but has **not been activated**.
+Persistent guards below remain required until that separate reviewed activation.
+
+The installed `tailscaled-autoconnect`, `tailscale-force-claim`, and
+`tailscale-disable-key-expiry` units are inactive and guarded by root-owned
+`/etc/systemd/system.control/<unit>.service.d/90-neusis-tailnet-transition.conf`.
+Their condition references the persistent `block-old-automation` marker in the
+root evidence directory. Retain these guards until destination activation;
+do not replay enrollment or restore old profile `85df` automatically.
 
 The existing private Overleaf and Marimohub/Dex listeners still refer to Oppy's
 old IP. Update their new destination IPs and narrowly scoped connector firewall
@@ -52,4 +80,6 @@ rules during the corresponding connector migration; do not silently widen them.
 
 Run `bash tests/tailscale-oppy.sh`. This evaluates only Oppy's enrollment settings,
 disabled old OAuth helpers, and encryption recipients. It neither enrolls a node
-nor decrypts a secret. Runtime evidence will be appended after the cutover.
+nor decrypts a secret. Bash syntax and ShellCheck passed for the local root job
+and acceptance script. Public ingress remains an explicitly deferred check for
+the corresponding connector migration, not a passed check.
