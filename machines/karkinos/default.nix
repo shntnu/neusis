@@ -60,12 +60,12 @@
     enable = true;
     isPersistent = true;
     hostName = "karkinos";
-    forceHostName = false;
+    forceHostName = true;
     autoEnroll = true;
     persistent_authkey_file = ../../secrets/common/persistent_cslab_mesh.age;
-    clientIdFile = null;
-    clientSecretFile = null;
-    disableKeyExpiry = false;
+    clientIdFile = ../../secrets/common/tsclient.age;
+    clientSecretFile = ../../secrets/common/tssecret.age;
+    disableKeyExpiry = true;
     tailnetOrg = "ToFdp7kzyV11CNTRL";
   };
 

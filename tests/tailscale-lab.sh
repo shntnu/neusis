@@ -13,6 +13,8 @@ nix eval --json --no-write-lock-file "path:$repository#nixosConfigurations" --ap
     expiry = config.neusis.tailscale.disableKeyExpiry;
     clientId = config.neusis.tailscale.clientIdFile;
     clientSecret = config.neusis.tailscale.clientSecretFile;
+    idSecret = toString config.age.secrets.ts-client-id.file;
+    oauthSecret = toString config.age.secrets.ts-client-secret.file;
     autoconnect = config.systemd.services.tailscaled-autoconnect.enable or false;
     claimHelper = builtins.hasAttr "tailscale-force-claim" config.systemd.services;
     expiryHelper = builtins.hasAttr "tailscale-disable-key-expiry" config.systemd.services;
@@ -26,9 +28,11 @@ nix eval --json --no-write-lock-file "path:$repository#nixosConfigurations" --ap
     .tailnet == "ToFdp7kzyV11CNTRL" and
     .up == ["--hostname", $host, "--advertise-tags=tag:cslab-servers", "--ssh=false"] and
     .set == ["--ssh=false"] and
-    .force == false and .expiry == false and
-    .clientId == null and .clientSecret == null and
-    .claimHelper == false and .expiryHelper == false and
+    .force == true and .expiry == true and
+    (.clientId | endswith("/secrets/common/tsclient.age")) and
+    (.clientSecret | endswith("/secrets/common/tssecret.age")) and
+    .idSecret == .clientId and .oauthSecret == .clientSecret and
+    .claimHelper == true and .expiryHelper == true and
     .autoEnroll == true and .autoconnect == true and
     .authKey == "/run/agenix/tsauthkey" and
     (.secret | endswith("/secrets/common/persistent_cslab_mesh.age"))
@@ -48,10 +52,10 @@ nix eval --json --no-write-lock-file "path:$repository#nixosConfigurations" --ap
     force = config.neusis.tailscale.forceHostName;
     expiry = config.neusis.tailscale.disableKeyExpiry;
     secret = toString config.age.secrets.tsauthkey.file;
-  }) (builtins.intersectAttrs { oppy = null; spirit = null; } systems)
+  }) (builtins.intersectAttrs { oppy = null; spirit = null; karkinos = null; } systems)
 ' | jq -e 'all(.[];
   .tailnet == "ToFdp7kzyV11CNTRL" and .clientId == null and .clientSecret == null and
   .force == false and .expiry == false and
   (.secret | endswith("/secrets/common/persistent_cslab_mesh.age"))
 )' >/dev/null
-printf 'Three-server shared enrollment, VM templates and scoped Overleaf ingress passed.\n'
+printf 'Three-server shared enrollment/OAuth, isolated VM templates and scoped Overleaf ingress passed.\n'
