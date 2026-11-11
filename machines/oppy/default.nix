@@ -53,13 +53,19 @@
     enable = true;
     isPersistent = true;
     hostName = "oppy";
-    forceHostName = true;
-    persistent_authkey_file = ../../secrets/common/persistent_cslab_mesh.age;
-    clientIdFile = ../../secrets/common/tsclient.age;
-    clientSecretFile = ../../secrets/common/tssecret.age;
-    disableKeyExpiry = true;
-    tailnetOrg = "shntnu.github";
+    forceHostName = false;
+    authkey_file = ../../secrets/runxi-tailnet/oppy-authkey.age;
+    clientIdFile = null;
+    clientSecretFile = null;
+    disableKeyExpiry = false;
+    tailnetOrg = "ToFdp7kzyV11CNTRL";
   };
+
+  services.tailscale.extraUpFlags = [
+    "--advertise-tags=tag:cslab-servers"
+    "--ssh=false"
+  ];
+  services.tailscale.extraSetFlags = [ "--ssh=false" ];
 
   neusis.cslab.infrastructure = {
     enable = true;

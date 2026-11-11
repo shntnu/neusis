@@ -35,6 +35,7 @@ in
     oppy
   ];
   "oppy/tsauthkey.age".publicKeys = users ++ machines;
+  "runxi-tailnet/oppy-authkey.age".publicKeys = users ++ [ oppy ];
   "oppy/alloy_key.age".publicKeys = [
     ank
     shantanu
