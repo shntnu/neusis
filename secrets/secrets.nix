@@ -35,7 +35,6 @@ in
     oppy
   ];
   "oppy/tsauthkey.age".publicKeys = users ++ machines;
-  "runxi-tailnet/oppy-authkey.age".publicKeys = users ++ [ oppy ];
   "oppy/alloy_key.age".publicKeys = [
     ank
     shantanu
@@ -67,12 +66,6 @@ in
   "common/persistent_cslab_mesh.age".publicKeys = machines ++ users;
 
   # Spirit
-  "runxi-tailnet/spirit-authkey.age".publicKeys = [
-    ank
-    shantanu
-    spirit
-    oppy
-  ];
 
   "spirit/tsauthkey.age".publicKeys = [
     ank

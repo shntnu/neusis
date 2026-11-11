@@ -61,7 +61,8 @@
     isPersistent = true;
     hostName = "karkinos";
     forceHostName = false;
-    autoEnroll = false;
+    autoEnroll = true;
+    persistent_authkey_file = ../../secrets/common/persistent_cslab_mesh.age;
     clientIdFile = null;
     clientSecretFile = null;
     disableKeyExpiry = false;

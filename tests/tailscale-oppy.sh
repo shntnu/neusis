@@ -13,13 +13,13 @@ nix eval --json --no-write-lock-file "path:$repository#nixosConfigurations.oppy.
   claimHelper = builtins.hasAttr "tailscale-force-claim" config.systemd.services;
   expiryHelper = builtins.hasAttr "tailscale-disable-key-expiry" config.systemd.services;
 }' | jq -e '
-  (.secret | endswith("/secrets/runxi-tailnet/oppy-authkey.age")) and
+  (.secret | endswith("/secrets/common/persistent_cslab_mesh.age")) and
   .up == ["--hostname", "oppy", "--advertise-tags=tag:cslab-servers", "--ssh=false"] and
   .set == ["--ssh=false"] and .tailnet == "ToFdp7kzyV11CNTRL" and
   .force == false and .expiry == false and .clientId == null and .clientSecret == null and
   .claimHelper == false and .expiryHelper == false
 ' >/dev/null
 nix eval --json --file "$repository/secrets/secrets.nix" | jq -e '
-  .["runxi-tailnet/oppy-authkey.age"].publicKeys == .["oppy/anywhere/etc/ssh/ssh_host_ed25519_key.age"].publicKeys
+  (.["common/persistent_cslab_mesh.age"].publicKeys | sort) == (.["common/persistent_tsauthkey.age"].publicKeys | sort)
 ' >/dev/null
 printf 'Oppy lab enrollment configuration and recipients passed.\n'

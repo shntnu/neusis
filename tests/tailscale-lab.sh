@@ -28,13 +28,11 @@ nix eval --json --no-write-lock-file "path:$repository#nixosConfigurations" --ap
     .set == ["--ssh=false"] and
     .force == false and .expiry == false and
     .clientId == null and .clientSecret == null and
-    .claimHelper == false and .expiryHelper == false
+    .claimHelper == false and .expiryHelper == false and
+    .autoEnroll == true and .autoconnect == true and
+    .authKey == "/run/agenix/tsauthkey" and
+    (.secret | endswith("/secrets/common/persistent_cslab_mesh.age"))
   ) and
-  (.spirit.autoEnroll and .oppy.autoEnroll and .spirit.autoconnect and .oppy.autoconnect) and
-  (.spirit.secret | endswith("/secrets/runxi-tailnet/spirit-authkey.age")) and
-  (.oppy.secret | endswith("/secrets/runxi-tailnet/oppy-authkey.age")) and
-  .karkinos.autoEnroll == false and .karkinos.authKey == null and
-  .karkinos.secret == null and .karkinos.autoconnect == false and
   .oppy.origin == ["100.93.122.65:18080"] and
   (.oppy.firewall | contains("iifname != \"lo\" tcp dport 3100 drop")) and
   (.oppy.firewall | contains("iifname \"tailscale0\" ip daddr 100.93.122.65 tcp dport 18080 ip saddr 100.117.220.62 accept")) and
@@ -42,4 +40,18 @@ nix eval --json --no-write-lock-file "path:$repository#nixosConfigurations" --ap
   (.oppy.firewall | contains("100.79.40.39") | not) and
   (.karkinos.proxy | endswith(" 100.93.122.65:18080"))
 ' >/dev/null
-printf 'Three-server lab configuration and scoped Overleaf ingress passed.\n'
+nix eval --json --no-write-lock-file "path:$repository#nixosConfigurations" --apply 'systems:
+  builtins.mapAttrs (name: system: let config = system.config.virtualisation.vmVariantWithDisko; in {
+    tailnet = config.neusis.tailscale.tailnetOrg;
+    clientId = config.neusis.tailscale.clientIdFile;
+    clientSecret = config.neusis.tailscale.clientSecretFile;
+    force = config.neusis.tailscale.forceHostName;
+    expiry = config.neusis.tailscale.disableKeyExpiry;
+    secret = toString config.age.secrets.tsauthkey.file;
+  }) (builtins.intersectAttrs { oppy = null; spirit = null; } systems)
+' | jq -e 'all(.[];
+  .tailnet == "ToFdp7kzyV11CNTRL" and .clientId == null and .clientSecret == null and
+  .force == false and .expiry == false and
+  (.secret | endswith("/secrets/common/persistent_cslab_mesh.age"))
+)' >/dev/null
+printf 'Three-server shared enrollment, VM templates and scoped Overleaf ingress passed.\n'

@@ -54,7 +54,7 @@
     isPersistent = true;
     hostName = "oppy";
     forceHostName = false;
-    authkey_file = ../../secrets/runxi-tailnet/oppy-authkey.age;
+    persistent_authkey_file = ../../secrets/common/persistent_cslab_mesh.age;
     clientIdFile = null;
     clientSecretFile = null;
     disableKeyExpiry = false;
