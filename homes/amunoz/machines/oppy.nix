@@ -11,6 +11,7 @@
   # host-specific secrets and services such as Pi-msg, so this file intentionally
   # does not duplicate that wiring or import Neusis's common Home Manager modules.
   imports = [
+    ../configs/agent-clis
     inputs.amunoz-nixos-config.homeModules."amunoz-oppy"
   ];
 
