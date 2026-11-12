@@ -18,6 +18,7 @@
     ./system.nix
     ./packages.nix
     ./services.nix
+    ./user-resource-limits.nix
     ./ollama.nix
     ./marimohub.nix
     ./overleaf.nix

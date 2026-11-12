@@ -86,6 +86,7 @@ rec {
           isNormalUser = true;
           shell = pkgs.${regularConfig.shell};
           description = regularConfig.fullName;
+          uid = regularConfig.uid or null;
           extraGroups = [
             "libvirtd"
             "qemu-libvirtd"
@@ -152,7 +153,9 @@ rec {
       # Create admin accounts
       admins = builtins.map mkAdmin userConfig.admins;
       # Create regular user accounts
-      regulars = builtins.map mkRegular userConfig.regulars;
+      regulars = builtins.map (
+        user: mkRegular (user // { uid = user.uids.${machineName} or (user.uid or null); })
+      ) userConfig.regulars;
       # Create locked accounts
       locked = builtins.map mkLocked (userConfig.locked or [ ]);
       # Create guest accounts

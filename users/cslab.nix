@@ -94,6 +94,9 @@
   regulars = [
     {
       username = "jrietdij";
+      # Existing Oppy UID; keep the resource-limited slice tied to this account.
+      # Other machines retain automatic UID allocation.
+      uids.oppy = 1008;
       fullName = "Jonne Rietdijk";
       shell = "zsh";
       sshKeys = [
