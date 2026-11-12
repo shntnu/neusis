@@ -38,6 +38,12 @@ in
     neusis.tailscale = {
       enable = mkEnableOption "Enable Neusis tailscale config";
 
+      autoEnroll = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Enroll using an agenix auth key; disable to retain an existing manually authenticated profile.";
+      };
+
       authkey_file = mkOption {
         type = types.nullOr types.path;
         default = null;
@@ -118,9 +124,11 @@ in
     # make the tailscale command usable to users
     environment.systemPackages = [ pkgs.tailscale ];
 
+    systemd.services.tailscaled-autoconnect.enable = mkIf (!cfg.autoEnroll) false;
+
     # add agenix secrets
     age.secrets = mkMerge [
-      {
+      (mkIf cfg.autoEnroll {
         tsauthkey.file =
           if cfg.authkey_file != null then
             cfg.authkey_file
@@ -128,7 +136,7 @@ in
             cfg.persistent_authkey_file
           else
             cfg.ephemeral_authkey_file;
-      }
+      })
       (mkIf (cfg.forceHostName && cfg.clientIdFile != null && cfg.clientSecretFile != null) {
         ts-client-id.file = cfg.clientIdFile;
         ts-client-secret.file = cfg.clientSecretFile;
@@ -138,7 +146,7 @@ in
     # enable the tailscale service
     services.tailscale = {
       enable = true;
-      authKeyFile = config.age.secrets.tsauthkey.path;
+      authKeyFile = if cfg.autoEnroll then config.age.secrets.tsauthkey.path else null;
       extraUpFlags = mkIf (cfg.hostName != null) [
         "--hostname"
         "${cfg.hostName}"

@@ -5,7 +5,7 @@
 }:
 
 let
-  oppyOrigin = "100.79.40.39:18080";
+  oppyOrigin = "100.93.122.65:18080";
 in
 {
   age.secrets.cloudflared-overleaf = {

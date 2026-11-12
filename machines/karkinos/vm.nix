@@ -6,10 +6,16 @@
 {
 
   virtualisation.vmVariantWithDisko = {
-    # Create ephemeral tailscale connections with custom vm hostName
+    # Match the other lab VM templates; do not administer production names.
     neusis.tailscale = lib.mkForce {
-      isPersistent = false;
+      isPersistent = true;
       hostName = "diskoTest${config.networking.hostName}";
+      persistent_authkey_file = ../../secrets/common/persistent_cslab_mesh.age;
+      forceHostName = false;
+      clientIdFile = null;
+      clientSecretFile = null;
+      disableKeyExpiry = false;
+      tailnetOrg = "ToFdp7kzyV11CNTRL";
     };
 
     virtualisation.qemu.options = [

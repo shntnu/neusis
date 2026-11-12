@@ -25,6 +25,7 @@ in
   "common/persistent_tsauthkey.age".publicKeys = users ++ machines;
   "common/ephemeral_tsauthkey.age".publicKeys = users ++ machines;
   "common/hashedInitialPassword.age".publicKeys = users ++ machines;
+  # Lab-tailnet OAuth client (devices:core); shared recipient set is unchanged.
   "common/tsclient.age".publicKeys = users ++ machines;
   "common/tssecret.age".publicKeys = users ++ machines;
 
@@ -66,6 +67,7 @@ in
   "common/persistent_cslab_mesh.age".publicKeys = machines ++ users;
 
   # Spirit
+
   "spirit/tsauthkey.age".publicKeys = [
     ank
     shantanu
