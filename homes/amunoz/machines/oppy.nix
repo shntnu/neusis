@@ -13,6 +13,7 @@
   imports = [
     ../configs/agent-clis
     inputs.amunoz-nixos-config.homeModules."amunoz-oppy"
+    ../configs/t3code
   ];
 
   # Reuse the personal configuration, but select Atuin from Neusis's newer
