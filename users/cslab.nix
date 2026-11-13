@@ -93,6 +93,19 @@
 
   regulars = [
     {
+      username = "blye";
+      fullName = "Bryan Lye";
+      shell = "zsh";
+      sshKeys = [
+        ../homes/blye/id_ed25519.pub
+      ];
+      homeModules = {
+        oppy = [
+          ../homes/blye/machines/oppy.nix
+        ];
+      };
+    }
+    {
       username = "jrietdij";
       # Existing Oppy UID; keep the resource-limited slice tied to this account.
       # Other machines retain automatic UID allocation.
