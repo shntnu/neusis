@@ -90,6 +90,19 @@
 
   regulars = [
     {
+      username = "blye";
+      fullName = "Bryan Lye";
+      shell = "zsh";
+      sshKeys = [
+        ../homes/blye/id_ed25519.pub
+      ];
+      homeModules = {
+        spirit = [
+          ../homes/blye/machines/spirit.nix
+        ];
+      };
+    }
+    {
       username = "yhe";
       fullName = "Yichun He";
       shell = "zsh";
